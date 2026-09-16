@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, Suspense } from 'react';
+import { useActionState, useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -47,6 +47,15 @@ function SessionTimeoutBanner() {
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+
+  // Clear any residual session activity timestamp on login page
+  useEffect(() => {
+    try {
+      localStorage.removeItem('tailor_app_last_activity');
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const [passwordState, passwordAction, passwordPending] = useActionState<PasswordState, FormData>(
     loginTailorWithPassword,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, Suspense } from 'react';
+import { useActionState, useState, useEffect, Suspense } from 'react';
 import { Mail, Lock, Loader2, Eye, EyeOff, ShieldAlert, ArrowRight, AlertCircle } from 'lucide-react';
 import { loginAdminWithPassword } from '@/app/(auth)/actions';
 import Link from 'next/link';
@@ -31,6 +31,15 @@ function SessionTimeoutBanner() {
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+
+  // Clear any residual session activity timestamp on admin login page
+  useEffect(() => {
+    try {
+      localStorage.removeItem('tailor_app_last_activity');
+    } catch {
+      // ignore
+    }
+  }, []);
 
   /**
    * Dedicated loginAdminWithPassword Server Action.

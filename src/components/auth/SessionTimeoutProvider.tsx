@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Clock, AlertTriangle, ShieldCheck, LogIn, RefreshCw } from 'lucide-react';
+import { Clock, AlertTriangle, LogIn, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface SessionTimeoutContextType {
@@ -42,19 +42,29 @@ export function SessionTimeoutProvider({
   const timeoutMs = timeoutMinutes * 60 * 1000;
   const warningMs = warningMinutes * 60 * 1000;
 
-  const [lastActive, setLastActive] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? parseInt(stored, 10) : Date.now();
-    }
-    return Date.now();
-  });
-
+  // Track mount timestamp to prevent premature logout on fresh mount
+  const mountTimeRef = useRef<number>(Date.now());
+  const [lastActive, setLastActive] = useState<number>(Date.now());
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const isLoggingOutRef = useRef<boolean>(false);
   const lastThrottleRef = useRef<number>(Date.now());
+
+  // Reset timer to current time
+  const resetTimer = useCallback(() => {
+    const now = Date.now();
+    lastThrottleRef.current = now;
+    setLastActive(now);
+    isLoggingOutRef.current = false;
+    setIsExpired(false);
+    setShowWarning(false);
+    try {
+      localStorage.setItem(STORAGE_KEY, now.toString());
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // Function to record user activity
   const recordActivity = useCallback(() => {
@@ -74,19 +84,6 @@ export function SessionTimeoutProvider({
     }
   }, [showWarning]);
 
-  // Explicit user reset (e.g. clicking "Stay Logged In")
-  const resetTimer = useCallback(() => {
-    const now = Date.now();
-    lastThrottleRef.current = now;
-    setLastActive(now);
-    try {
-      localStorage.setItem(STORAGE_KEY, now.toString());
-    } catch {
-      // ignore
-    }
-    setShowWarning(false);
-  }, []);
-
   // Perform sign-out when expired
   const handleSignOut = useCallback(async () => {
     if (isLoggingOutRef.current) return;
@@ -95,11 +92,47 @@ export function SessionTimeoutProvider({
     setIsExpired(true);
 
     try {
+      localStorage.removeItem(STORAGE_KEY);
       await supabase.auth.signOut();
     } catch (err) {
       console.error('[SessionTimeout] SignOut error:', err);
     }
   }, [supabase]);
+
+  // On mount and auth state change, ensure we start fresh
+  useEffect(() => {
+    const now = Date.now();
+    mountTimeRef.current = now;
+
+    // Check existing stored timestamp: if it's expired or from a previous session, reset it
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const storedTime = parseInt(stored, 10);
+        if (isNaN(storedTime) || (now - storedTime) >= timeoutMs) {
+          localStorage.setItem(STORAGE_KEY, now.toString());
+        }
+      } else {
+        localStorage.setItem(STORAGE_KEY, now.toString());
+      }
+    } catch {
+      // ignore storage errors
+    }
+
+    resetTimer();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED' || event === 'TOKEN_REFRESHED' || (event === 'INITIAL_SESSION' && session)) {
+        resetTimer();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [resetTimer, supabase, timeoutMs]);
 
   // Listen to user interaction events across the window
   useEffect(() => {
@@ -139,7 +172,10 @@ export function SessionTimeoutProvider({
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-          currentLastActive = parseInt(stored, 10);
+          const parsed = parseInt(stored, 10);
+          if (!isNaN(parsed)) {
+            currentLastActive = parsed;
+          }
         }
       } catch {
         // fallback to state
@@ -148,6 +184,14 @@ export function SessionTimeoutProvider({
       const now = Date.now();
       const elapsed = now - currentLastActive;
       const remaining = timeoutMs - elapsed;
+
+      // Don't expire immediately on mount if component mounted less than 10 seconds ago
+      const mountedElapsed = now - mountTimeRef.current;
+      if (mountedElapsed < 10000 && remaining <= 0) {
+        // Healing: Fresh mount with leftover old storage timestamp -> reset
+        resetTimer();
+        return;
+      }
 
       if (remaining <= 0) {
         // Expired
@@ -166,7 +210,7 @@ export function SessionTimeoutProvider({
     }, 1000);
 
     return () => clearInterval(checkInterval);
-  }, [lastActive, timeoutMs, warningMs, isExpired, showWarning, handleSignOut]);
+  }, [lastActive, timeoutMs, warningMs, isExpired, showWarning, handleSignOut, resetTimer]);
 
   // Format seconds into MM:SS
   const formatTime = (secs: number | null) => {
@@ -209,7 +253,7 @@ export function SessionTimeoutProvider({
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Button
                 onClick={resetTimer}
-                className="w-full sm:w-auto bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-semibold flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" />
                 Stay Logged In
@@ -217,7 +261,7 @@ export function SessionTimeoutProvider({
               <Button
                 variant="outline"
                 onClick={handleSignOut}
-                className="w-full sm:w-auto border-slate-700 text-slate-300 hover:bg-slate-800"
+                className="w-full sm:w-auto border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer"
               >
                 Log Out Now
               </Button>
@@ -250,9 +294,14 @@ export function SessionTimeoutProvider({
             <div className="pt-2">
               <Button
                 onClick={() => {
+                  try {
+                    localStorage.removeItem(STORAGE_KEY);
+                  } catch {
+                    // ignore
+                  }
                   window.location.href = `${loginRoute}?reason=session_timeout`;
                 }}
-                className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 shadow-lg shadow-[#2e7d32]/20 flex items-center justify-center gap-2 text-base"
+                className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 shadow-lg shadow-[#2e7d32]/20 flex items-center justify-center gap-2 text-base cursor-pointer"
               >
                 <LogIn className="w-5 h-5" />
                 Re-Authenticate & Sign In
