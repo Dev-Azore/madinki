@@ -1,10 +1,29 @@
 import { createClient } from '@/lib/supabase/server';
-import { History, ShieldAlert, User, ArrowRight, Ban, CheckCircle2, Clock } from 'lucide-react';
+import {
+  History,
+  ShieldAlert,
+  ArrowRight,
+  Ban,
+  CheckCircle2,
+  Clock,
+  Crown,
+  ShieldCheck,
+  ShieldMinus,
+  Sparkles,
+  Trash2,
+} from 'lucide-react';
 import Link from 'next/link';
 
 interface AuditLogRow {
   id: string;
-  action: 'suspend' | 'reactivate';
+  action:
+    | 'suspend'
+    | 'reactivate'
+    | 'change_plan'
+    | 'promote_admin'
+    | 'demote_admin'
+    | 'create_global_template'
+    | 'delete_global_template';
   previous_status: string | null;
   new_status: string | null;
   created_at: string;
@@ -47,6 +66,67 @@ export default async function AdminAuditLogPage() {
 
   const logs = (rawLogs || []) as unknown as AuditLogRow[];
 
+  const getActionConfig = (action: AuditLogRow['action']) => {
+    switch (action) {
+      case 'suspend':
+        return {
+          icon: <Ban className="w-4 h-4 text-red-400" />,
+          bgColor: 'bg-red-500/10 border-red-500/20',
+          verb: 'suspended account of',
+          pillColor: 'bg-red-950/80 text-red-300 border-red-800',
+        };
+      case 'reactivate':
+        return {
+          icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
+          bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+          verb: 'reactivated account of',
+          pillColor: 'bg-emerald-950/80 text-emerald-300 border-emerald-800',
+        };
+      case 'change_plan':
+        return {
+          icon: <Crown className="w-4 h-4 text-amber-400" />,
+          bgColor: 'bg-amber-500/10 border-amber-500/20',
+          verb: 'updated subscription plan for',
+          pillColor: 'bg-amber-950/80 text-amber-300 border-amber-800',
+        };
+      case 'promote_admin':
+        return {
+          icon: <ShieldCheck className="w-4 h-4 text-lime-400" />,
+          bgColor: 'bg-lime-500/10 border-lime-500/20',
+          verb: 'promoted to Admin:',
+          pillColor: 'bg-lime-950/80 text-lime-300 border-lime-800',
+        };
+      case 'demote_admin':
+        return {
+          icon: <ShieldMinus className="w-4 h-4 text-orange-400" />,
+          bgColor: 'bg-orange-500/10 border-orange-500/20',
+          verb: 'demoted to Tailor:',
+          pillColor: 'bg-orange-950/80 text-orange-300 border-orange-800',
+        };
+      case 'create_global_template':
+        return {
+          icon: <Sparkles className="w-4 h-4 text-purple-400" />,
+          bgColor: 'bg-purple-500/10 border-purple-500/20',
+          verb: 'published global style template:',
+          pillColor: 'bg-purple-950/80 text-purple-300 border-purple-800',
+        };
+      case 'delete_global_template':
+        return {
+          icon: <Trash2 className="w-4 h-4 text-slate-400" />,
+          bgColor: 'bg-slate-800 border-slate-700',
+          verb: 'deleted global style template:',
+          pillColor: 'bg-slate-900 text-slate-300 border-slate-700',
+        };
+      default:
+        return {
+          icon: <History className="w-4 h-4 text-slate-400" />,
+          bgColor: 'bg-slate-800 border-slate-700',
+          verb: 'performed administrative action on',
+          pillColor: 'bg-slate-900 text-slate-300 border-slate-700',
+        };
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Header */}
@@ -61,7 +141,7 @@ export default async function AdminAuditLogPage() {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Immutable chronological record of administrative actions and status modifications.
+            Immutable chronological record of administrative actions, plan upgrades, role promotions, and global template events.
           </p>
         </div>
 
@@ -93,15 +173,15 @@ export default async function AdminAuditLogPage() {
             <ShieldAlert className="w-8 h-8 text-slate-600 mx-auto" />
             <p className="text-sm font-semibold text-slate-300">No audit events recorded yet</p>
             <p className="text-xs text-slate-500">
-              When an administrator suspends or reactivates a tailor account, the audit trail will appear here.
+              When an administrator modifies an account, promotes a user, changes a plan, or manages global templates, the audit trail will appear here.
             </p>
           </div>
         ) : (
           <div className="divide-y divide-slate-800/60 border border-slate-800/80 rounded-xl overflow-hidden bg-slate-950/70">
             {logs.map((log) => {
-              const isSuspend = log.action === 'suspend';
+              const cfg = getActionConfig(log.action);
               const actorName = log.actor?.name || 'Administrator';
-              const targetName = log.target?.name || `Tailor (${log.target_id.slice(0, 8)}...)`;
+              const targetName = log.target?.name || `Target (${log.target_id.slice(0, 8)}...)`;
               const timestamp = new Date(log.created_at).toLocaleString(undefined, {
                 month: 'short',
                 day: 'numeric',
@@ -118,17 +198,9 @@ export default async function AdminAuditLogPage() {
                 >
                   <div className="flex items-start sm:items-center gap-3">
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 ${
-                        isSuspend
-                          ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      }`}
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 border ${cfg.bgColor}`}
                     >
-                      {isSuspend ? (
-                        <Ban className="w-4 h-4" />
-                      ) : (
-                        <CheckCircle2 className="w-4 h-4" />
-                      )}
+                      {cfg.icon}
                     </div>
 
                     <div className="space-y-1">
@@ -136,29 +208,29 @@ export default async function AdminAuditLogPage() {
                         <span className="text-xs font-bold text-slate-100">
                           {actorName}
                         </span>
-                        <span className="text-xs text-slate-500">
-                          {isSuspend ? 'suspended' : 'reactivated'}
+                        <span className="text-xs text-slate-400">
+                          {cfg.verb}
                         </span>
                         <span className="text-xs font-bold text-lime-400">
                           {targetName}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
-                        <span className="px-1.5 py-0.5 bg-slate-900 rounded border border-slate-800">
-                          {log.previous_status || 'unknown'}
-                        </span>
-                        <ArrowRight className="w-3 h-3 text-slate-600" />
-                        <span
-                          className={`px-1.5 py-0.5 rounded border font-semibold ${
-                            isSuspend
-                              ? 'bg-red-950/80 text-red-300 border-red-800'
-                              : 'bg-emerald-950/80 text-emerald-300 border-emerald-800'
-                          }`}
-                        >
-                          {log.new_status}
-                        </span>
-                      </div>
+                      {(log.previous_status || log.new_status) && (
+                        <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                          {log.previous_status && (
+                            <>
+                              <span className="px-1.5 py-0.5 bg-slate-900 rounded border border-slate-800">
+                                {log.previous_status}
+                              </span>
+                              <ArrowRight className="w-3 h-3 text-slate-600" />
+                            </>
+                          )}
+                          <span className={`px-1.5 py-0.5 rounded border font-semibold ${cfg.pillColor}`}>
+                            {log.new_status}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -175,3 +247,4 @@ export default async function AdminAuditLogPage() {
     </div>
   );
 }
+

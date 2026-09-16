@@ -1,9 +1,10 @@
 'use client';
 
-import { useActionState, useState } from 'react';
-import { Mail, Lock, Loader2, Eye, EyeOff, ShieldAlert, ArrowRight } from 'lucide-react';
-import { loginWithPassword } from '@/app/(auth)/actions';
+import { useActionState, useState, Suspense } from 'react';
+import { Mail, Lock, Loader2, Eye, EyeOff, ShieldAlert, ArrowRight, AlertCircle } from 'lucide-react';
+import { loginAdminWithPassword } from '@/app/(auth)/actions';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 type LoginState =
   | Record<string, never>
@@ -12,17 +13,32 @@ type LoginState =
 
 const initialState: LoginState = {};
 
+function SessionTimeoutBanner() {
+  const searchParams = useSearchParams();
+  const reason = searchParams.get('reason');
+
+  if (reason === 'session_timeout') {
+    return (
+      <div className="mb-4 rounded-xl bg-amber-500/10 border border-amber-500/30 px-3.5 py-3 text-xs text-amber-300 flex items-start gap-2.5">
+        <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+        <span>Your administrator session expired due to inactivity. Please sign in again.</span>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   /**
-   * Reuses the shared loginWithPassword Server Action.
-   * On success, the server redirects to /dashboard; the admin layout then
-   * checks role and redirects further to /admin if the user is an admin.
-   * Non-admin users land on /dashboard as normal.
+   * Dedicated loginAdminWithPassword Server Action.
+   * Strictly permits users with role === 'admin'.
+   * Rejects non-admin attempts.
    */
   const [state, action, isPending] = useActionState<LoginState, FormData>(
-    loginWithPassword,
+    loginAdminWithPassword,
     initialState
   );
 
@@ -57,6 +73,9 @@ export default function AdminLoginPage() {
 
         {/* Login card */}
         <div className="bg-slate-900/70 backdrop-blur border border-slate-700/50 rounded-2xl p-6 shadow-2xl shadow-slate-950/50">
+          <Suspense fallback={null}>
+            <SessionTimeoutBanner />
+          </Suspense>
           <form action={action} className="space-y-4">
             {globalError && (
               <div className="rounded-lg bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-400">

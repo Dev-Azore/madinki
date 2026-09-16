@@ -196,24 +196,27 @@ export interface Database {
           created_at: string
           deleted_at: string | null
           id: string
+          is_global: boolean
           name: string
-          tailor_id: string
+          tailor_id: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           deleted_at?: string | null
           id?: string
+          is_global?: boolean
           name: string
-          tailor_id: string
+          tailor_id?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           deleted_at?: string | null
           id?: string
+          is_global?: boolean
           name?: string
-          tailor_id?: string
+          tailor_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -265,12 +268,13 @@ export interface Database {
         Returns: {
           tailor_id: string
           name: string
+          role: string
           status: string
           plan: string
           client_count: number
           template_count: number
           measurement_count: number
-          last_activity: string
+          last_activity: string | null
         }[]
       }
       is_admin: {

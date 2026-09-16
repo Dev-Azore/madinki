@@ -55,29 +55,15 @@ export function AdBanner({
     return null;
   }
 
-  // If no AdSense credentials configured (e.g. pre-launch/dev), render subtle collapsible container
+  // If no AdSense credentials configured (e.g. pre-launch/dev), collapse completely
   if (!clientId || !targetSlotId) {
-    return (
-      <div
-        className={`my-4 p-3 bg-slate-900/40 border border-slate-800/60 rounded-xl text-center text-slate-500 text-[11px] ${className}`}
-      >
-        <span className="font-medium tracking-wider uppercase text-[10px] text-slate-600 block mb-1">
-          Advertisement Placeholder
-        </span>
-        <span className="text-slate-500">
-          Support TailorApp with Free Plan sponsorship
-        </span>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div
-      className={`my-4 overflow-hidden rounded-xl border border-slate-800/80 bg-slate-950 p-2 text-center transition-all duration-300 ${className}`}
+      className={`my-4 overflow-hidden rounded-2xl border border-[#0B2545]/60 bg-[#071A34]/40 p-1.5 text-center transition-all duration-300 ${className}`}
     >
-      <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1">
-        Advertisement
-      </span>
       <ins
         ref={adRef}
         className="adsbygoogle block"

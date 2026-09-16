@@ -23,6 +23,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { logout } from '@/app/(auth)/actions';
 import { updateTailorName, type TailorProfileData } from './actions';
+import { PwaInstallButton } from '@/components/pwa/PwaInstallButton';
 
 interface ProfileClientProps {
   initialProfile: TailorProfileData | null;
@@ -261,6 +262,27 @@ export function ProfileClient({ initialProfile, errorMessage }: ProfileClientPro
             <div className="text-[10px] text-slate-500 mt-0.5">Cloud verified</div>
           </div>
         </div>
+      </div>
+
+      {/* ── App Installation / PWA Section ── */}
+      <div className="rounded-2xl bg-[#071A34] border border-[#2e7d32]/40 p-5 space-y-3 shadow-lg shadow-[#040e1e]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#2e7d32]/20 text-[#81c784] flex items-center justify-center">
+              <Sparkles className="w-3.5 h-3.5" />
+            </div>
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                PWA Home Screen App
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Install TailorApp on your phone or computer for 1-tap workshop access.
+              </p>
+            </div>
+          </div>
+          <PwaInstallButton variant="badge" />
+        </div>
+        <PwaInstallButton variant="menu" />
       </div>
 
       {/* ── Security & Account Settings ── */}

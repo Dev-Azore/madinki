@@ -17,9 +17,9 @@ export type MagicLinkActionState =
   | { success: true; message: string };
 
 // ---------------------------------------------------------------------------
-// loginWithPassword
+// loginTailorWithPassword (Tailors Only)
 // ---------------------------------------------------------------------------
-export async function loginWithPassword(
+export async function loginTailorWithPassword(
   _prevState: AuthActionState,
   formData: FormData
 ): Promise<AuthActionState> {
@@ -40,14 +40,11 @@ export async function loginWithPassword(
   });
 
   if (error) {
-    console.error('[Supabase Auth] signInWithPassword error:', error);
-    return { error: `Login failed: ${error.message}` };
+    console.error('[Tailor Auth] signInWithPassword error:', error.message);
+    return { error: 'Invalid email or password.' };
   }
 
-  // Determine destination based on user role and status
-  let destination = '/dashboard';
   const userId = signInData.user?.id;
-
   if (userId) {
     const { data: profile } = await supabase
       .from('users')
@@ -55,18 +52,74 @@ export async function loginWithPassword(
       .eq('id', userId)
       .single();
 
+    // Strict Role Isolation: Tailor login must NEVER recognize or permit admin accounts
+    if (profile?.role !== 'tailor') {
+      await supabase.auth.signOut();
+      return { error: 'Invalid email or password.' };
+    }
+
     if (profile?.status === 'suspended') {
       await supabase.auth.signOut();
       return { error: 'Your account is suspended. Please contact support.' };
     }
+  }
 
-    if (profile?.role === 'admin') {
-      destination = '/admin';
+  redirect('/dashboard');
+}
+
+// ---------------------------------------------------------------------------
+// loginAdminWithPassword (Admins Only)
+// ---------------------------------------------------------------------------
+export async function loginAdminWithPassword(
+  _prevState: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
+  const supabase = await createClient();
+
+  const parsed = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors as Record<string, string[]> };
+  }
+
+  const { data: signInData, error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    console.error('[Admin Auth] signInWithPassword error:', error.message);
+    return { error: 'Invalid credentials or unauthorized access.' };
+  }
+
+  const userId = signInData.user?.id;
+  if (userId) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role, status')
+      .eq('id', userId)
+      .single();
+
+    // Strict Role Isolation: Admin login must NEVER recognize or permit tailor accounts
+    if (profile?.role !== 'admin') {
+      await supabase.auth.signOut();
+      return { error: 'Invalid credentials or unauthorized access.' };
+    }
+
+    if (profile?.status === 'suspended') {
+      await supabase.auth.signOut();
+      return { error: 'This administrator account is disabled.' };
     }
   }
 
-  redirect(destination);
+  redirect('/admin');
 }
+
+// Backward-compatibility alias
+export const loginWithPassword = loginTailorWithPassword;
 
 // ---------------------------------------------------------------------------
 // loginWithMagicLink
@@ -141,10 +194,19 @@ export async function registerTailor(
 }
 
 // ---------------------------------------------------------------------------
-// logout
+// logout (Tailor)
 // ---------------------------------------------------------------------------
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect('/login');
+}
+
+// ---------------------------------------------------------------------------
+// logoutAdmin (Admin)
+// ---------------------------------------------------------------------------
+export async function logoutAdmin() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect('/admin-login');
 }

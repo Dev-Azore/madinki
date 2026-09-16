@@ -2,38 +2,38 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Ban, CheckCircle2, Loader2, AlertTriangle, X } from 'lucide-react';
-import { updateTailorStatusAction } from '@/app/admin/actions';
+import { ShieldCheck, ShieldAlert, Loader2, AlertTriangle, X } from 'lucide-react';
+import { updateUserRoleAction } from '@/app/admin/actions';
 
-interface TailorStatusToggleProps {
-  tailorId: string;
-  tailorName: string;
-  currentStatus: 'active' | 'suspended';
+interface TailorRoleToggleProps {
+  userId: string;
+  userName: string;
+  currentRole: 'tailor' | 'admin';
   isSelf?: boolean;
 }
 
-export function TailorStatusToggle({
-  tailorId,
-  tailorName,
-  currentStatus,
+export function TailorRoleToggle({
+  userId,
+  userName,
+  currentRole,
   isSelf,
-}: TailorStatusToggleProps) {
+}: TailorRoleToggleProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const isSuspended = currentStatus === 'suspended';
-  const targetAction = isSuspended ? 'reactivate' : 'suspend';
+  const isAdmin = currentRole === 'admin';
+  const targetRole = isAdmin ? 'tailor' : 'admin';
 
-  const handleConfirm = async () => {
+  const handleConfirmRoleChange = async () => {
     setIsLoading(true);
     setErrorMessage(null);
 
     try {
-      const res = await updateTailorStatusAction({
-        target_id: tailorId,
-        action: targetAction,
+      const res = await updateUserRoleAction({
+        target_id: userId,
+        role: targetRole,
       });
 
       if (res.error) {
@@ -45,7 +45,7 @@ export function TailorStatusToggle({
         router.refresh();
       }
     } catch {
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      setErrorMessage('Failed to update user role.');
       setIsLoading(false);
     }
   };
@@ -60,48 +60,48 @@ export function TailorStatusToggle({
           setErrorMessage(null);
           setIsOpen(true);
         }}
-        title={isSelf ? 'You cannot suspend your own account' : undefined}
+        title={isSelf ? 'You cannot alter your own admin role' : undefined}
         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
           isSelf ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'
         } ${
-          isSuspended
-            ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-            : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30'
+          isAdmin
+            ? 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30'
+            : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
         }`}
       >
-        {isSuspended ? (
+        {isAdmin ? (
           <>
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Reactivate</span>
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+            <span>Administrator</span>
           </>
         ) : (
           <>
-            <Ban className="w-3.5 h-3.5" />
-            <span>Suspend</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+            <span>Tailor Role</span>
           </>
         )}
       </button>
 
       {/* Confirmation Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in-up">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    isSuspended
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                    isAdmin
+                      ? 'bg-amber-400/10 text-amber-400 border border-amber-400/20'
+                      : 'bg-[#2e7d32]/20 text-[#81c784] border border-[#2e7d32]/30'
                   }`}
                 >
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-100">
-                    {isSuspended ? 'Reactivate Tailor Account' : 'Suspend Tailor Account'}
+                    {isAdmin ? 'Demote Administrator to Tailor' : 'Promote Tailor to Administrator'}
                   </h3>
-                  <p className="text-xs text-slate-400">{tailorName}</p>
+                  <p className="text-xs text-slate-400">{userName}</p>
                 </div>
               </div>
 
@@ -115,9 +115,9 @@ export function TailorStatusToggle({
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              {isSuspended
-                ? `Are you sure you want to reactivate ${tailorName}'s account? The tailor will immediately regain full access to their dashboard, clients, and measurements.`
-                : `Are you sure you want to suspend ${tailorName}'s account? The tailor will be immediately blocked from accessing their dashboard and redirected to the suspended notice page. Their data is fully preserved.`}
+              {isAdmin
+                ? `Are you sure you want to remove administrator privileges from ${userName}? They will no longer be able to access the admin console.`
+                : `Are you sure you want to promote ${userName} to an Administrator? They will be granted full access to the admin console, platform statistics, tailor accounts, and global templates.`}
             </p>
 
             {errorMessage && (
@@ -139,11 +139,11 @@ export function TailorStatusToggle({
               <button
                 type="button"
                 disabled={isLoading}
-                onClick={handleConfirm}
+                onClick={handleConfirmRoleChange}
                 className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-50 ${
-                  isSuspended
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
-                    : 'bg-red-500 hover:bg-red-400 text-slate-950'
+                  isAdmin
+                    ? 'bg-slate-700 hover:bg-slate-600 text-white'
+                    : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
                 }`}
               >
                 {isLoading ? (
@@ -152,7 +152,7 @@ export function TailorStatusToggle({
                     <span>Processing...</span>
                   </>
                 ) : (
-                  <span>Confirm {isSuspended ? 'Reactivation' : 'Suspension'}</span>
+                  <span>Confirm {isAdmin ? 'Demotion' : 'Promotion'}</span>
                 )}
               </button>
             </div>

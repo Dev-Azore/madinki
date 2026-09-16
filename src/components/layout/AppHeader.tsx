@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { logout } from '@/app/(auth)/actions';
 import { LogOut, Scissors, User } from 'lucide-react';
+import { PwaInstallButton } from '@/components/pwa/PwaInstallButton';
 
 interface AppHeaderProps {
   name: string;
@@ -49,8 +50,10 @@ export function AppHeader({ name, plan }: AppHeaderProps) {
           </div>
         </Link>
 
-        {/* Right Action: Profile Shortcut + Sign Out */}
+        {/* Right Action: Install App + Profile Shortcut + Sign Out */}
         <div className="flex items-center gap-2">
+          <PwaInstallButton className="hidden sm:inline-flex" />
+
           <Link
             href="/profile"
             className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-[#0B2545] rounded-xl border border-transparent hover:border-[#0B2545] transition"

@@ -38,59 +38,67 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute =
     path.startsWith('/login') ||
     path.startsWith('/register') ||
-    path.startsWith('/admin-login'); // admin entry point is a public auth page
+    path.startsWith('/admin-login'); // Explicit admin login page
   const isLandingRoute = path === '/';
-  const isPublicRoute = isAuthRoute || isLandingRoute || path.startsWith('/suspended');
+  const isPublicRoute = isAuthRoute || isLandingRoute || path.startsWith('/suspended') || path.startsWith('/not-found');
   const isAppRoute =
     path.startsWith('/dashboard') ||
     path.startsWith('/clients') ||
     path.startsWith('/templates') ||
     path.startsWith('/measurements');
-  // /admin-login is excluded from the admin guard — it must remain publicly reachable
+  // /admin-login is excluded from the admin guard — it must remain directly reachable
   const isAdminRoute = path.startsWith('/admin') && !path.startsWith('/admin-login');
 
-  // Unauthenticated users: redirect to appropriate login page
+  // Unauthenticated users attempting to access /admin routes:
+  // STEALTH MODE: Do NOT redirect to /admin-login (prevents route guessing/enumeration). Rewrite to 404 Not Found.
+  if (!user && isAdminRoute) {
+    return NextResponse.rewrite(new URL('/not-found', request.url), {
+      status: 404,
+    });
+  }
+
+  // Unauthenticated users accessing protected tailor app routes: redirect to /login
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = isAdminRoute ? '/admin-login' : '/login';
+    url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
   if (user) {
-    // Authenticated users visiting any auth/login page: redirect away
-    if (isAuthRoute) {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('role, status')
-        .eq('id', user.id)
-        .single();
+    // Single query for user profile (role & status)
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role, status')
+      .eq('id', user.id)
+      .single();
 
-      // Admins → admin console; tailors → dashboard
+    // Authenticated users visiting auth/login pages: redirect to their respective home
+    if (isAuthRoute) {
       const destination = profile?.role === 'admin' ? '/admin' : '/dashboard';
       const url = request.nextUrl.clone();
       url.pathname = destination;
       return NextResponse.redirect(url);
     }
 
-    if (isAppRoute || isAdminRoute) {
-      // 1 query per request for role and status
-      const { data: profile } = await supabase
-        .from('users')
-        .select('role, status')
-        .eq('id', user.id)
-        .single();
+    // Block suspended accounts
+    if (profile?.status === 'suspended' && !path.startsWith('/suspended')) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/suspended';
+      return NextResponse.redirect(url);
+    }
 
-      if (profile?.status === 'suspended' && !path.startsWith('/suspended')) {
-        const url = request.nextUrl.clone();
-        url.pathname = '/suspended';
-        return NextResponse.redirect(url);
-      }
+    // Stealth protection: Non-admin users attempting to access /admin routes receive 404 Not Found
+    if (isAdminRoute && profile?.role !== 'admin') {
+      return NextResponse.rewrite(new URL('/not-found', request.url), {
+        status: 404,
+      });
+    }
 
-      if (isAdminRoute && profile?.role !== 'admin') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/dashboard';
-        return NextResponse.redirect(url);
-      }
+    // Prevent admins from accidentally using tailor app routes
+    if (isAppRoute && profile?.role === 'admin') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin';
+      return NextResponse.redirect(url);
     }
 
     // Prevent stale browser cache on authenticated app/admin views

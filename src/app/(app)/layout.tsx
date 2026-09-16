@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { SessionTimeoutProvider } from '@/components/auth/SessionTimeoutProvider';
 
 // Tailor-facing routes use Client Components (CSR) per spec §3.6.
 // This layout is a Server Component that provides auth context to children,
@@ -57,12 +58,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const profilePlan = profile?.plan ?? 'free';
 
   return (
-    <div className="min-h-screen bg-[#040e1e] text-slate-100 flex flex-col selection:bg-[#2e7d32] selection:text-white">
-      <AppHeader name={profileName} plan={profilePlan} />
-      <main className="flex-1 pb-24 max-w-2xl w-full mx-auto px-4 pt-4">
-        {children}
-      </main>
-      <BottomNav />
-    </div>
+    <SessionTimeoutProvider role="tailor">
+      <div className="min-h-screen bg-[#040e1e] text-slate-100 flex flex-col selection:bg-[#2e7d32] selection:text-white">
+        <AppHeader name={profileName} plan={profilePlan} />
+        <main className="flex-1 pb-24 max-w-2xl w-full mx-auto px-4 pt-4">
+          {children}
+        </main>
+        <BottomNav />
+      </div>
+    </SessionTimeoutProvider>
   );
 }

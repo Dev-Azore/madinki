@@ -224,3 +224,47 @@ export async function getMeasurementWizardData(): Promise<{
     templates: formattedTemplates,
   };
 }
+
+/**
+ * Fetches the most recent measurement snapshot for a client and template
+ * to enable fast pre-filling during fittings.
+ */
+export async function getLatestClientMeasurement(
+  clientId: string,
+  templateId: string
+): Promise<{
+  taken_at?: string;
+  fields_snapshot?: Array<{ field_name: string; unit: string | null; value: string }>;
+} | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || !clientId || !templateId) {
+    return null;
+  }
+
+  const { data } = await supabase
+    .from('measurements')
+    .select('taken_at, fields_snapshot')
+    .eq('client_id', clientId)
+    .eq('template_id', templateId)
+    .eq('tailor_id', user.id)
+    .order('taken_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data || !data.fields_snapshot) {
+    return null;
+  }
+
+  return {
+    taken_at: data.taken_at,
+    fields_snapshot: data.fields_snapshot as Array<{
+      field_name: string;
+      unit: string | null;
+      value: string;
+    }>,
+  };
+}

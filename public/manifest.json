@@ -1,0 +1,55 @@
+{
+  "name": "TailorApp — Measurement Management",
+  "short_name": "TailorApp",
+  "description": "Professional measurement studio and client fitting manager for independent tailors.",
+  "start_url": "/dashboard",
+  "id": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#040e1e",
+  "theme_color": "#071A34",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Take Measurement",
+      "short_name": "Measure",
+      "description": "Record a new client measurement fitting",
+      "url": "/measurements/new",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "New Customer",
+      "short_name": "Customer",
+      "description": "Add a new client to your roster",
+      "url": "/clients/new",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Clients Directory",
+      "short_name": "Clients",
+      "description": "View all customer measurement records",
+      "url": "/clients",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    }
+  ]
+}
