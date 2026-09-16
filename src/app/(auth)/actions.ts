@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { loginSchema, magicLinkSchema, registerSchema } from '@/lib/validation/auth';
+import { checkRateLimit, resetRateLimit } from '@/lib/security/rateLimit';
 
 // State types must be exported so pages can use them with useActionState<S, F>.
 export type AuthActionState =
@@ -23,6 +24,19 @@ export async function loginTailorWithPassword(
   _prevState: AuthActionState,
   formData: FormData
 ): Promise<AuthActionState> {
+  const emailRaw = String(formData.get('email') || '').trim().toLowerCase();
+
+  // Rate limit check: max 6 attempts per 15 mins per email
+  const rateLimitKey = `login_tailor_${emailRaw}`;
+  const rateLimit = checkRateLimit(rateLimitKey, 6, 15 * 60 * 1000);
+  if (!rateLimit.allowed) {
+    return {
+      error: `Too many failed login attempts. Please try again in ${Math.ceil(
+        rateLimit.retryAfterSeconds / 60
+      )} minutes.`,
+    };
+  }
+
   const supabase = await createClient();
 
   const parsed = loginSchema.safeParse({
@@ -64,6 +78,9 @@ export async function loginTailorWithPassword(
     }
   }
 
+  // Reset rate limit on successful authentication
+  resetRateLimit(rateLimitKey);
+
   redirect('/dashboard');
 }
 
@@ -74,6 +91,19 @@ export async function loginAdminWithPassword(
   _prevState: AuthActionState,
   formData: FormData
 ): Promise<AuthActionState> {
+  const emailRaw = String(formData.get('email') || '').trim().toLowerCase();
+
+  // Strict rate limit check for admin: max 5 attempts per 15 mins
+  const rateLimitKey = `login_admin_${emailRaw}`;
+  const rateLimit = checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+  if (!rateLimit.allowed) {
+    return {
+      error: `Too many failed attempts. Access temporarily restricted. Try again in ${Math.ceil(
+        rateLimit.retryAfterSeconds / 60
+      )} minutes.`,
+    };
+  }
+
   const supabase = await createClient();
 
   const parsed = loginSchema.safeParse({
@@ -114,6 +144,9 @@ export async function loginAdminWithPassword(
       return { error: 'This administrator account is disabled.' };
     }
   }
+
+  // Reset rate limit on successful authentication
+  resetRateLimit(rateLimitKey);
 
   redirect('/admin');
 }

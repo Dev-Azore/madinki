@@ -22,6 +22,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { getClientProfile, deleteClientAction } from '../actions';
+import { WhatsAppShareButton } from '@/components/measurements/WhatsAppShareButton';
 
 interface MeasurementSnapshotField {
   field_name: string;
@@ -380,12 +381,29 @@ export default function ClientProfilePage() {
                             )}
                           </div>
 
-                          <div className="mt-3.5 text-[11px] text-slate-500 flex items-center justify-between border-t border-[#0B2545] pt-2">
-                            <span>Ticket ID: #{measurement.id.slice(0, 8)}</span>
-                            <span className="flex items-center gap-1 text-[#81c784]">
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              <span>Immutable fitting snapshot</span>
-                            </span>
+                          <div className="mt-3.5 pt-3 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-t border-[#0B2545]">
+                            <div className="flex items-center gap-2">
+                              <span>Ticket ID: #{measurement.id.slice(0, 8)}</span>
+                              <span className="text-slate-600">•</span>
+                              <span className="flex items-center gap-1 text-[#81c784]">
+                                <ShieldCheck className="w-3.5 h-3.5" />
+                                <span>Immutable snapshot</span>
+                              </span>
+                            </div>
+
+                            <WhatsAppShareButton
+                              data={{
+                                clientName: client.name,
+                                clientPhone: client.phone,
+                                templateName: measurement.template_name_snapshot,
+                                takenAt: measurement.taken_at,
+                                fields: measurement.fields_snapshot.map((f) => ({
+                                  field_name: f.field_name,
+                                  unit: f.unit || null,
+                                  value: f.value,
+                                })),
+                              }}
+                            />
                           </div>
                         </div>
                       )}

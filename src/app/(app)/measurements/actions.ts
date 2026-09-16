@@ -30,6 +30,7 @@ export interface TemplateFieldOption {
 export interface TemplateOption {
   id: string;
   name: string;
+  is_global?: boolean;
   template_fields: TemplateFieldOption[];
 }
 
@@ -74,11 +75,13 @@ export async function recordMeasurement(
   }
 
   // 4. Authoritatively fetch the template and active template fields from DB
+  // (Supports tailor custom templates as well as system global templates)
   const { data: template, error: templateError } = await supabase
     .from('templates')
     .select(`
       id,
       name,
+      is_global,
       template_fields (
         id,
         field_name,
@@ -87,7 +90,7 @@ export async function recordMeasurement(
       )
     `)
     .eq('id', template_id)
-    .eq('tailor_id', user.id)
+    .or(`tailor_id.eq.${user.id},is_global.eq.true`)
     .is('deleted_at', null)
     .single();
 
@@ -165,6 +168,7 @@ export async function recordMeasurement(
 
 /**
  * Fetches clients and active templates to initialize the measurement recording wizard.
+ * Returns both tailor's custom templates and platform global templates.
  */
 export async function getMeasurementWizardData(): Promise<{
   clients: ClientOption[];
@@ -187,12 +191,13 @@ export async function getMeasurementWizardData(): Promise<{
     .eq('tailor_id', user.id)
     .order('name', { ascending: true });
 
-  // 2. Fetch templates with fields
+  // 2. Fetch templates with fields (both custom and global)
   const { data: templatesData, error: templatesError } = await supabase
     .from('templates')
     .select(`
       id,
       name,
+      is_global,
       template_fields (
         id,
         field_name,
@@ -200,8 +205,9 @@ export async function getMeasurementWizardData(): Promise<{
         order_index
       )
     `)
-    .eq('tailor_id', user.id)
+    .or(`tailor_id.eq.${user.id},is_global.eq.true`)
     .is('deleted_at', null)
+    .order('is_global', { ascending: false })
     .order('name', { ascending: true });
 
   if (clientsError || templatesError) {

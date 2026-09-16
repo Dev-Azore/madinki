@@ -32,6 +32,7 @@ import {
   TemplateOption,
 } from '../actions';
 import { Button } from '@/components/ui/button';
+import { WhatsAppShareButton } from '@/components/measurements/WhatsAppShareButton';
 
 function getInitials(name: string): string {
   const parts = name.trim().split(' ');
@@ -611,7 +612,14 @@ function MeasurementWizard() {
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-sm text-white">{tpl.name}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-sm text-white">{tpl.name}</span>
+                          {tpl.is_global && (
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                              Global
+                            </span>
+                          )}
+                        </div>
                         {isSelected ? (
                           <div className="w-6 h-6 rounded-full bg-[#2e7d32] text-white flex items-center justify-center shrink-0">
                             <Check className="w-3.5 h-3.5" />
@@ -1013,36 +1021,52 @@ function MeasurementWizard() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
             <Button
               type="button"
               variant="outline"
               disabled={isSubmitting}
               onClick={() => setCurrentStep(2)}
-              className="border-[#0B2545] text-slate-300 hover:bg-[#071A34] text-xs"
+              className="border-[#0B2545] text-slate-300 hover:bg-[#071A34] text-xs order-2 sm:order-1"
             >
               <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
               <span>Back to Edit Sizes</span>
             </Button>
 
-            <Button
-              type="button"
-              disabled={isSubmitting}
-              onClick={handleSaveMeasurement}
-              className="bg-[#2e7d32] hover:bg-[#1b5e20] active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-xl shadow-[#2e7d32]/30 transition-all flex items-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Freezing Record...</span>
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span>Save & Freeze Measurement</span>
-                </>
-              )}
-            </Button>
+            <div className="flex items-center gap-2.5 order-1 sm:order-2">
+              <WhatsAppShareButton
+                data={{
+                  clientName: selectedClient.name,
+                  clientPhone: selectedClient.phone,
+                  templateName: selectedTemplate.name,
+                  takenAt: takenAt,
+                  fields: selectedTemplate.template_fields.map((tf) => ({
+                    field_name: tf.field_name,
+                    unit: tf.unit || activeUnit,
+                    value: (fieldValues[tf.field_name] || '').trim(),
+                  })),
+                }}
+              />
+
+              <Button
+                type="button"
+                disabled={isSubmitting}
+                onClick={handleSaveMeasurement}
+                className="bg-[#2e7d32] hover:bg-[#1b5e20] active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-xl shadow-[#2e7d32]/30 transition-all flex items-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span>Freezing Record...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>Save & Freeze</span>
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       )}
