@@ -88,12 +88,6 @@ export function LandingFooter() {
                   Create Free Account
                 </Link>
               </li>
-              <li>
-                <Link href="/admin-login" className="hover:text-amber-400 transition-colors flex items-center gap-1.5 font-medium">
-                  <Shield className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Admin Portal</span>
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

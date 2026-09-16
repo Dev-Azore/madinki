@@ -17,7 +17,7 @@ import {
   Smartphone,
   ChevronLeft,
 } from 'lucide-react';
-import { loginTailorWithPassword, loginWithMagicLink } from '../actions';
+import { loginTailorWithPassword } from '../actions';
 import { Button } from '@/components/ui/button';
 
 type PasswordState =
@@ -25,14 +25,7 @@ type PasswordState =
   | { errors: Record<string, string[]> }
   | { error: string };
 
-type MagicState =
-  | Record<string, never>
-  | { errors: Record<string, string[]> }
-  | { error: string }
-  | { success: true; message: string };
-
 const initialPasswordState: PasswordState = {};
-const initialMagicState: MagicState = {};
 
 function SessionTimeoutBanner() {
   const searchParams = useSearchParams();
@@ -53,25 +46,15 @@ function SessionTimeoutBanner() {
 }
 
 export default function LoginPage() {
-  const [mode, setMode] = useState<'password' | 'magic'>('password');
   const [showPassword, setShowPassword] = useState(false);
 
   const [passwordState, passwordAction, passwordPending] = useActionState<PasswordState, FormData>(
     loginTailorWithPassword,
     initialPasswordState
   );
-  const [magicState, magicAction, magicPending] = useActionState<MagicState, FormData>(
-    loginWithMagicLink,
-    initialMagicState
-  );
-
-  const isPending = passwordPending || magicPending;
 
   const passwordErrors = 'errors' in passwordState ? passwordState.errors : {};
   const passwordError = 'error' in passwordState ? passwordState.error : null;
-  const magicErrors = 'errors' in magicState ? magicState.errors : {};
-  const magicError = 'error' in magicState ? magicState.error : null;
-  const magicSuccess = 'success' in magicState ? magicState : null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 bg-[#040e1e] text-slate-100 relative overflow-hidden selection:bg-[#2e7d32] selection:text-white">
@@ -93,7 +76,7 @@ export default function LoginPage() {
             <span>Back to Home</span>
           </Link>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#071A34] border border-[#2e7d32]/30 text-[#81c784] text-[11px] font-bold uppercase tracking-wider">
-            <Sparkles className="w-3 h-3" />
+            <Sparkles className="w-3.5 h-3.5" />
             Tailor Portal
           </div>
         </div>
@@ -117,173 +100,90 @@ export default function LoginPage() {
             <SessionTimeoutBanner />
           </Suspense>
 
-          {/* Mode Switcher Tabs */}
-          <div className="flex rounded-2xl bg-[#040e1e] p-1 mb-6 border border-[#0B2545]">
-            <button
-              type="button"
-              onClick={() => setMode('password')}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                mode === 'password'
-                  ? 'bg-[#2e7d32] text-white shadow-md shadow-[#2e7d32]/20'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Password Login
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('magic')}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                mode === 'magic'
-                  ? 'bg-[#2e7d32] text-white shadow-md shadow-[#2e7d32]/20'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Magic Link
-            </button>
-          </div>
+          <form action={passwordAction} className="space-y-4">
+            {passwordError && (
+              <div className="rounded-2xl bg-red-500/10 border border-red-500/30 p-3.5 text-xs text-red-300 flex items-start gap-2.5 animate-fade-in-up">
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <span className="leading-relaxed">{passwordError}</span>
+              </div>
+            )}
 
-          {mode === 'password' ? (
-            <form action={passwordAction} className="space-y-4">
-              {passwordError && (
-                <div className="rounded-2xl bg-red-500/10 border border-red-500/30 p-3.5 text-xs text-red-300 flex items-start gap-2.5 animate-fade-in-up">
-                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">{passwordError}</span>
-                </div>
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+              >
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  id="login-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="tailor@example.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#040e1e] border border-[#0B2545] rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2e7d32] focus:ring-1 focus:ring-[#2e7d32] transition"
+                />
+              </div>
+              {passwordErrors.email && (
+                <p className="text-xs text-red-400">{passwordErrors.email[0]}</p>
               )}
+            </div>
 
-              {/* Email */}
-              <div className="space-y-1.5">
+            {/* Password */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
                 <label
-                  htmlFor="login-email"
+                  htmlFor="login-password"
                   className="block text-xs font-bold uppercase tracking-wider text-slate-300"
                 >
-                  Email Address
+                  Password
                 </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    id="login-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    placeholder="tailor@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#040e1e] border border-[#0B2545] rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2e7d32] focus:ring-1 focus:ring-[#2e7d32] transition"
-                  />
-                </div>
-                {passwordErrors.email && (
-                  <p className="text-xs text-red-400">{passwordErrors.email[0]}</p>
-                )}
               </div>
-
-              {/* Password */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="login-password"
-                    className="block text-xs font-bold uppercase tracking-wider text-slate-300"
-                  >
-                    Password
-                  </label>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    id="login-password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    required
-                    placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 bg-[#040e1e] border border-[#0B2545] rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2e7d32] focus:ring-1 focus:ring-[#2e7d32] transition"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition cursor-pointer"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {passwordErrors.password && (
-                  <p className="text-xs text-red-400">{passwordErrors.password[0]}</p>
-                )}
-              </div>
-
-              <div className="pt-2">
-                <Button
-                  id="login-submit"
-                  type="submit"
-                  disabled={isPending}
-                  className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#2e7d32]/25 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-sm"
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  id="login-password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-10 py-2.5 bg-[#040e1e] border border-[#0B2545] rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2e7d32] focus:ring-1 focus:ring-[#2e7d32] transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition cursor-pointer"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {passwordPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  ) : (
-                    <ArrowRight className="w-4 h-4" />
-                  )}
-                  <span>{passwordPending ? 'Signing In…' : 'Sign In to Studio'}</span>
-                </Button>
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            </form>
-          ) : (
-            <form action={magicAction} className="space-y-4">
-              {magicError && (
-                <div className="rounded-2xl bg-red-500/10 border border-red-500/30 p-3.5 text-xs text-red-300 flex items-start gap-2.5 animate-fade-in-up">
-                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">{magicError}</span>
-                </div>
+              {passwordErrors.password && (
+                <p className="text-xs text-red-400">{passwordErrors.password[0]}</p>
               )}
-              {magicSuccess && (
-                <div className="rounded-2xl bg-[#2e7d32]/20 border border-[#2e7d32] p-3.5 text-xs text-[#81c784] flex items-start gap-2.5 animate-fade-in-up">
-                  <Sparkles className="w-4 h-4 text-[#81c784] shrink-0 mt-0.5" />
-                  <span className="leading-relaxed font-medium">{magicSuccess.message}</span>
-                </div>
-              )}
+            </div>
 
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="magic-email"
-                  className="block text-xs font-bold uppercase tracking-wider text-slate-300"
-                >
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    id="magic-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    placeholder="tailor@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#040e1e] border border-[#0B2545] rounded-xl text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2e7d32] focus:ring-1 focus:ring-[#2e7d32] transition"
-                  />
-                </div>
-                {magicErrors.email && (
-                  <p className="text-xs text-red-400">{magicErrors.email[0]}</p>
+            <div className="pt-2">
+              <Button
+                id="login-submit"
+                type="submit"
+                disabled={passwordPending}
+                className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#2e7d32]/25 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-sm"
+              >
+                {passwordPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
                 )}
-              </div>
-
-              <div className="pt-2">
-                <Button
-                  id="magic-link-submit"
-                  type="submit"
-                  disabled={isPending}
-                  className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#2e7d32]/25 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-sm"
-                >
-                  {magicPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  ) : (
-                    <Sparkles className="w-4 h-4" />
-                  )}
-                  <span>{magicPending ? 'Sending Magic Link…' : 'Send Magic Link'}</span>
-                </Button>
-              </div>
-            </form>
-          )}
+                <span>{passwordPending ? 'Signing In…' : 'Sign In to Studio'}</span>
+              </Button>
+            </div>
+          </form>
 
           {/* Card Footer */}
           <div className="pt-6 mt-6 border-t border-[#0B2545] text-center space-y-2">

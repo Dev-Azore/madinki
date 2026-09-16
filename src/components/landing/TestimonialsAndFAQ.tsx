@@ -29,15 +29,15 @@ const FAQS = [
 const MASTER_TESTIMONIALS = [
   {
     quote:
-      'In our workshop at Bn Isma\'il Clothing, accuracy is our priority. TailorApp stops lost customer measurements and allows our cutters to check size history in seconds.',
+      'In our workshop at Bn Isma\'eel Clothing, accuracy is our priority. TailorApp stops lost customer measurements and allows our cutters to check size history in seconds.',
     author: 'Auwal Isma\'il',
-    role: 'CEO, Bn Isma\'il Clothing',
-    tag: 'Bn Isma\'il Clothing',
+    role: 'CEO, Bn Isma\'eel Clothing',
+    tag: 'Bn Isma\'eel Clothing',
   },
   {
     quote:
       'Managing hundreds of clients used to require stacks of paper books. With TailorApp, my apprentices and I find accurate Kaftan and Babban Riga measurements without stress.',
-    author: 'Isma\'il Zubairu',
+    author: 'Isma\'il Zubair',
     role: 'CEO, Kankara Couture and More',
     tag: 'Kankara Couture',
   },
