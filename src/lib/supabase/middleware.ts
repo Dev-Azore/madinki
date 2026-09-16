@@ -35,17 +35,26 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Route classification
+  const isLandingRoute = path === '/' || path === '' || path === '/index.html';
   const isAuthRoute =
     path.startsWith('/login') ||
     path.startsWith('/register') ||
     path.startsWith('/admin-login'); // Explicit admin login page
-  const isLandingRoute = path === '/';
-  const isPublicRoute = isAuthRoute || isLandingRoute || path.startsWith('/suspended') || path.startsWith('/not-found');
+  const isPublicRoute =
+    isLandingRoute ||
+    isAuthRoute ||
+    path.startsWith('/suspended') ||
+    path.startsWith('/not-found') ||
+    path.startsWith('/manifest') ||
+    path.startsWith('/icons') ||
+    path.startsWith('/favicon') ||
+    path.startsWith('/sw.js');
   const isAppRoute =
     path.startsWith('/dashboard') ||
     path.startsWith('/clients') ||
     path.startsWith('/templates') ||
-    path.startsWith('/measurements');
+    path.startsWith('/measurements') ||
+    path.startsWith('/profile');
   // /admin-login is excluded from the admin guard — it must remain directly reachable
   const isAdminRoute = path.startsWith('/admin') && !path.startsWith('/admin-login');
 
