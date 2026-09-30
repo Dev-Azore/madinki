@@ -96,7 +96,6 @@ export function ClientForm({ initialData }: ClientFormProps) {
   };
 
   return (
-  return (
     <form
       onSubmit={(e) => handleSubmit(e, 'profile')}
       className="space-y-4 max-w-xl mx-auto animate-fade-in-up"
