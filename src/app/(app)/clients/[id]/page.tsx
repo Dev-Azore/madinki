@@ -139,9 +139,9 @@ export default function ClientProfilePage() {
       <div className="flex items-center justify-between">
         <Link
           href="/clients"
-          className="inline-flex items-center gap-2 p-2 bg-white border border-slate-200 hover:border-[#2e7d32]/50 text-slate-600 hover:text-[#0B2545] rounded-xl shadow-xs transition cursor-pointer"
+          className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-slate-900 rounded-2xl shadow-xs transition cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 text-[#1b5e20]" />
           <span className="text-xs font-bold pr-1">Client Directory</span>
         </Link>
 
@@ -149,7 +149,7 @@ export default function ClientProfilePage() {
           <div className="flex items-center gap-2">
             <Link
               href={`/clients/${client.id}/edit`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-[#2e7d32]/50 text-slate-700 hover:text-[#0B2545] rounded-xl text-xs font-bold shadow-xs transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-slate-900 rounded-2xl text-xs font-bold shadow-xs transition cursor-pointer"
             >
               <Edit2 className="w-3.5 h-3.5 text-[#1b5e20]" />
               <span>Edit Info</span>
@@ -159,7 +159,7 @@ export default function ClientProfilePage() {
                 setDeleteErrorMessage(null);
                 setShowDeleteModal(true);
               }}
-              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer"
+              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-2xl border border-slate-200 hover:border-red-200 transition cursor-pointer shadow-2xs"
               title="Delete Client"
             >
               <Trash2 className="w-4 h-4" />
@@ -169,20 +169,20 @@ export default function ClientProfilePage() {
       </div>
 
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-500 space-y-3">
+        <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
-          <p className="text-sm">Loading client profile...</p>
+          <p className="text-sm font-medium">Loading client profile...</p>
         </div>
       )}
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-3xl text-red-700 text-sm">
           <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
           <div>
             <p>{error}</p>
             <Link
               href="/clients"
-              className="text-xs text-red-600 underline hover:text-red-800 mt-1 inline-block"
+              className="text-xs text-red-600 underline hover:text-red-800 mt-1 inline-block font-semibold"
             >
               Back to Client Directory
             </Link>
@@ -192,16 +192,16 @@ export default function ClientProfilePage() {
 
       {!isLoading && !error && client && (
         <>
-          {/* Client Profile Card */}
+          {/* Client Profile Hero Card */}
           <div className="p-6 sm:p-7 bg-white border border-slate-200/90 rounded-3xl relative overflow-hidden shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
-              <div className="space-y-3 flex-1">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-14 h-14 bg-emerald-50 text-[#1b5e20] border-2 border-[#2e7d32] rounded-2xl flex items-center justify-center font-black text-xl font-mono shadow-xs">
+              <div className="space-y-3.5 flex-1">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-emerald-50 text-[#1b5e20] border border-emerald-200/90 rounded-2xl flex items-center justify-center font-black text-xl font-mono shadow-xs">
                     {getInitials(client.name)}
                   </div>
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-black text-[#0B2545]">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                       {client.name}
                     </h1>
                     <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1.5">
@@ -211,23 +211,33 @@ export default function ClientProfilePage() {
                   </div>
                 </div>
 
-                {/* Contact & Notes */}
-                <div className="flex flex-wrap gap-3 pt-2">
+                {/* Contact & WhatsApp */}
+                <div className="flex flex-wrap items-center gap-2.5 pt-1">
                   {client.phone ? (
-                    <a
-                      href={`tel:${client.phone}`}
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-[#1b5e20] transition shadow-xs"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-[#2e7d32]" />
-                      <span>{client.phone}</span>
-                    </a>
+                    <>
+                      <a
+                        href={`tel:${client.phone}`}
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs font-bold text-slate-700 hover:text-[#1b5e20] transition shadow-2xs"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-[#1b5e20]" />
+                        <span>{client.phone}</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 text-[#1b5e20] text-xs font-bold rounded-xl transition shadow-2xs"
+                      >
+                        <span>Message on WhatsApp</span>
+                      </a>
+                    </>
                   ) : (
                     <span className="text-xs text-slate-400 italic">No phone number on file</span>
                   )}
                 </div>
 
                 {client.notes && (
-                  <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 space-y-1">
+                  <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs text-slate-700 space-y-1">
                     <p className="text-[11px] font-bold text-[#1b5e20] flex items-center gap-1">
                       <FileText className="w-3 h-3" />
                       Fitting Preferences & Notes:
@@ -240,7 +250,7 @@ export default function ClientProfilePage() {
               {/* Action: Take Measurement */}
               <Link
                 href={`/measurements/new?clientId=${client.id}`}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold rounded-xl text-sm shadow-sm shadow-[#2e7d32]/25 transition cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] active:scale-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-950/15 transition-all cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>New Measurement</span>
@@ -252,12 +262,12 @@ export default function ClientProfilePage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-[#0B2545] flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
                   <Ruler className="w-5 h-5 text-[#1b5e20]" />
-                  <span>Fitting Records ({measurements.length})</span>
+                  <span>Measurement Records ({measurements.length})</span>
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Historical measurements are preserved permanently with exact dates.
+                  Historical size records are permanently saved with exact dates.
                 </p>
               </div>
 
@@ -265,29 +275,29 @@ export default function ClientProfilePage() {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-[#0B2545] rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-bold shadow-xs transition cursor-pointer"
                 >
                   <Printer className="w-3.5 h-3.5 text-[#1b5e20]" />
-                  <span>Print Ticket</span>
+                  <span>Print Slip</span>
                 </button>
               )}
             </div>
 
             {/* Empty History */}
             {measurements.length === 0 ? (
-              <div className="p-8 text-center bg-white border border-dashed border-slate-300 rounded-3xl space-y-3 shadow-xs">
-                <div className="w-12 h-12 bg-emerald-50 text-[#1b5e20] border border-emerald-200 rounded-2xl flex items-center justify-center mx-auto">
-                  <Ruler className="w-6 h-6" />
+              <div className="p-10 text-center bg-white border border-dashed border-slate-300 rounded-3xl space-y-3 shadow-xs">
+                <div className="w-14 h-14 bg-emerald-50 text-[#1b5e20] border border-emerald-200 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+                  <Ruler className="w-7 h-7" />
                 </div>
-                <h3 className="text-sm font-bold text-[#0B2545]">
+                <h3 className="text-base font-bold text-slate-900">
                   No measurements recorded yet
                 </h3>
-                <p className="text-xs text-slate-600 max-w-sm mx-auto">
-                  Record measurements using a garment template to start building this customer&apos;s fitting history.
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Record measurements using a garment template to start building this customer&apos;s size history.
                 </p>
                 <Link
                   href={`/measurements/new?clientId=${client.id}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-xs font-bold rounded-xl shadow-sm transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Take First Measurement</span>
@@ -302,25 +312,25 @@ export default function ClientProfilePage() {
                   return (
                     <div
                       key={measurement.id}
-                      className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition hover:border-[#2e7d32]/50 shadow-xs"
+                      className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden transition hover:border-emerald-300 shadow-xs"
                     >
                       {/* Card Header */}
                       <button
                         type="button"
                         onClick={() => toggleExpand(measurement.id)}
-                        className="w-full p-4 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50 transition"
+                        className="w-full p-4 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50/70 transition"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-[#1b5e20] rounded-xl">
+                        <div className="flex items-center gap-3.5">
+                          <div className="p-2.5 bg-emerald-50 border border-emerald-200/90 text-[#1b5e20] rounded-xl shadow-2xs">
                             <Tag className="w-4 h-4" />
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-bold text-[#0B2545] text-sm sm:text-base">
+                              <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
                                 {measurement.template_name_snapshot}
                               </h3>
                               {index === 0 && (
-                                <span className="px-2 py-0.5 bg-emerald-100 border border-emerald-300 text-emerald-800 text-[10px] font-bold rounded-full">
+                                <span className="px-2 py-0.5 bg-emerald-100 border border-emerald-300 text-[#1b5e20] text-[10px] font-black rounded-full uppercase tracking-wider">
                                   Latest
                                 </span>
                               )}
@@ -337,8 +347,8 @@ export default function ClientProfilePage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-slate-500 hidden sm:inline">
-                            {measurement.fields_snapshot?.length || 0} fields
+                          <span className="text-xs text-slate-500 hidden sm:inline font-mono">
+                            {measurement.fields_snapshot?.length || 0} points
                           </span>
                           <div className="p-1 text-slate-400">
                             {isExpanded ? (
@@ -359,12 +369,12 @@ export default function ClientProfilePage() {
                               measurement.fields_snapshot.map((field, fIdx) => (
                                 <div
                                   key={fIdx}
-                                  className="p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                                  className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl"
                                 >
                                   <p className="text-[11px] font-medium text-slate-500 truncate">
                                     {field.field_name}
                                   </p>
-                                  <p className="text-base font-black text-[#0B2545] mt-1 flex items-baseline gap-1 font-mono">
+                                  <p className="text-base font-black text-slate-900 mt-1 flex items-baseline gap-1 font-mono">
                                     <span>{field.value}</span>
                                     {field.unit && (
                                       <span className="text-xs font-semibold text-[#1b5e20]">
@@ -381,13 +391,13 @@ export default function ClientProfilePage() {
                             )}
                           </div>
 
-                          <div className="mt-3.5 pt-3 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-t border-slate-100">
+                          <div className="mt-4 pt-3 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-t border-slate-100">
                             <div className="flex items-center gap-2">
-                              <span>Ticket ID: #{measurement.id.slice(0, 8)}</span>
+                              <span>Slip ID: #{measurement.id.slice(0, 8)}</span>
                               <span className="text-slate-300">•</span>
                               <span className="flex items-center gap-1 text-[#1b5e20] font-medium">
                                 <ShieldCheck className="w-3.5 h-3.5" />
-                                <span>Immutable snapshot</span>
+                                <span>Permanent Record</span>
                               </span>
                             </div>
 
@@ -424,12 +434,12 @@ export default function ClientProfilePage() {
               <div className="p-2.5 bg-red-50 rounded-2xl">
                 <Trash2 className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-[#0B2545]">Delete Client?</h3>
+              <h3 className="text-lg font-bold text-slate-900">Delete Client?</h3>
             </div>
 
             <p className="text-sm text-slate-600">
               Are you sure you want to delete{' '}
-              <span className="font-bold text-[#0B2545]">&ldquo;{client.name}&rdquo;</span>?
+              <span className="font-bold text-slate-900">&ldquo;{client.name}&rdquo;</span>?
             </p>
 
             {deleteErrorMessage && (
@@ -450,7 +460,7 @@ export default function ClientProfilePage() {
                   setDeleteErrorMessage(null);
                 }}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium transition cursor-pointer"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
               >
                 Close
               </button>
@@ -459,7 +469,7 @@ export default function ClientProfilePage() {
                   type="button"
                   onClick={handleDeleteClient}
                   disabled={isDeleting}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   {isDeleting ? (
                     <>

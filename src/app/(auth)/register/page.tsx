@@ -235,7 +235,7 @@ export default function RegisterPage() {
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-3.5 h-3.5 text-[#1b5e20] shrink-0" />
-            <span>Permanent fitting history snapshots with exact measurement timestamps</span>
+            <span>Permanent fitting history with exact measurement dates and timestamps</span>
           </div>
         </div>
       </div>

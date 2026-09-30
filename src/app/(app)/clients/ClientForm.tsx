@@ -96,22 +96,23 @@ export function ClientForm({ initialData }: ClientFormProps) {
   };
 
   return (
+  return (
     <form
       onSubmit={(e) => handleSubmit(e, 'profile')}
       className="space-y-4 max-w-xl mx-auto animate-fade-in-up"
     >
       {generalError && (
-        <div className="flex items-start gap-3 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-3xl text-red-700 text-sm">
           <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
           <span>{generalError}</span>
         </div>
       )}
 
       {/* Name Input */}
-      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
+      <div className="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-3xl space-y-2.5 shadow-xs">
         <label
           htmlFor="client-name"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-700"
         >
           Customer Name <span className="text-[#1b5e20]">*</span>
         </label>
@@ -123,7 +124,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Faisal Abubakar"
-            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-medium shadow-xs transition"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-semibold shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
@@ -133,12 +134,12 @@ export function ClientForm({ initialData }: ClientFormProps) {
       </div>
 
       {/* Phone Input */}
-      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
+      <div className="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-3xl space-y-2.5 shadow-xs">
         <label
           htmlFor="client-phone"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-700"
         >
-          Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
+          Phone Number <span className="text-slate-400 font-normal lowercase">(for WhatsApp slips)</span>
         </label>
         <div className="relative">
           <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -148,7 +149,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="e.g., +234 803 123 4567"
-            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-medium shadow-xs transition"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-semibold shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
@@ -158,12 +159,12 @@ export function ClientForm({ initialData }: ClientFormProps) {
       </div>
 
       {/* Notes Input */}
-      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
+      <div className="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-3xl space-y-2.5 shadow-xs">
         <label
           htmlFor="client-notes"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-700"
         >
-          Fitting Preferences & Notes <span className="text-slate-400 font-normal lowercase">(optional)</span>
+          Fitting Preferences & Style Notes <span className="text-slate-400 font-normal lowercase">(optional)</span>
         </label>
         <div className="relative">
           <FileText className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
@@ -172,8 +173,8 @@ export function ClientForm({ initialData }: ClientFormProps) {
             rows={3}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="e.g., Prefers high-collar Kaftan, likes tapered sokoto, wedding delivery for Dec."
-            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm font-medium shadow-xs transition"
+            placeholder="e.g., Prefers high-collar Kaftan, likes tapered trousers, wedding order for Dec."
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm font-medium shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
@@ -188,7 +189,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium border border-slate-200 transition cursor-pointer text-center"
+          className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition cursor-pointer text-center"
         >
           Cancel
         </button>
@@ -198,7 +199,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
             type="button"
             onClick={(e) => handleSubmit(e, 'measure')}
             disabled={isSubmitting}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300 rounded-xl text-sm font-bold transition cursor-pointer"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-200/90 rounded-2xl text-xs font-bold transition cursor-pointer shadow-2xs active:scale-95"
           >
             {isSubmitting && redirectAfterSave === 'measure' ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -212,7 +213,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-sm shadow-[#2e7d32]/20 transition disabled:opacity-50 cursor-pointer"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] text-white rounded-2xl text-xs font-bold shadow-md shadow-emerald-950/15 transition disabled:opacity-50 cursor-pointer active:scale-95"
         >
           {isSubmitting && redirectAfterSave === 'profile' ? (
             <>
@@ -222,7 +223,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
           ) : (
             <>
               <Save className="w-4 h-4" />
-              <span>{isEditing ? 'Save Changes' : 'Save Customer'}</span>
+              <span>{isEditing ? 'Save Changes' : 'Save Client'}</span>
             </>
           )}
         </button>

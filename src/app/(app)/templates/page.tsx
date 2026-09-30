@@ -133,7 +133,7 @@ export default function TemplatesPage() {
 
         <Link
           href="/templates/new"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] active:scale-95 text-white font-bold rounded-xl text-sm shadow-sm shadow-[#2e7d32]/20 transition cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] active:scale-95 text-white font-bold rounded-xl text-sm shadow-md shadow-[#2e7d32]/25 transition cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>New Template</span>
@@ -222,7 +222,7 @@ export default function TemplatesPage() {
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="p-5 bg-white border border-slate-200/90 hover:border-[#2e7d32]/50 rounded-2xl transition flex flex-col justify-between group shadow-xs hover:shadow-md"
+              className="p-5 bg-white border border-slate-200/90 hover:border-[#2e7d32]/50 rounded-3xl transition flex flex-col justify-between group shadow-xs hover:shadow-lg hover:shadow-emerald-900/5"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
@@ -281,7 +281,7 @@ export default function TemplatesPage() {
 
               {/* Action Footer */}
               <div className="pt-3.5 mt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[10px] text-slate-500 font-mono">
+                <span className="text-[10px] text-slate-400 font-mono">
                   ID: #{template.id.slice(0, 6)}
                 </span>
                 <Link

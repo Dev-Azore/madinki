@@ -422,7 +422,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-sm shadow-[#2e7d32]/25 transition disabled:opacity-50 cursor-pointer"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] text-white rounded-xl text-sm font-bold shadow-md shadow-[#2e7d32]/25 transition disabled:opacity-50 cursor-pointer active:scale-95"
         >
           {isSubmitting ? (
             <>

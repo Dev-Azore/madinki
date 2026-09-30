@@ -210,14 +210,14 @@ export function HeroSection() {
                   setActiveTab('whatsapp');
                 }}
                 className={`group p-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${activeFeature === 'whatsapp'
-                    ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
-                    : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
+                  ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
+                  : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
                   }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${activeFeature === 'whatsapp'
-                      ? 'bg-[#1b5e20] text-white'
-                      : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
+                    ? 'bg-[#1b5e20] text-white'
+                    : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
                     }`}>
                     <Send className="w-4 h-4" />
                   </div>
@@ -233,7 +233,7 @@ export function HeroSection() {
                 </div>
               </button>
 
-              {/* Card 2: Immutable Snapshots */}
+              {/* Card 2: Permanent Fitting History */}
               <button
                 type="button"
                 onClick={() => {
@@ -241,14 +241,14 @@ export function HeroSection() {
                   setActiveTab('ticket');
                 }}
                 className={`group p-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${activeFeature === 'snapshot'
-                    ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
-                    : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
+                  ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
+                  : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
                   }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${activeFeature === 'snapshot'
-                      ? 'bg-[#1b5e20] text-white'
-                      : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
+                    ? 'bg-[#1b5e20] text-white'
+                    : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
                     }`}>
                     <ShieldCheck className="w-4 h-4" />
                   </div>
@@ -272,14 +272,14 @@ export function HeroSection() {
                   setActiveTab('blueprint');
                 }}
                 className={`group p-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${activeFeature === 'presets'
-                    ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
-                    : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
+                  ? 'bg-white border-[#1b5e20] shadow-md shadow-emerald-950/5 ring-2 ring-[#1b5e20]/10 scale-[1.02]'
+                  : 'bg-white/80 hover:bg-white border-slate-200/90 shadow-xs hover:border-slate-300 hover:scale-[1.01]'
                   }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${activeFeature === 'presets'
-                      ? 'bg-[#1b5e20] text-white'
-                      : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
+                    ? 'bg-[#1b5e20] text-white'
+                    : 'bg-emerald-50 text-[#1b5e20] group-hover:bg-emerald-100'
                     }`}>
                     <Layers className="w-4 h-4" />
                   </div>
@@ -363,8 +363,8 @@ export function HeroSection() {
                   type="button"
                   onClick={() => setActiveTab('ticket')}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeTab === 'ticket'
-                      ? 'bg-white text-[#1b5e20] shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#1b5e20] shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                     }`}
                 >
                   <Layers className="w-3.5 h-3.5" />
@@ -374,8 +374,8 @@ export function HeroSection() {
                   type="button"
                   onClick={() => setActiveTab('blueprint')}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeTab === 'blueprint'
-                      ? 'bg-white text-[#1b5e20] shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#1b5e20] shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                     }`}
                 >
                   <Ruler className="w-3.5 h-3.5" />
@@ -385,8 +385,8 @@ export function HeroSection() {
                   type="button"
                   onClick={() => setActiveTab('whatsapp')}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${activeTab === 'whatsapp'
-                      ? 'bg-white text-[#1b5e20] shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white text-[#1b5e20] shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                     }`}
                 >
                   <Send className="w-3.5 h-3.5" />
@@ -431,8 +431,8 @@ export function HeroSection() {
                           key={client.id}
                           onClick={() => setSelectedClientId(client.id)}
                           className={`w-full p-3 rounded-xl text-left transition-all flex items-center justify-between cursor-pointer ${isSelected
-                              ? 'bg-emerald-50/80 border border-emerald-200 shadow-xs translate-x-1'
-                              : 'bg-slate-50/50 border border-slate-100 hover:bg-slate-100/80 hover:border-slate-200'
+                            ? 'bg-emerald-50/80 border border-emerald-200 shadow-xs translate-x-1'
+                            : 'bg-slate-50/50 border border-slate-100 hover:bg-slate-100/80 hover:border-slate-200'
                             }`}
                         >
                           <div className="space-y-0.5">
@@ -448,10 +448,10 @@ export function HeroSection() {
                           </div>
                           <span
                             className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${client.status === 'Ready'
-                                ? 'bg-emerald-100 text-[#1b5e20]'
-                                : client.status === 'In Progress'
-                                  ? 'bg-amber-100 text-amber-800'
-                                  : 'bg-sky-100 text-sky-800'
+                              ? 'bg-emerald-100 text-[#1b5e20]'
+                              : client.status === 'In Progress'
+                                ? 'bg-amber-100 text-amber-800'
+                                : 'bg-sky-100 text-sky-800'
                               }`}
                           >
                             {client.status}
@@ -588,8 +588,8 @@ export function HeroSection() {
                               />
                               <div
                                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${isNodeHovered
-                                    ? 'bg-[#1b5e20] border-white scale-125 shadow-md'
-                                    : 'bg-white border-[#1b5e20]'
+                                  ? 'bg-[#1b5e20] border-white scale-125 shadow-md'
+                                  : 'bg-white border-[#1b5e20]'
                                   }`}
                               >
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#1b5e20] group-hover/node:bg-white" />
@@ -598,8 +598,8 @@ export function HeroSection() {
                               {/* Tooltip Tag */}
                               <div
                                 className={`absolute bottom-full mb-1.5 px-2.5 py-1 rounded-lg bg-slate-900 text-white text-[10px] font-bold whitespace-nowrap pointer-events-none transition-all duration-150 shadow-md ${isNodeHovered
-                                    ? 'opacity-100 scale-100 -translate-y-1'
-                                    : 'opacity-0 scale-95 translate-y-0'
+                                  ? 'opacity-100 scale-100 -translate-y-1'
+                                  : 'opacity-0 scale-95 translate-y-0'
                                   }`}
                               >
                                 {node.label}: {node.value}

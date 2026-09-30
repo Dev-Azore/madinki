@@ -112,55 +112,101 @@ export default function ClientsPage() {
     }
   };
 
-  const filteredClients = clients.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (c.phone && c.phone.includes(searchQuery)) ||
-    (c.notes && c.notes.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const [filterType, setFilterType] = useState<'all' | 'has_phone' | 'with_notes'>('all');
+
+  const filteredClients = clients.filter((c) => {
+    const matchesSearch =
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.phone && c.phone.includes(searchQuery)) ||
+      (c.notes && c.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (filterType === 'has_phone') return Boolean(c.phone);
+    if (filterType === 'with_notes') return Boolean(c.notes);
+    return true;
+  });
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header & New Client CTA */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#2e7d32]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#1b5e20]">
-              Customer Directory
-            </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#1b5e20] text-xs font-bold tracking-tight">
+            <Users className="w-3.5 h-3.5" />
+            <span>Customer Directory</span>
           </div>
-          <h1 className="text-2xl font-black text-[#0B2545] mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2">
             Client Profiles
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Manage your client contact numbers and fitting records.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Manage your client contacts, notes, and direct fitting access.
           </p>
         </div>
 
         <Link
           href="/clients/new"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] active:scale-95 text-white font-bold rounded-xl text-sm shadow-sm shadow-[#2e7d32]/20 transition cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] active:scale-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-950/15 transition-all cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Client</span>
         </Link>
       </div>
 
-      {/* Search Bar with Counter Pill */}
-      <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by client name, phone number, or notes..."
-          className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
-        />
-        {clients.length > 0 && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-slate-100 text-[#1b5e20] text-[11px] font-mono border border-slate-200">
-            {filteredClients.length} of {clients.length}
-          </span>
-        )}
+      {/* Controls Bar: Search & Filter Tabs */}
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        {/* Search Bar with Counter Pill */}
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, phone, or notes..."
+            className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
+          />
+          {clients.length > 0 && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-mono border border-slate-200">
+              {filteredClients.length} of {clients.length}
+            </span>
+          )}
+        </div>
+
+        {/* Filter Pills */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setFilterType('all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterType === 'all'
+                ? 'bg-white text-[#1b5e20] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            All ({clients.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('has_phone')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterType === 'has_phone'
+                ? 'bg-white text-[#1b5e20] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            With Phone
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('with_notes')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterType === 'with_notes'
+                ? 'bg-white text-[#1b5e20] shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            With Notes
+          </button>
+        </div>
       </div>
 
       {/* Error state */}
@@ -171,7 +217,7 @@ export default function ClientsPage() {
             <p>{error}</p>
             <button
               onClick={loadClients}
-              className="text-xs text-red-600 underline hover:text-red-800 mt-1 cursor-pointer"
+              className="text-xs text-red-600 underline hover:text-red-800 mt-1 cursor-pointer font-semibold"
             >
               Try again
             </button>
@@ -181,27 +227,27 @@ export default function ClientsPage() {
 
       {/* Loading state */}
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-500 space-y-3">
+        <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
-          <p className="text-sm">Loading client directory...</p>
+          <p className="text-sm font-medium">Loading client directory...</p>
         </div>
       )}
 
       {/* Empty State */}
       {!isLoading && !error && clients.length === 0 && (
-        <div className="p-8 text-center bg-white border border-dashed border-slate-300 rounded-3xl max-w-md mx-auto space-y-4 shadow-xs">
-          <div className="w-14 h-14 bg-emerald-50 text-[#1b5e20] rounded-2xl flex items-center justify-center mx-auto border border-emerald-200">
-            <Users className="w-7 h-7" />
+        <div className="p-10 text-center bg-white border border-dashed border-slate-300 rounded-3xl max-w-md mx-auto space-y-4 shadow-xs">
+          <div className="w-16 h-16 bg-emerald-50 text-[#1b5e20] rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
+            <Users className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#0B2545]">No clients added yet</h3>
-            <p className="text-xs text-slate-600 mt-1">
-              Add your first customer to start recording fittings and garment sizes.
+            <h3 className="text-lg font-black text-slate-900">No clients added yet</h3>
+            <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+              Add your first customer to start recording fittings, sizes, and sending WhatsApp slips.
             </p>
           </div>
           <Link
             href="/clients/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-xs font-bold rounded-xl shadow-sm transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add First Client</span>
@@ -211,52 +257,56 @@ export default function ClientsPage() {
 
       {/* Filtered No Results */}
       {!isLoading && !error && clients.length > 0 && filteredClients.length === 0 && (
-        <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-2xl shadow-xs">
-          <p className="text-sm">No clients found matching &ldquo;{searchQuery}&rdquo;</p>
+        <div className="p-10 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs">
+          <p className="text-sm font-medium">No clients found matching &ldquo;{searchQuery}&rdquo;</p>
           <button
-            onClick={() => setSearchQuery('')}
-            className="text-xs text-[#1b5e20] hover:underline mt-1 cursor-pointer font-semibold"
+            onClick={() => {
+              setSearchQuery('');
+              setFilterType('all');
+            }}
+            className="text-xs text-[#1b5e20] hover:underline mt-2 cursor-pointer font-bold inline-block"
           >
-            Clear search
+            Clear search & filters
           </button>
         </div>
       )}
 
       {/* Clients Cards Grid */}
       {!isLoading && !error && filteredClients.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredClients.map((client) => {
             const initials = getInitials(client.name);
             return (
               <div
                 key={client.id}
-                className="p-5 bg-white border border-slate-200/90 hover:border-[#2e7d32]/50 rounded-2xl transition flex flex-col justify-between group shadow-xs hover:shadow-md"
+                className="p-5 bg-white border border-slate-200/90 hover:border-emerald-300 rounded-3xl transition-all duration-200 flex flex-col justify-between group shadow-xs hover:shadow-md hover:-translate-y-0.5"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <Link
                       href={`/clients/${client.id}`}
-                      className="flex items-center gap-3 group-hover:text-[#1b5e20] transition cursor-pointer"
+                      className="flex items-center gap-3.5 group-hover:text-[#1b5e20] transition cursor-pointer flex-1 min-w-0"
                     >
                       {/* Client Avatar */}
-                      <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-[#1b5e20] font-black text-xs flex items-center justify-center flex-shrink-0 font-mono shadow-xs">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200/90 text-[#1b5e20] font-black text-sm flex items-center justify-center flex-shrink-0 font-mono shadow-2xs group-hover:scale-105 transition-transform">
                         {initials}
                       </div>
-                      <div>
-                        <h3 className="font-bold text-[#0B2545] text-base group-hover:text-[#1b5e20] transition">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#1b5e20] transition truncate">
                           {client.name}
                         </h3>
-                        <span className="text-[10px] text-slate-500 font-mono">
+                        <span className="text-[10px] text-slate-400 font-mono">
                           ID: #{client.id.slice(0, 6)}
                         </span>
                       </div>
                     </Link>
 
-                    <div className="flex items-center gap-1">
+                    {/* Top Action Cluster */}
+                    <div className="flex items-center gap-1 shrink-0">
                       <Link
                         href={`/clients/${client.id}/edit`}
                         title="Edit Client"
-                        className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                        className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition cursor-pointer"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Link>
@@ -266,7 +316,7 @@ export default function ClientsPage() {
                           setClientToDelete(client);
                         }}
                         title="Delete Client"
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -274,24 +324,37 @@ export default function ClientsPage() {
                   </div>
 
                   {/* Contact & Notes Snippet */}
-                  <div className="mt-3.5 space-y-1.5 text-xs">
+                  <div className="mt-4 space-y-2 text-xs">
                     {client.phone ? (
-                      <a
-                        href={`tel:${client.phone}`}
-                        className="flex items-center gap-2 text-slate-700 hover:text-[#1b5e20] transition font-medium"
-                      >
-                        <Phone className="w-3.5 h-3.5 text-[#2e7d32]" />
-                        <span>{client.phone}</span>
-                      </a>
+                      <div className="flex items-center justify-between gap-2">
+                        <a
+                          href={`tel:${client.phone}`}
+                          className="flex items-center gap-2 text-slate-700 hover:text-[#1b5e20] transition font-bold"
+                        >
+                          <div className="w-6 h-6 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#1b5e20] shrink-0">
+                            <Phone className="w-3 h-3" />
+                          </div>
+                          <span>{client.phone}</span>
+                        </a>
+
+                        <a
+                          href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] font-bold text-[#1b5e20] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 px-2 py-0.5 rounded-lg transition"
+                        >
+                          WhatsApp
+                        </a>
+                      </div>
                     ) : (
-                      <span className="flex items-center gap-2 text-slate-400 italic">
-                        <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="flex items-center gap-2 text-slate-400 italic">
+                        <Phone className="w-3.5 h-3.5 text-slate-300" />
                         <span>No phone number</span>
-                      </span>
+                      </div>
                     )}
 
                     {client.notes && (
-                      <p className="text-[11px] text-slate-600 line-clamp-1 italic bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                      <p className="text-[11px] text-slate-600 line-clamp-2 italic bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
                         &ldquo;{client.notes}&rdquo;
                       </p>
                     )}
@@ -299,19 +362,34 @@ export default function ClientsPage() {
                 </div>
 
                 {/* Footer Quick Actions */}
-                <div className="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-[10px] text-slate-500 flex items-center gap-1">
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    {new Date(client.created_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    {new Date(client.created_at).toLocaleDateString('en-GB', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
                   </span>
 
-                  <Link
-                    href={`/clients/${client.id}`}
-                    className="flex items-center gap-1 font-bold text-[#1b5e20] hover:underline"
-                  >
-                    <span>Fittings & History</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    {/* Direct 1-Tap Measure Button */}
+                    <Link
+                      href={`/measurements/new?clientId=${client.id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] text-xs font-bold border border-emerald-200/90 transition shadow-2xs active:scale-95"
+                    >
+                      <Ruler className="w-3.5 h-3.5" />
+                      <span>Measure</span>
+                    </Link>
+
+                    <Link
+                      href={`/clients/${client.id}`}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition active:scale-95"
+                    >
+                      <span>History</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             );
@@ -328,7 +406,7 @@ export default function ClientsPage() {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-[#0B2545]">Delete Client Profile</h3>
+              <h3 className="text-lg font-bold text-slate-900">Delete Client Profile</h3>
               <p className="text-xs text-slate-600 mt-1">
                 Are you sure you want to delete <strong>{clientToDelete.name}</strong>? This will remove their client record.
               </p>

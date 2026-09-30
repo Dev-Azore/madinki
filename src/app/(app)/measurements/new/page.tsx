@@ -300,7 +300,7 @@ function MeasurementWizard() {
         router.refresh();
       }
     } catch {
-      setSubmitError('A network error occurred while saving the measurement snapshot. Please retry.');
+      setSubmitError('A network error occurred while saving. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -309,7 +309,7 @@ function MeasurementWizard() {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-slate-400 space-y-4 max-w-xl mx-auto">
         <Loader2 className="w-10 h-10 animate-spin text-[#81c784]" />
-        <p className="text-sm font-medium">Opening measurement studio...</p>
+        <p className="text-sm font-medium">Loading...</p>
       </div>
     );
   }
@@ -349,7 +349,7 @@ function MeasurementWizard() {
 
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-bold px-3 py-1 bg-emerald-50 border border-emerald-200 text-[#1b5e20] rounded-full uppercase tracking-wider">
-              Studio Step {currentStep} of 3
+              Step {currentStep} of 3
             </span>
           </div>
         </div>
@@ -660,7 +660,7 @@ function MeasurementWizard() {
               type="button"
               disabled={!selectedClientId || !selectedTemplateId}
               onClick={handleStep1Next}
-              className="bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 px-6 rounded-xl shadow-sm active:scale-95 transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] text-white font-bold py-3 px-6 rounded-xl shadow-md shadow-[#2e7d32]/25 active:scale-95 transition-all flex items-center gap-2"
             >
               <span>Next: Record Sizes</span>
               <ChevronRight className="w-4 h-4" />
@@ -904,16 +904,16 @@ function MeasurementWizard() {
             <Button
               type="button"
               onClick={handleStep2Next}
-              className="bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 px-6 rounded-xl shadow-sm active:scale-95 transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] text-white font-bold py-3 px-6 rounded-xl shadow-md shadow-[#2e7d32]/25 active:scale-95 transition-all flex items-center gap-2"
             >
-              <span>Review Snapshot</span>
+              <span>Review & Save</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* STEP 3: REVIEW & IMMUTABLE SAVE */}
+      {/* STEP 3: REVIEW & SAVE */}
       {currentStep === 3 && selectedTemplate && selectedClient && (
         <div className="space-y-6">
           {/* Header */}
@@ -923,9 +923,9 @@ function MeasurementWizard() {
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-[#0B2545]">3. Review & Freeze Fitting Ticket</h2>
+                <h2 className="text-base font-bold text-[#0B2545]">3. Review & Confirm</h2>
                 <p className="text-xs text-slate-500">
-                  Verify sizes before creating the permanent immutable snapshot.
+                  Check all sizes carefully before saving the record.
                 </p>
               </div>
             </div>
@@ -972,7 +972,7 @@ function MeasurementWizard() {
           {/* Measurements Table Review */}
           <div className="bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 space-y-3 shadow-xs">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Fitting Slip Snapshot (Exact Preserved Values)
+              Measurement Summary
             </h3>
 
             <div className="divide-y divide-slate-100 border border-slate-200 rounded-2xl overflow-hidden bg-white">
@@ -1009,13 +1009,13 @@ function MeasurementWizard() {
             </div>
           </div>
 
-          {/* Immutability & Cloud Backup Assurance */}
+          {/* Safe Record Notice */}
           <div className="p-4 bg-white border border-slate-200/90 rounded-2xl flex items-start gap-3 shadow-xs">
             <ShieldCheck className="w-5 h-5 text-[#1b5e20] shrink-0 mt-0.5" />
             <p className="text-xs text-slate-600 leading-relaxed">
-              <strong className="text-[#0B2545]">Authoritative Snapshot Guarantee:</strong> Once saved,
-              this measurement record will be permanently saved to{' '}
-              <strong className="text-[#0B2545]">{selectedClient.name}</strong>&rsquo;s timeline with full historical accuracy.
+              <strong className="text-[#0B2545]">Safe Record:</strong> Once saved,
+              this measurement will be permanently added to{' '}
+              <strong className="text-[#0B2545]">{selectedClient.name}</strong>&rsquo;s fitting history and cannot be changed.
             </p>
           </div>
 
@@ -1051,17 +1051,17 @@ function MeasurementWizard() {
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSaveMeasurement}
-                className="bg-[#2e7d32] hover:bg-[#1b5e20] active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-sm transition-all flex items-center gap-2"
+                className="bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-md shadow-[#2e7d32]/25 transition-all flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span>Freezing Record...</span>
+                    <span>Saving...</span>
                   </>
                 ) : (
                   <>
                     <Check className="w-4 h-4" />
-                    <span>Save & Freeze</span>
+                    <span>Save Record</span>
                   </>
                 )}
               </Button>
@@ -1079,7 +1079,7 @@ export default function MeasurementNewPage() {
       fallback={
         <div className="flex flex-col items-center justify-center py-24 text-slate-400 space-y-4 max-w-xl mx-auto">
           <Loader2 className="w-10 h-10 animate-spin text-[#81c784]" />
-          <p className="text-sm font-medium">Loading measurement studio...</p>
+          <p className="text-sm font-medium">Loading...</p>
         </div>
       }
     >

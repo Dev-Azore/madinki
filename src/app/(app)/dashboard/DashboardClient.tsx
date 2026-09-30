@@ -165,11 +165,11 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
   const quickTips = [
     {
       title: 'Direct WhatsApp Customer Delivery',
-      desc: 'After saving any client fitting snapshot, tap the WhatsApp button to instantly share a pre-formatted measurement slip directly to their phone.',
+      desc: 'After saving a client measurement, tap the WhatsApp button to instantly share a pre-formatted slip directly to their phone.',
     },
     {
-      title: 'Immutable Snapshots Guarantee',
-      desc: 'Measurements can never be overwritten by mistake. Every order gets its own permanent timestamped blueprint record.',
+      title: 'Permanent Fitting Records',
+      desc: 'Measurements can never be overwritten by mistake. Every record gets its own permanent timestamped entry.',
     },
     {
       title: 'Taking Babban Riga Wingspan',
@@ -189,13 +189,13 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200/80 text-[#1b5e20] text-[11px] font-extrabold uppercase tracking-wider shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#1b5e20] animate-pulse" />
-              <span>Tailor Atelier Studio</span>
+              <span>Madinki Dashboard</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               {greeting}, {firstName}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Manage client fitting snapshots, traditional cuts, and instant WhatsApp slips.
+              Manage your clients, record fittings, and send instant WhatsApp slips.
             </p>
           </div>
 
@@ -355,7 +355,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              With Fitting Snapshots
+              With Fitting Records
             </button>
             <button
               type="button"
@@ -446,7 +446,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                         )}
                       </div>
 
-                      {/* Snapshot Garment Tag */}
+                      {/* Last Fitting Tag */}
                       <div className="flex items-center gap-2">
                         {client.last_measurement ? (
                           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50/80 text-[#1b5e20] border border-emerald-200/70 text-[10.5px] font-bold">
@@ -489,13 +489,13 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
         </div>
       </div>
 
-      {/* ── STUDIO WORKBENCH CARDS GRID ── */}
+      {/* ── WORKBENCH CARDS GRID ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
         {[
           {
             href: '/measurements/new',
             title: 'Take New Fitting',
-            desc: 'Capture size specifications into an immutable snapshot ticket',
+            desc: 'Record and save client measurements into a permanent fitting record',
             Icon: Ruler,
             color: 'bg-emerald-50 border-emerald-200/90 text-[#1b5e20]',
             badge: 'Start Ticket',
