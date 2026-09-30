@@ -65,8 +65,8 @@ export function TailorStatusToggle({
           isSelf ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'
         } ${
           isSuspended
-            ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-            : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30'
+            ? 'bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300'
+            : 'bg-red-50 hover:bg-red-100 text-red-700 border border-red-200'
         }`}
       >
         {isSuspended ? (
@@ -84,44 +84,44 @@ export function TailorStatusToggle({
 
       {/* Confirmation Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-white border border-slate-200/90 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                     isSuspended
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      ? 'bg-emerald-50 text-[#1b5e20] border border-emerald-200'
+                      : 'bg-red-50 text-red-700 border border-red-200'
                   }`}
                 >
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-100">
+                  <h3 className="text-base font-bold text-slate-900">
                     {isSuspended ? 'Reactivate Tailor Account' : 'Suspend Tailor Account'}
                   </h3>
-                  <p className="text-xs text-slate-400">{tailorName}</p>
+                  <p className="text-xs text-slate-500">{tailorName}</p>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="text-slate-500 hover:text-slate-300 p-1 cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               {isSuspended
                 ? `Are you sure you want to reactivate ${tailorName}'s account? The tailor will immediately regain full access to their dashboard, clients, and measurements.`
                 : `Are you sure you want to suspend ${tailorName}'s account? The tailor will be immediately blocked from accessing their dashboard and redirected to the suspended notice page. Their data is fully preserved.`}
             </p>
 
             {errorMessage && (
-              <div className="p-3 bg-red-950/50 border border-red-800 rounded-xl text-xs text-red-200">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
                 {errorMessage}
               </div>
             )}
@@ -131,7 +131,7 @@ export function TailorStatusToggle({
                 type="button"
                 disabled={isLoading}
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -142,8 +142,8 @@ export function TailorStatusToggle({
                 onClick={handleConfirm}
                 className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-50 ${
                   isSuspended
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
-                    : 'bg-red-500 hover:bg-red-400 text-slate-950'
+                    ? 'bg-[#1b5e20] hover:bg-[#144818] text-white shadow-sm shadow-[#1b5e20]/20'
+                    : 'bg-red-600 hover:bg-red-700 text-white shadow-sm shadow-red-600/20'
                 }`}
               >
                 {isLoading ? (

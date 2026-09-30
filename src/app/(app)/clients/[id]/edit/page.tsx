@@ -59,36 +59,36 @@ export default function EditClientPage() {
       <div className="flex items-center gap-3">
         <Link
           href={`/clients/${clientId}`}
-          className="p-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 rounded-xl transition cursor-pointer"
+          className="p-2 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-[#0B2545] rounded-xl shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
-            <Users className="w-6 h-6 text-lime-400" />
+          <h1 className="text-xl sm:text-2xl font-black text-[#0B2545] flex items-center gap-2">
+            <Users className="w-6 h-6 text-[#1b5e20]" />
             Edit Client Information
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
             Update contact numbers and client preferences.
           </p>
         </div>
       </div>
 
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-16 text-slate-400 space-y-3">
-          <Loader2 className="w-8 h-8 animate-spin text-lime-400" />
+        <div className="flex flex-col items-center justify-center py-16 text-slate-500 space-y-3">
+          <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
           <p className="text-sm">Loading client data...</p>
         </div>
       )}
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-950/50 border border-red-800 rounded-xl text-red-200 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0 text-red-400 mt-0.5" />
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+          <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
           <div>
             <p>{error}</p>
             <Link
               href="/clients"
-              className="text-xs text-red-400 underline hover:text-red-300 mt-1 inline-block"
+              className="text-xs text-red-600 underline hover:text-red-800 mt-1 inline-block"
             >
               Back to Client Directory
             </Link>

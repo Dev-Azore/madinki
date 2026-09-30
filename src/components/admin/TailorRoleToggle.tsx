@@ -65,18 +65,18 @@ export function TailorRoleToggle({
           isSelf ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'
         } ${
           isAdmin
-            ? 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30'
-            : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+            ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300'
+            : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
         }`}
       >
         {isAdmin ? (
           <>
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
             <span>Administrator</span>
           </>
         ) : (
           <>
-            <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
             <span>Tailor Role</span>
           </>
         )}
@@ -84,44 +84,44 @@ export function TailorRoleToggle({
 
       {/* Confirmation Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in-up">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-fade-in-up">
+          <div className="bg-white border border-slate-200/90 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                     isAdmin
-                      ? 'bg-amber-400/10 text-amber-400 border border-amber-400/20'
-                      : 'bg-[#2e7d32]/20 text-[#81c784] border border-[#2e7d32]/30'
+                      ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                      : 'bg-emerald-50 text-[#1b5e20] border border-emerald-200'
                   }`}
                 >
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-100">
+                  <h3 className="text-base font-bold text-slate-900">
                     {isAdmin ? 'Demote Administrator to Tailor' : 'Promote Tailor to Administrator'}
                   </h3>
-                  <p className="text-xs text-slate-400">{userName}</p>
+                  <p className="text-xs text-slate-500">{userName}</p>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="text-slate-500 hover:text-slate-300 p-1 cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               {isAdmin
                 ? `Are you sure you want to remove administrator privileges from ${userName}? They will no longer be able to access the admin console.`
                 : `Are you sure you want to promote ${userName} to an Administrator? They will be granted full access to the admin console, platform statistics, tailor accounts, and global templates.`}
             </p>
 
             {errorMessage && (
-              <div className="p-3 bg-red-950/50 border border-red-800 rounded-xl text-xs text-red-200">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
                 {errorMessage}
               </div>
             )}
@@ -131,7 +131,7 @@ export function TailorRoleToggle({
                 type="button"
                 disabled={isLoading}
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -142,8 +142,8 @@ export function TailorRoleToggle({
                 onClick={handleConfirmRoleChange}
                 className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-50 ${
                   isAdmin
-                    ? 'bg-slate-700 hover:bg-slate-600 text-white'
-                    : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                    ? 'bg-slate-800 hover:bg-slate-700 text-white'
+                    : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
                 }`}
               >
                 {isLoading ? (

@@ -7,7 +7,6 @@ import {
   Smartphone,
   Share,
   PlusSquare,
-  Sparkles,
   CheckCircle2,
 } from 'lucide-react';
 
@@ -127,11 +126,11 @@ export function PwaInstallPrompt() {
     <>
       {/* Floating Smart Install Banner */}
       <div className="fixed bottom-20 sm:bottom-6 left-4 right-4 sm:left-auto sm:right-6 z-50 max-w-md mx-auto animate-fade-in-up">
-        <div className="bg-[#071A34]/95 backdrop-blur-md border border-[#2e7d32]/50 shadow-2xl shadow-[#040e1e]/90 rounded-2xl p-4 flex items-center justify-between gap-3.5">
+        <div className="bg-white/95 backdrop-blur-md border border-emerald-200 shadow-xl shadow-slate-900/10 rounded-2xl p-4 flex items-center justify-between gap-3.5">
           {/* Brand Icon */}
-          <div className="w-11 h-11 rounded-xl bg-[#040e1e] border border-[#2e7d32]/60 flex items-center justify-center shrink-0 shadow-inner">
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 shadow-xs">
             <svg
-              className="w-6 h-6 text-[#81c784]"
+              className="w-6 h-6 text-[#1b5e20]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -150,15 +149,15 @@ export function PwaInstallPrompt() {
           {/* Text Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <h4 className="text-xs font-black text-white tracking-tight">
+              <h4 className="text-xs font-black text-slate-900 tracking-tight">
                 Install TailorApp
               </h4>
-              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-[#2e7d32]/30 text-[#81c784] text-[9px] font-bold uppercase">
-                <Sparkles className="w-2.5 h-2.5" />
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-emerald-50 text-[#1b5e20] text-[9px] font-bold uppercase border border-emerald-200">
+                <Smartphone className="w-2.5 h-2.5" />
                 PWA
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 truncate">
+            <p className="text-[11px] text-slate-500 truncate">
               Fast home screen access & instant measuring
             </p>
           </div>
@@ -168,7 +167,7 @@ export function PwaInstallPrompt() {
             <button
               type="button"
               onClick={handleInstallClick}
-              className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-xs font-bold rounded-xl transition shadow-md shadow-[#2e7d32]/30 cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#1b5e20] hover:bg-[#144818] text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Install</span>
@@ -177,7 +176,7 @@ export function PwaInstallPrompt() {
             <button
               type="button"
               onClick={handleDismiss}
-              className="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800 transition cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition cursor-pointer"
               title="Dismiss for today"
               aria-label="Dismiss install prompt"
             >
@@ -189,53 +188,53 @@ export function PwaInstallPrompt() {
 
       {/* iOS Safari / Manual Installation Modal */}
       {showIosModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in-up">
-          <div className="bg-[#071A34] border border-[#2e7d32]/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in-up">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#040e1e] border border-[#2e7d32]/60 flex items-center justify-center text-[#81c784]">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#1b5e20]">
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-extrabold text-white">
+                  <h3 className="text-sm font-extrabold text-slate-900">
                     Add TailorApp to Home Screen
                   </h3>
-                  <p className="text-[11px] text-slate-400">Install in 2 quick taps</p>
+                  <p className="text-[11px] text-slate-500">Install in 2 quick taps</p>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setShowIosModal(false)}
-                className="text-slate-400 hover:text-slate-200 p-1 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 bg-[#040e1e] border border-[#0B2545] rounded-2xl p-4 text-xs text-slate-300">
+            <div className="space-y-3 bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-700">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5 font-bold text-[11px]">
+                <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-[11px]">
                   1
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Tap the Share button</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
-                    At the bottom or top of Safari: <Share className="w-3.5 h-3.5 text-blue-400 inline" />
+                  <p className="font-semibold text-slate-900">Tap the Share button</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                    At the bottom or top of Safari: <Share className="w-3.5 h-3.5 text-sky-600 inline" />
                   </p>
                 </div>
               </div>
 
-              <div className="h-px bg-[#0B2545]" />
+              <div className="h-px bg-slate-200" />
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-[#81c784] flex items-center justify-center shrink-0 mt-0.5 font-bold text-[11px]">
+                <div className="w-6 h-6 rounded-lg bg-emerald-100 text-[#1b5e20] flex items-center justify-center shrink-0 mt-0.5 font-bold text-[11px]">
                   2
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Choose &apos;Add to Home Screen&apos;</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1">
-                    Scroll down and select: <PlusSquare className="w-3.5 h-3.5 text-[#81c784] inline" />
+                  <p className="font-semibold text-slate-900">Choose &apos;Add to Home Screen&apos;</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                    Scroll down and select: <PlusSquare className="w-3.5 h-3.5 text-[#1b5e20] inline" />
                   </p>
                 </div>
               </div>
@@ -247,7 +246,7 @@ export function PwaInstallPrompt() {
                 setShowIosModal(false);
                 handleDismiss();
               }}
-              className="w-full py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-xs font-bold rounded-xl transition cursor-pointer"
+              className="w-full py-2.5 bg-[#1b5e20] hover:bg-[#144818] text-white text-xs font-bold rounded-xl transition cursor-pointer"
             >
               Got it, thanks!
             </button>

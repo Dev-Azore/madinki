@@ -22,7 +22,7 @@ export function WhatsAppShareButton({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition flex items-center justify-center cursor-pointer ${className}`}
+        className={`p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300 transition flex items-center justify-center cursor-pointer shadow-xs ${className}`}
         title="Share fitting slip on WhatsApp"
         aria-label="Share fitting slip on WhatsApp"
       >
@@ -36,7 +36,7 @@ export function WhatsAppShareButton({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] border border-[#25D366]/40 cursor-pointer active:scale-95 shadow-sm ${className}`}
+      className={`inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300 cursor-pointer active:scale-95 shadow-xs ${className}`}
       title="Send measurement slip via WhatsApp"
     >
       <Share2 className="w-3.5 h-3.5" />

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, Loader2, Check, ArrowRightLeft } from 'lucide-react';
+import { ShieldCheck, Loader2, Check, ArrowRightLeft } from 'lucide-react';
 import { updateTailorPlanAction } from '@/app/admin/actions';
 
 interface TailorPlanToggleProps {
@@ -54,22 +54,22 @@ export function TailorPlanToggle({
         onClick={handleTogglePlan}
         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50 ${
           isPremium
-            ? 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30'
-            : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+            ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300'
+            : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
         }`}
         title={`Click to switch to ${targetPlan.toUpperCase()} plan`}
       >
         {isLoading ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : (
-          <Sparkles className="w-3.5 h-3.5" />
+          <ShieldCheck className="w-3.5 h-3.5" />
         )}
         <span>{isPremium ? 'Premium (Active)' : 'Free Tier'}</span>
         <ArrowRightLeft className="w-3 h-3 opacity-60 ml-0.5" />
       </button>
 
       {errorMessage && (
-        <span className="text-[11px] text-red-400">{errorMessage}</span>
+        <span className="text-[11px] text-red-600">{errorMessage}</span>
       )}
     </div>
   );

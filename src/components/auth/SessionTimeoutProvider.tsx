@@ -231,21 +231,21 @@ export function SessionTimeoutProvider({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in-up"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-fade-in-up"
         >
-          <div className="w-full max-w-md bg-[#071A34] border border-[#2e7d32]/40 rounded-2xl p-6 shadow-2xl shadow-slate-950/80 text-center space-y-5">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xl text-center space-y-5">
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto text-amber-600">
               <Clock className="w-7 h-7 animate-pulse" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white tracking-tight">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                 Session Inactivity Warning
               </h3>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-600">
                 You have been inactive for a while. For your security, you will be automatically logged out in:
               </p>
-              <div className="py-2 text-3xl font-black font-mono text-amber-400">
+              <div className="py-2 text-3xl font-black font-mono text-amber-600">
                 {formatTime(secondsRemaining)}
               </div>
             </div>
@@ -253,7 +253,7 @@ export function SessionTimeoutProvider({
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Button
                 onClick={resetTimer}
-                className="w-full sm:w-auto bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-semibold flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto bg-[#1b5e20] hover:bg-[#144818] text-white font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-[#1b5e20]/20"
               >
                 <RefreshCw className="w-4 h-4" />
                 Stay Logged In
@@ -261,7 +261,7 @@ export function SessionTimeoutProvider({
               <Button
                 variant="outline"
                 onClick={handleSignOut}
-                className="w-full sm:w-auto border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer"
+                className="w-full sm:w-auto border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
               >
                 Log Out Now
               </Button>
@@ -275,18 +275,18 @@ export function SessionTimeoutProvider({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md animate-fade-in-up"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in-up"
         >
-          <div className="w-full max-w-md bg-[#071A34] border border-amber-500/30 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-slate-950/90 text-center space-y-6">
-            <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto text-red-400">
+          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600">
               <AlertTriangle className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-white tracking-tight">
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">
                 Session Expired
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Your session has ended due to inactivity to protect customer measurements and account security.
               </p>
             </div>
@@ -301,7 +301,7 @@ export function SessionTimeoutProvider({
                   }
                   window.location.href = `${loginRoute}?reason=session_timeout`;
                 }}
-                className="w-full bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold py-3 shadow-lg shadow-[#2e7d32]/20 flex items-center justify-center gap-2 text-base cursor-pointer"
+                className="w-full bg-[#1b5e20] hover:bg-[#144818] text-white font-bold py-3 shadow-sm shadow-[#1b5e20]/20 flex items-center justify-center gap-2 text-base cursor-pointer"
               >
                 <LogIn className="w-5 h-5" />
                 Re-Authenticate & Sign In

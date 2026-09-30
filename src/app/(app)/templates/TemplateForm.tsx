@@ -7,7 +7,7 @@ import {
   Trash2,
   ArrowUp,
   ArrowDown,
-  Sparkles,
+  Scissors,
   Loader2,
   AlertCircle,
   Save,
@@ -249,17 +249,17 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl mx-auto animate-fade-in-up">
       {generalError && (
-        <div className="flex items-start gap-3 p-3.5 bg-red-950/40 border border-red-800/80 rounded-2xl text-red-200 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0 text-red-400 mt-0.5" />
+        <div className="flex items-start gap-3 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+          <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
           <span>{generalError}</span>
         </div>
       )}
 
       {/* Preset Quick Loader */}
       {!isEditing && (
-        <div className="p-4 sm:p-5 bg-[#071A34] border border-[#2e7d32]/35 rounded-2xl space-y-2.5">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#81c784] uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-[#2e7d32]" />
+        <div className="p-4 sm:p-5 bg-white border border-emerald-200 rounded-2xl space-y-2.5 shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#1b5e20] uppercase tracking-wider">
+            <Layers className="w-3.5 h-3.5 text-[#2e7d32]" />
             <span>Popular Traditional Presets</span>
           </div>
           <div className="flex flex-wrap gap-2 pt-1">
@@ -268,7 +268,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
                 key={preset.name}
                 type="button"
                 onClick={() => handleApplyPreset(preset)}
-                className="px-3 py-1.5 bg-[#040e1e] hover:bg-[#0B2545] border border-[#0B2545] hover:border-[#2e7d32]/50 rounded-xl text-xs font-bold text-slate-200 hover:text-white transition-all cursor-pointer"
+                className="px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold text-slate-700 hover:text-[#1b5e20] transition-all cursor-pointer shadow-xs"
               >
                 + {preset.name}
               </button>
@@ -278,12 +278,12 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
       )}
 
       {/* Template Name Input */}
-      <div className="p-4 sm:p-5 bg-[#071A34] border border-[#0B2545] rounded-2xl space-y-2">
+      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
         <label
           htmlFor="template-name"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
         >
-          Template Name <span className="text-[#81c784]">*</span>
+          Template Name <span className="text-[#1b5e20]">*</span>
         </label>
         <input
           id="template-name"
@@ -291,11 +291,11 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Royal Kaftan, Senator Suit, Babban Riga, Female Gown"
-          className="w-full px-3.5 py-2.5 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-xl text-white placeholder-slate-500 focus:outline-none text-base font-bold transition"
+          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-[#0B2545] placeholder-slate-400 focus:outline-none text-base font-bold shadow-xs transition"
           disabled={isSubmitting}
         />
         {fieldErrors.name && (
-          <p className="text-xs text-red-400">{fieldErrors.name[0]}</p>
+          <p className="text-xs text-red-600 font-medium">{fieldErrors.name[0]}</p>
         )}
       </div>
 
@@ -303,18 +303,18 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#81c784]" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-[#0B2545] flex items-center gap-2">
+              <Layers className="w-4 h-4 text-[#1b5e20]" />
               <span>Measurement Points ({fields.length})</span>
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Set the exact body points to measure for this style.
             </p>
           </div>
           <button
             type="button"
             onClick={handleAddField}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2e7d32]/20 hover:bg-[#2e7d32]/30 text-[#81c784] border border-[#2e7d32]/40 rounded-xl text-xs font-bold transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300 rounded-xl text-xs font-bold transition cursor-pointer shadow-xs"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Point</span>
@@ -325,20 +325,20 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
           {fields.map((field, index) => (
             <div
               key={index}
-              className="p-3 bg-[#071A34] border border-[#0B2545] hover:border-[#2e7d32]/40 rounded-xl flex items-center gap-2 sm:gap-3 transition-colors"
+              className="p-3 bg-white border border-slate-200 hover:border-[#2e7d32]/40 rounded-xl flex items-center gap-2 sm:gap-3 transition-colors shadow-xs"
             >
               {/* Order Number & Reorder */}
-              <div className="flex flex-col items-center gap-0.5 text-slate-500">
+              <div className="flex flex-col items-center gap-0.5 text-slate-400">
                 <button
                   type="button"
                   onClick={() => handleMoveUp(index)}
                   disabled={index === 0 || isSubmitting}
                   title="Move up"
-                  className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-slate-500 cursor-pointer"
+                  className="p-1 hover:text-[#0B2545] disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
                 >
                   <ArrowUp className="w-3.5 h-3.5" />
                 </button>
-                <span className="text-[10px] font-mono font-bold text-[#81c784]">
+                <span className="text-[10px] font-mono font-bold text-[#1b5e20]">
                   {index + 1}
                 </span>
                 <button
@@ -346,7 +346,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
                   onClick={() => handleMoveDown(index)}
                   disabled={index === fields.length - 1 || isSubmitting}
                   title="Move down"
-                  className="p-1 hover:text-white disabled:opacity-20 disabled:hover:text-slate-500 cursor-pointer"
+                  className="p-1 hover:text-[#0B2545] disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
                 >
                   <ArrowDown className="w-3.5 h-3.5" />
                 </button>
@@ -361,7 +361,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
                     handleFieldChange(index, 'field_name', e.target.value)
                   }
                   placeholder={`Measurement point name (e.g., Tsawon Riga, Hannu)`}
-                  className="w-full px-3 py-2 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none font-medium"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-lg text-sm text-[#0B2545] placeholder-slate-400 focus:outline-none font-medium shadow-xs"
                   disabled={isSubmitting}
                 />
               </div>
@@ -373,7 +373,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
                   onChange={(e) =>
                     handleFieldChange(index, 'unit', e.target.value)
                   }
-                  className="w-full px-2.5 py-2 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-lg text-xs font-bold text-[#81c784] focus:outline-none"
+                  className="w-full px-2.5 py-2 bg-slate-50 border border-slate-300 focus:border-[#2e7d32] rounded-lg text-xs font-bold text-[#1b5e20] focus:outline-none shadow-xs"
                   disabled={isSubmitting}
                 >
                   <option value="in">Inches (in)</option>
@@ -390,7 +390,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
                 onClick={() => handleRemoveField(index)}
                 disabled={fields.length <= 1 || isSubmitting}
                 title="Remove field"
-                className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition disabled:opacity-20 disabled:hover:text-slate-500 cursor-pointer"
+                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-20 disabled:hover:text-slate-400 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -402,7 +402,7 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
           type="button"
           onClick={handleAddField}
           disabled={isSubmitting}
-          className="w-full py-2.5 border-2 border-dashed border-[#0B2545] hover:border-[#2e7d32]/50 text-slate-400 hover:text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer"
+          className="w-full py-2.5 border-2 border-dashed border-slate-300 hover:border-[#2e7d32]/50 text-slate-600 hover:text-[#0B2545] bg-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
         >
           <Plus className="w-4 h-4" />
           <span>Add Another Measurement Point</span>
@@ -415,14 +415,14 @@ export function TemplateForm({ initialData }: TemplateFormProps) {
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="px-4 py-2.5 bg-[#071A34] hover:bg-[#0B2545] text-slate-300 rounded-xl text-sm font-medium border border-[#0B2545] transition cursor-pointer"
+          className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium border border-slate-200 transition cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#2e7d32]/25 transition disabled:opacity-50 cursor-pointer"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-sm shadow-[#2e7d32]/25 transition disabled:opacity-50 cursor-pointer"
         >
           {isSubmitting ? (
             <>

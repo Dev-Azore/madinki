@@ -7,7 +7,6 @@ import {
   History,
   LayoutDashboard,
   LogOut,
-  Sparkles,
   Layers,
 } from 'lucide-react';
 import { logoutAdmin } from '@/app/(auth)/actions';
@@ -42,22 +41,22 @@ export default async function AdminLayout({
 
   return (
     <SessionTimeoutProvider role="admin">
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col">
         {/* Top Admin Navigation Header */}
-        <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               {/* Left: Brand + Admin Badge */}
               <div className="flex items-center gap-3">
                 <Link href="/admin" className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
+                  <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
                     <ShieldAlert className="w-4 h-4" />
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <span className="font-extrabold text-base tracking-tight text-slate-100">
+                    <span className="font-extrabold text-base tracking-tight text-slate-900">
                       TailorApp
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-400 border border-amber-400/20">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
                       Admin Console
                     </span>
                   </div>
@@ -68,25 +67,25 @@ export default async function AdminLayout({
               <nav className="hidden md:flex items-center gap-1">
                 <Link
                   href="/admin"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
                 >
-                  <Users className="w-3.5 h-3.5 text-lime-400" />
+                  <Users className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Tailor Directory & Stats</span>
                 </Link>
 
                 <Link
                   href="/admin/templates"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
                 >
-                  <Layers className="w-3.5 h-3.5 text-[#81c784]" />
+                  <Layers className="w-3.5 h-3.5 text-[#1b5e20]" />
                   <span>Global Templates</span>
                 </Link>
 
                 <Link
                   href="/admin/audit-log"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
                 >
-                  <History className="w-3.5 h-3.5 text-amber-400" />
+                  <History className="w-3.5 h-3.5 text-amber-600" />
                   <span>Audit Log</span>
                 </Link>
               </nav>
@@ -96,7 +95,7 @@ export default async function AdminLayout({
                 <form action={logoutAdmin}>
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-400 hover:text-red-400 hover:bg-red-950/20 rounded-xl text-xs font-semibold transition cursor-pointer border border-transparent hover:border-red-900/30"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl text-xs font-semibold transition cursor-pointer border border-transparent hover:border-red-200"
                     title="Sign Out"
                   >
                     <LogOut className="w-3.5 h-3.5" />
@@ -108,26 +107,26 @@ export default async function AdminLayout({
           </div>
 
           {/* Mobile Nav sub-bar */}
-          <div className="md:hidden flex items-center justify-around border-t border-slate-800/80 px-2 py-2 bg-slate-900/60 text-xs">
+          <div className="md:hidden flex items-center justify-around border-t border-slate-200 px-2 py-2 bg-white text-xs">
             <Link
               href="/admin"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-300 hover:text-lime-400 font-semibold rounded-lg"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-[#1b5e20] font-semibold rounded-lg"
             >
-              <Users className="w-3.5 h-3.5 text-lime-400" />
+              <Users className="w-3.5 h-3.5 text-emerald-600" />
               <span>Tailors</span>
             </Link>
             <Link
               href="/admin/templates"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-300 hover:text-[#81c784] font-semibold rounded-lg"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-[#1b5e20] font-semibold rounded-lg"
             >
-              <Layers className="w-3.5 h-3.5 text-[#81c784]" />
+              <Layers className="w-3.5 h-3.5 text-[#1b5e20]" />
               <span>Templates</span>
             </Link>
             <Link
               href="/admin/audit-log"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-300 hover:text-amber-400 font-semibold rounded-lg"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-amber-600 font-semibold rounded-lg"
             >
-              <History className="w-3.5 h-3.5 text-amber-400" />
+              <History className="w-3.5 h-3.5 text-amber-600" />
               <span>Audit Log</span>
             </Link>
           </div>

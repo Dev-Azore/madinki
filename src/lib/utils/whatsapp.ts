@@ -48,7 +48,7 @@ export function generateWhatsAppMessage(data: WhatsAppShareData): string {
     `📏 *MEASURED SIZES:*`,
     measurementsList || `(No measurements recorded)`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `✨ *Crafted with TailorApp*`,
+    `🧵 *Recorded with TailorApp*`,
   ].filter(Boolean);
 
   return lines.join('\n');

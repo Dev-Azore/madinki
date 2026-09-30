@@ -36,10 +36,10 @@ export function DeleteGlobalTemplateButton({
       type="button"
       disabled={isLoading}
       onClick={handleDelete}
-      className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-950/20 transition cursor-pointer disabled:opacity-50"
+      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer disabled:opacity-50"
       title="Delete Global Template"
     >
-      {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-red-400" /> : <Trash2 className="w-4 h-4" />}
+      {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-red-600" /> : <Trash2 className="w-4 h-4" />}
     </button>
   );
 }

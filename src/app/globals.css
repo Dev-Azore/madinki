@@ -16,7 +16,7 @@
   --color-brand-900: #071A34;
   --color-brand-950: #040e1e;
 
-  /* ── Dark Rich Tailor Green Palette ── */
+  /* ── Tailor Green Palette ── */
   --color-lime-50:  #e8f5e9;
   --color-lime-100: #c8e6c9;
   --color-lime-200: #a5d6a7;
@@ -44,23 +44,18 @@
 }
 
 /* ── Animations ── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-6px) rotate(0.5deg); }
-}
-
-@keyframes pulseSoft {
-  0%, 100% { opacity: 0.25; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.04); }
-}
-
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -69,20 +64,21 @@
   100% { transform: translateX(-50%); }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-float-slow {
-  animation: floatSlow 5.5s ease-in-out infinite;
-}
-
-.animate-pulse-soft {
-  animation: pulseSoft 7s ease-in-out infinite;
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out both;
+  animation: fadeInUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-marquee {
@@ -95,28 +91,50 @@
   animation-play-state: paused;
 }
 
+/* ── Stagger Delays (for card grids) ── */
+.stagger-1 { animation-delay: 0.06s; }
+.stagger-2 { animation-delay: 0.12s; }
+.stagger-3 { animation-delay: 0.18s; }
+.stagger-4 { animation-delay: 0.24s; }
+.stagger-5 { animation-delay: 0.30s; }
+.stagger-6 { animation-delay: 0.36s; }
+
 /* ── Custom Scrollbars ── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #040e1e;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0B2545;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2e7d32;
+  background: #94a3b8;
 }
 
 /* ── Glass panels ── */
 .glass {
-  background: rgba(7, 26, 52, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(46, 125, 50, 0.2);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 1px 3px -1px rgba(11, 37, 69, 0.04),
+              0 8px 20px -6px rgba(11, 37, 69, 0.06);
+}
+
+/* ── Card hover lift ── */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px rgba(11, 37, 69, 0.1),
+              0 2px 6px -2px rgba(11, 37, 69, 0.06);
 }
 
 /* ── Global defaults ── */
@@ -126,9 +144,24 @@ html {
 }
 
 body {
-  background-color: #040e1e;
-  color: #f1f5f9;
+  /* Warm gradient canvas — not flat white, not clinical gray */
+  background: linear-gradient(168deg, #f0f4f3 0%, #f6f8fa 35%, #f2f5f0 65%, #f4f6f8 100%);
+  background-attachment: fixed;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* Subtle noise-grain texture overlay (optional, lightweight) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
 }

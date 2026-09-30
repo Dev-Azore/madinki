@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   Scissors,
   Check,
-  Sparkles,
+  Layers,
   ShieldCheck,
   RefreshCw,
 } from 'lucide-react';
@@ -122,22 +122,22 @@ export function InteractiveDemo() {
   const current = NIGERIAN_PRESETS[activePreset];
 
   return (
-    <section id="demo" className="py-20 sm:py-24 relative overflow-hidden bg-[#040e1e] border-y border-[#0B2545]">
+    <section id="demo" className="py-20 sm:py-24 relative overflow-hidden bg-[#f8fafc] border-y border-slate-200">
       {/* Ambient background glows */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-[#0B2545]/40 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/2 right-4 sm:right-10 -translate-y-1/2 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-[#2e7d32]/15 rounded-full blur-[90px] sm:blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-slate-200/50 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 right-4 sm:right-10 -translate-y-1/2 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-emerald-100/40 rounded-full blur-[90px] sm:blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3.5 mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#071A34] border border-[#2e7d32]/40 text-[#81c784] text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 text-[#1b5e20] text-xs font-bold uppercase tracking-wider shadow-xs">
+            <Layers className="w-3.5 h-3.5" />
             Interactive Studio (Kaftan, Babban Riga & Gowns)
           </div>
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
             Try Taking a Measurement Now
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base lg:text-lg">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg">
             See how easy it is to enter and save customer measurements for traditional male and female clothes.
           </p>
         </div>
@@ -159,11 +159,11 @@ export function InteractiveDemo() {
                 onClick={() => handlePresetChange(item.key)}
                 className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
                   isActive
-                    ? 'bg-[#2e7d32] text-white shadow-lg shadow-[#2e7d32]/30 scale-105'
-                    : 'bg-[#071A34] text-slate-300 hover:text-white hover:bg-[#0B2545] border border-[#0B2545]'
+                    ? 'bg-[#1b5e20] text-white shadow-xs scale-105'
+                    : 'bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'
                 }`}
               >
-                <Scissors className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#81c784]'}`} />
+                <Scissors className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#1b5e20]'}`} />
                 <span>{item.label}</span>
               </button>
             );
@@ -171,28 +171,28 @@ export function InteractiveDemo() {
         </div>
 
         {/* Interactive Workspace Box */}
-        <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl bg-[#071A34] border border-[#2e7d32]/40 shadow-2xl p-5 sm:p-8 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-xl p-5 sm:p-8 relative overflow-hidden">
           {/* Header of the test ticket */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#0B2545]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md bg-[#0B2545] text-[#81c784] text-[11px] font-bold uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-[#1b5e20] text-[11px] font-bold uppercase tracking-wider border border-emerald-200">
                   {current.category}
                 </span>
-                <span className="text-xs text-slate-400">Sample Template</span>
+                <span className="text-xs text-slate-500">Sample Template</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white">{current.title}</h3>
-              <p className="text-xs sm:text-sm text-slate-300">{current.description}</p>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900">{current.title}</h3>
+              <p className="text-xs sm:text-sm text-slate-600">{current.description}</p>
             </div>
 
             {/* Unit toggle */}
-            <div className="flex items-center self-start sm:self-center gap-1.5 p-1 bg-[#040e1e] rounded-xl border border-[#0B2545]">
+            <div className="flex items-center self-start sm:self-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200">
               <button
                 onClick={() => setUnit('in')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                   unit === 'in'
-                    ? 'bg-[#2e7d32] text-white shadow'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#1b5e20] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 Inches (in)
@@ -201,8 +201,8 @@ export function InteractiveDemo() {
                 onClick={() => setUnit('cm')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                   unit === 'cm'
-                    ? 'bg-[#2e7d32] text-white shadow'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#1b5e20] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 Centimeters (cm)
@@ -211,22 +211,22 @@ export function InteractiveDemo() {
           </div>
 
           {/* Customer name input row */}
-          <div className="py-5 border-b border-[#0B2545] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="py-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Customer Name / Phone:
               </label>
               <input
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                className="w-full sm:max-w-md bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-xl px-4 py-2.5 text-sm text-white font-medium focus:outline-none transition"
+                className="w-full sm:max-w-md bg-slate-50 border border-slate-300 focus:border-[#1b5e20] focus:ring-1 focus:ring-[#1b5e20] rounded-xl px-4 py-2.5 text-sm text-slate-900 font-medium focus:outline-none transition"
                 placeholder="Enter customer name..."
               />
             </div>
-            <div className="text-left sm:text-right text-xs text-slate-400 space-y-0.5">
-              <div>Date: <span className="text-slate-200 font-semibold">{new Date().toLocaleDateString('en-GB')}</span></div>
-              <div className="text-[#81c784] font-medium flex items-center gap-1 sm:justify-end">
+            <div className="text-left sm:text-right text-xs text-slate-500 space-y-0.5">
+              <div>Date: <span className="text-slate-800 font-semibold">{new Date().toLocaleDateString('en-GB')}</span></div>
+              <div className="text-[#1b5e20] font-medium flex items-center gap-1 sm:justify-end">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Private & Secured</span>
               </div>
@@ -235,18 +235,18 @@ export function InteractiveDemo() {
 
           {/* Live Inputs Grid */}
           <div className="py-6">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#81c784] mb-4 flex items-center gap-2">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#1b5e20] mb-4 flex items-center gap-2">
               <span>Measurement Fields</span>
-              <span className="text-slate-400 font-normal">({current.fields.length} points)</span>
+              <span className="text-slate-500 font-normal">({current.fields.length} points)</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4">
               {current.fields.map((field, idx) => (
                 <div
                   key={idx}
-                  className="bg-[#040e1e] border border-[#0B2545] focus-within:border-[#2e7d32] rounded-2xl p-3.5 transition-all"
+                  className="bg-slate-50 border border-slate-200 focus-within:border-[#1b5e20] focus-within:ring-1 focus-within:ring-[#1b5e20] rounded-2xl p-3.5 transition-all"
                 >
-                  <label className="block text-xs font-semibold text-slate-300 mb-1 truncate" title={field.name}>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1 truncate" title={field.name}>
                     {field.name}
                   </label>
                   <div className="flex items-center gap-2 mt-1">
@@ -254,10 +254,10 @@ export function InteractiveDemo() {
                       type="text"
                       value={fieldValues[field.name] ?? ''}
                       onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                      className="w-full bg-transparent text-lg font-black text-white font-mono focus:outline-none placeholder-slate-600"
+                      className="w-full bg-transparent text-lg font-black text-slate-900 font-mono focus:outline-none placeholder-slate-400"
                       placeholder={field.placeholder}
                     />
-                    <span className="text-xs text-[#81c784] font-bold font-mono">
+                    <span className="text-xs text-[#1b5e20] font-bold font-mono">
                       {unit}
                     </span>
                   </div>
@@ -267,9 +267,9 @@ export function InteractiveDemo() {
           </div>
 
           {/* Bottom Actions */}
-          <div className="pt-6 border-t border-[#0B2545] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-[#2e7d32]" />
+          <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <span className="w-2 h-2 rounded-full bg-[#1b5e20]" />
               <span>Permanent record saved with zero chance of loss.</span>
             </div>
 
@@ -279,8 +279,8 @@ export function InteractiveDemo() {
                 disabled={isSaved}
                 className={`w-full sm:w-auto gap-2 text-sm font-bold transition-all ${
                   isSaved
-                    ? 'bg-[#2e7d32] text-white'
-                    : 'bg-[#2e7d32] hover:bg-[#1b5e20] text-white shadow-lg shadow-[#2e7d32]/25'
+                    ? 'bg-[#1b5e20] text-white'
+                    : 'bg-[#1b5e20] hover:bg-[#144818] text-white shadow-xs'
                 }`}
               >
                 {isSaved ? (
@@ -300,14 +300,14 @@ export function InteractiveDemo() {
 
           {/* Success Alert */}
           {isSaved && (
-            <div className="mt-4 p-4 rounded-xl bg-[#2e7d32]/20 border border-[#2e7d32] flex items-center justify-between gap-3 text-xs text-white animate-fade-in-up">
+            <div className="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3 text-xs text-slate-900 animate-fade-in-up">
               <div className="flex items-center gap-2.5">
-                <Check className="w-4 h-4 text-[#81c784]" />
+                <Check className="w-4 h-4 text-[#1b5e20]" />
                 <span>
                   <strong>Success:</strong> Saved ticket for <strong>{clientName}</strong> under {current.title}. In the real app, this is permanently saved to your cloud account!
                 </span>
               </div>
-              <Link href="/register" className="text-[#81c784] underline font-bold hover:text-white whitespace-nowrap">
+              <Link href="/register" className="text-[#1b5e20] underline font-bold hover:text-[#144818] whitespace-nowrap">
                 Create Free Account &rarr;
               </Link>
             </div>

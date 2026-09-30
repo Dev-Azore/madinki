@@ -101,19 +101,19 @@ export function ClientForm({ initialData }: ClientFormProps) {
       className="space-y-4 max-w-xl mx-auto animate-fade-in-up"
     >
       {generalError && (
-        <div className="flex items-start gap-3 p-3.5 bg-red-950/40 border border-red-800/80 rounded-2xl text-red-200 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0 text-red-400 mt-0.5" />
+        <div className="flex items-start gap-3 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+          <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
           <span>{generalError}</span>
         </div>
       )}
 
       {/* Name Input */}
-      <div className="p-4 sm:p-5 bg-[#071A34] border border-[#0B2545] rounded-2xl space-y-2">
+      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
         <label
           htmlFor="client-name"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
         >
-          Customer Name <span className="text-[#81c784]">*</span>
+          Customer Name <span className="text-[#1b5e20]">*</span>
         </label>
         <div className="relative">
           <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -123,22 +123,22 @@ export function ClientForm({ initialData }: ClientFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Faisal Abubakar"
-            className="w-full pl-10 pr-3.5 py-2.5 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm sm:text-base font-medium transition"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-medium shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
         {fieldErrors.name && (
-          <p className="text-xs text-red-400">{fieldErrors.name[0]}</p>
+          <p className="text-xs text-red-600 font-medium">{fieldErrors.name[0]}</p>
         )}
       </div>
 
       {/* Phone Input */}
-      <div className="p-4 sm:p-5 bg-[#071A34] border border-[#0B2545] rounded-2xl space-y-2">
+      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
         <label
           htmlFor="client-phone"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
         >
-          Phone Number <span className="text-slate-500 font-normal lowercase">(optional)</span>
+          Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
         </label>
         <div className="relative">
           <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -148,22 +148,22 @@ export function ClientForm({ initialData }: ClientFormProps) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="e.g., +234 803 123 4567"
-            className="w-full pl-10 pr-3.5 py-2.5 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm sm:text-base font-medium transition"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base font-medium shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
         {fieldErrors.phone && (
-          <p className="text-xs text-red-400">{fieldErrors.phone[0]}</p>
+          <p className="text-xs text-red-600 font-medium">{fieldErrors.phone[0]}</p>
         )}
       </div>
 
       {/* Notes Input */}
-      <div className="p-4 sm:p-5 bg-[#071A34] border border-[#0B2545] rounded-2xl space-y-2">
+      <div className="p-4 sm:p-5 bg-white border border-slate-200/90 rounded-2xl space-y-2 shadow-xs">
         <label
           htmlFor="client-notes"
-          className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+          className="block text-xs font-bold uppercase tracking-wider text-slate-600"
         >
-          Fitting Preferences & Notes <span className="text-slate-500 font-normal lowercase">(optional)</span>
+          Fitting Preferences & Notes <span className="text-slate-400 font-normal lowercase">(optional)</span>
         </label>
         <div className="relative">
           <FileText className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
@@ -173,12 +173,12 @@ export function ClientForm({ initialData }: ClientFormProps) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="e.g., Prefers high-collar Kaftan, likes tapered sokoto, wedding delivery for Dec."
-            className="w-full pl-10 pr-3.5 py-2.5 bg-[#040e1e] border border-[#0B2545] focus:border-[#2e7d32] rounded-xl text-white placeholder-slate-500 focus:outline-none text-sm font-medium transition"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none text-sm font-medium shadow-xs transition"
             disabled={isSubmitting}
           />
         </div>
         {fieldErrors.notes && (
-          <p className="text-xs text-red-400">{fieldErrors.notes[0]}</p>
+          <p className="text-xs text-red-600 font-medium">{fieldErrors.notes[0]}</p>
         )}
       </div>
 
@@ -188,7 +188,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="px-4 py-2.5 bg-[#071A34] hover:bg-[#0B2545] text-slate-300 rounded-xl text-sm font-medium border border-[#0B2545] transition cursor-pointer text-center"
+          className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium border border-slate-200 transition cursor-pointer text-center"
         >
           Cancel
         </button>
@@ -198,12 +198,12 @@ export function ClientForm({ initialData }: ClientFormProps) {
             type="button"
             onClick={(e) => handleSubmit(e, 'measure')}
             disabled={isSubmitting}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#071A34] hover:bg-[#0B2545] text-[#81c784] border border-[#2e7d32]/40 rounded-xl text-sm font-bold transition cursor-pointer"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-300 rounded-xl text-sm font-bold transition cursor-pointer"
           >
             {isSubmitting && redirectAfterSave === 'measure' ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <Ruler className="w-4 h-4 text-[#81c784]" />
+              <Ruler className="w-4 h-4 text-[#1b5e20]" />
             )}
             <span>Save & Take Measurement</span>
           </button>
@@ -212,7 +212,7 @@ export function ClientForm({ initialData }: ClientFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#2e7d32]/20 transition disabled:opacity-50 cursor-pointer"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white rounded-xl text-sm font-bold shadow-sm shadow-[#2e7d32]/20 transition disabled:opacity-50 cursor-pointer"
         >
           {isSubmitting && redirectAfterSave === 'profile' ? (
             <>

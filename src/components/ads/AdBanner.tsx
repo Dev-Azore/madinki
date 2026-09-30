@@ -62,7 +62,7 @@ export function AdBanner({
 
   return (
     <div
-      className={`my-4 overflow-hidden rounded-2xl border border-[#0B2545]/60 bg-[#071A34]/40 p-1.5 text-center transition-all duration-300 ${className}`}
+      className={`my-4 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 p-1.5 text-center transition-all duration-300 ${className}`}
     >
       <ins
         ref={adRef}

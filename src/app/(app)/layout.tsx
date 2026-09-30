@@ -59,9 +59,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <SessionTimeoutProvider role="tailor">
-      <div className="min-h-screen bg-[#040e1e] text-slate-100 flex flex-col selection:bg-[#2e7d32] selection:text-white">
+      <div className="min-h-screen text-slate-900 flex flex-col selection:bg-[#1b5e20] selection:text-white">
         <AppHeader name={profileName} plan={profilePlan} />
-        <main className="flex-1 pb-24 max-w-2xl w-full mx-auto px-4 pt-4">
+        <main className="flex-1 pb-24 max-w-2xl w-full mx-auto px-4 pt-5">
           {children}
         </main>
         <BottomNav />
