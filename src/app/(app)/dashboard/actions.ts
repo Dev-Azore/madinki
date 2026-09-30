@@ -16,6 +16,7 @@ export interface DashboardClientItem {
 }
 
 export interface DashboardStats {
+  user_name: string;
   client_count: number;
   template_count: number;
   measurement_count: number;
@@ -43,7 +44,20 @@ export async function getDashboardStats(): Promise<DashboardStatsResponse> {
     return { data: null, error: 'Unauthorized' };
   }
 
-  // 1. Fetch aggregate statistics via security definer RPC
+  // 1. Fetch user's profile name
+  const { data: userProfile } = await supabase
+    .from('users')
+    .select('name')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  const userName =
+    userProfile?.name ||
+    user.user_metadata?.name ||
+    user.email?.split('@')[0] ||
+    'Tailor';
+
+  // 2. Fetch aggregate statistics via security definer RPC
   const { data: statsData, error: statsError } = await supabase.rpc('tailor_dashboard_stats');
 
   if (statsError) {
@@ -53,7 +67,7 @@ export async function getDashboardStats(): Promise<DashboardStatsResponse> {
 
   const row = Array.isArray(statsData) ? statsData[0] : statsData;
 
-  // 2. Fetch clients with their recent measurements for immediate lookup
+  // 3. Fetch clients with their recent measurements for immediate lookup
   const { data: clientsData, error: clientsError } = await supabase
     .from('clients')
     .select('id, name, phone, notes, created_at')
@@ -61,7 +75,7 @@ export async function getDashboardStats(): Promise<DashboardStatsResponse> {
     .order('updated_at', { ascending: false })
     .limit(20);
 
-  // 3. Fetch recent measurements to associate with client lookup
+  // 4. Fetch recent measurements to associate with client lookup
   const { data: measurementsData } = await supabase
     .from('measurements')
     .select('client_id, template_name_snapshot, fields_snapshot, taken_at')
@@ -95,6 +109,7 @@ export async function getDashboardStats(): Promise<DashboardStatsResponse> {
 
   return {
     data: {
+      user_name: userName,
       client_count: Number(row?.client_count ?? 0),
       template_count: Number(row?.template_count ?? 0),
       measurement_count: Number(row?.measurement_count ?? 0),

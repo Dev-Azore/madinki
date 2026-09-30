@@ -45,12 +45,12 @@ export function LandingNavbar() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/login">
               <Button variant="ghost" size="sm" className="text-xs sm:text-sm px-2.5 sm:px-3 text-slate-700 hover:text-slate-900 hover:bg-slate-100">
-                Sign In
+                Login
               </Button>
             </Link>
             <Link href="/register">
               <Button size="sm" className="text-xs sm:text-sm px-3 sm:px-4 gap-1.5 bg-[#1b5e20] hover:bg-[#144818] text-white font-bold shadow-xs">
-                <span>Start Free</span>
+                <span>Signup</span>
                 <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </Button>
             </Link>
