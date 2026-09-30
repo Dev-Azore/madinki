@@ -34,21 +34,21 @@ export function generateWhatsAppMessage(data: WhatsAppShareData): string {
   const filledFields = fields.filter((f) => f.value && f.value.trim().length > 0);
 
   const measurementsList = filledFields
-    .map((f) => `• *${f.field_name}:* ${f.value}${f.unit ? ` ${f.unit}` : ''}`)
+    .map((f) => `• ${f.field_name}: ${f.value}${f.unit ? ` ${f.unit}` : ''}`)
     .join('\n');
 
   const lines = [
-    `✂️ *Madinki — Fitting Measurement Slip*`,
+    `✂️ Madinki — Fitting Measurement Slip`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `👤 *Customer:* ${clientName}`,
-    clientPhone ? `📞 *Phone:* ${clientPhone}` : null,
-    `👗 *Garment Style:* ${templateName}`,
-    `📅 *Fitting Date:* ${dateStr}`,
+    `👤 Customer: ${clientName}`,
+    clientPhone ? `📞 Phone: ${clientPhone}` : null,
+    `👗 Garment Style: ${templateName}`,
+    `📅 Fitting Date: ${dateStr}`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `📏 *MEASURED SIZES:*`,
+    `📏 MEASURED SIZES:`,
     measurementsList || `(No measurements recorded)`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `🧵 *Recorded with Madinki*`,
+    `🧵 Recorded with Madinki`,
   ].filter(Boolean);
 
   return lines.join('\n');
