@@ -277,7 +277,7 @@ export function ProfileClient({ initialProfile, errorMessage }: ProfileClientPro
                 PWA Home Screen App
               </h3>
               <p className="text-[11px] text-slate-500">
-                Install TailorApp on your phone or computer for 1-tap workshop access.
+                Install Madinki on your phone or computer for 1-tap workshop access.
               </p>
             </div>
           </div>

@@ -16,7 +16,6 @@ import {
   ArrowRight,
   Plus,
   Minus,
-  Sparkles,
   Share2,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -347,7 +346,7 @@ export function InteractiveDemo() {
               <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="text-xs text-slate-500 flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#1b5e20]" />
-                  <span>Permanent snapshot • Zero overwrite risk</span>
+                  <span>Permanent record • Zero overwrite risk</span>
                 </div>
 
                 <Button
@@ -362,12 +361,12 @@ export function InteractiveDemo() {
                   {isSaved ? (
                     <>
                       <Check className="w-4 h-4 text-white" />
-                      <span>Ticket Locked & Generated!</span>
+                      <span>Slip Saved & Generated!</span>
                     </>
                   ) : (
                     <>
                       <Lock className="w-3.5 h-3.5" />
-                      <span>Freeze & Generate Fitting Slip</span>
+                      <span>Save & Generate Measurement Slip</span>
                     </>
                   )}
                 </Button>
@@ -428,7 +427,7 @@ export function InteractiveDemo() {
                         <div className="font-bold text-slate-900 font-sans flex items-center justify-between pb-2 border-b border-slate-100">
                           <span className="flex items-center gap-1.5">
                             <Scissors className="w-3.5 h-3.5 text-[#1b5e20]" />
-                            <span>✂️ TailorApp — Fitting Slip</span>
+                            <span>✂️ Madinki — Fitting Slip</span>
                           </span>
                           <span className="text-[10px] text-slate-400 font-sans">
                             {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -454,7 +453,7 @@ export function InteractiveDemo() {
                         </div>
 
                         <div className="pt-2 border-t border-dashed border-slate-200 text-[10px] text-slate-500 font-sans flex items-center justify-between">
-                          <span>🧵 *Recorded with TailorApp*</span>
+                          <span>🧵 *Recorded with Madinki*</span>
                           <span className="text-emerald-700 font-bold">✓✓ Sent</span>
                         </div>
                       </div>
@@ -488,7 +487,7 @@ export function InteractiveDemo() {
                           <div className="text-[11px] text-slate-500">{current.title}</div>
                         </div>
                         <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-[#1b5e20] text-[10px] font-black uppercase border border-emerald-200">
-                          {isSaved ? '🔒 Locked Snapshot' : 'Draft Ticket'}
+                          {isSaved ? '🔒 Saved Record' : 'Draft Slip'}
                         </span>
                       </div>
 
@@ -512,21 +511,21 @@ export function InteractiveDemo() {
                 )}
               </div>
 
-              {/* Psychology CTA Footnote */}
+              {/* Callout Box */}
               <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/90 text-xs text-slate-800 space-y-2">
                 <div className="font-black text-[#1b5e20] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Scissors className="w-3.5 h-3.5" />
                   <span>Ready to replace paper notebooks in your shop?</span>
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed">
-                  Join independent tailors across Nigeria managing client fitting snapshots with zero lost records.
+                  Join independent tailors across Nigeria managing customer measurements with zero lost records.
                 </p>
                 <div className="pt-1">
                   <Link
                     href="/register"
                     className="inline-flex items-center gap-1.5 text-xs font-black text-[#1b5e20] hover:underline"
                   >
-                    <span>Create Free Tailor Account</span>
+                    <span>Create Free Account</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>

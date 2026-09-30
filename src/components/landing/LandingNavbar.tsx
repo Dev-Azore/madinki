@@ -16,7 +16,7 @@ export function LandingNavbar() {
             </div>
             <div className="flex flex-col">
               <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5">
-                TailorApp
+                Madinki
               </span>
               <span className="text-[10px] sm:text-[11px] text-[#1b5e20] font-medium -mt-0.5 sm:-mt-1">
                 Measurement Book for Tailors

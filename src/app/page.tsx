@@ -7,7 +7,7 @@ import { TestimonialsAndFAQ } from '@/components/landing/TestimonialsAndFAQ';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 
 export const metadata = {
-  title: 'TailorApp — Digital Measurement Book for Tailors & Fashion Designers',
+  title: 'Madinki — Digital Measurement Book for Tailors & Fashion Designers',
   description:
     'A simple and reliable digital measurement management system for independent tailors and fashion designers. Never lose customer measurements again.',
 };

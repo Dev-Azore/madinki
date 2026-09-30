@@ -17,8 +17,14 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase() || 'TR';
 }
 
+function getFirstName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return parts[0] || name;
+}
+
 export function AppHeader({ name, plan }: AppHeaderProps) {
   const initials = getInitials(name);
+  const firstName = getFirstName(name);
 
   return (
     <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-2xs">
@@ -34,7 +40,7 @@ export function AppHeader({ name, plan }: AppHeaderProps) {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-black text-slate-900 tracking-tight group-hover:text-[#1b5e20] transition-colors leading-none">
-              TailorApp
+              Madinki
             </span>
             <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase leading-none mt-0.5">
               Atelier
@@ -56,7 +62,7 @@ export function AppHeader({ name, plan }: AppHeaderProps) {
 
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition truncate max-w-[90px] sm:max-w-[140px]">
-                {name}
+                {firstName}
               </span>
               {plan === 'premium' ? (
                 <span className="text-[9.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-gradient-to-r from-amber-100 to-amber-50 text-amber-800 border border-amber-300">

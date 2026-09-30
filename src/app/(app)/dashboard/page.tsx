@@ -2,7 +2,7 @@ import { getDashboardStats } from './actions';
 import DashboardClient from './DashboardClient';
 
 export const metadata = {
-  title: 'Tailor Dashboard — TailorApp',
+  title: 'Tailor Dashboard — Madinki',
   description: 'Search clients, view fittings, and manage garment measurements.',
 };
 

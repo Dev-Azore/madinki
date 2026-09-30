@@ -15,9 +15,10 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-const STORAGE_KEY_INSTALLED = 'tailorapp_pwa_installed';
-const STORAGE_KEY_DISMISSED_AT = 'tailorapp_pwa_dismissed_at';
+const STORAGE_KEY_INSTALLED = 'madinki_pwa_installed';
+const STORAGE_KEY_DISMISSED_AT = 'madinki_pwa_dismissed_at';
 const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours cooldown
+const DISPLAY_DURATION_MS = 8000; // Show for 8 seconds, then auto-disappear
 
 export function PwaInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -81,6 +82,18 @@ export function PwaInstallPrompt() {
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
+
+  // Auto-dismiss after 8 seconds and start 24-hour cooldown
+  useEffect(() => {
+    if (!showBanner || showIosModal) return;
+
+    const timer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY_DISMISSED_AT, String(Date.now()));
+      setShowBanner(false);
+    }, DISPLAY_DURATION_MS);
+
+    return () => clearTimeout(timer);
+  }, [showBanner, showIosModal]);
 
   const handleDismiss = () => {
     // Record timestamp so it won't appear again on refresh within 24h
@@ -150,7 +163,7 @@ export function PwaInstallPrompt() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
               <h4 className="text-xs font-black text-slate-900 tracking-tight">
-                Install TailorApp
+                Install Madinki
               </h4>
               <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-emerald-50 text-[#1b5e20] text-[9px] font-bold uppercase border border-emerald-200">
                 <Smartphone className="w-2.5 h-2.5" />
@@ -197,7 +210,7 @@ export function PwaInstallPrompt() {
                 </div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900">
-                    Add TailorApp to Home Screen
+                    Add Madinki to Home Screen
                   </h3>
                   <p className="text-[11px] text-slate-500">Install in 2 quick taps</p>
                 </div>

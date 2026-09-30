@@ -54,7 +54,7 @@ export default async function AdminLayout({
                   </div>
                   <div className="flex items-baseline gap-2">
                     <span className="font-extrabold text-base tracking-tight text-slate-900">
-                      TailorApp
+                      Madinki
                     </span>
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
                       Admin Console

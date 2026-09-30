@@ -3,7 +3,7 @@ import { ArrowLeft, FileQuestion } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: 'Page Not Found — TailorApp',
+  title: 'Page Not Found — Madinki',
 };
 
 export default function NotFound() {

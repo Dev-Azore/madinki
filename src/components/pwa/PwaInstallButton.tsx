@@ -8,7 +8,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-const STORAGE_KEY_INSTALLED = 'tailorapp_pwa_installed';
+const STORAGE_KEY_INSTALLED = 'madinki_pwa_installed';
 
 interface PwaInstallButtonProps {
   className?: string;
@@ -114,7 +114,7 @@ export function PwaInstallButton({
           type="button"
           onClick={handleTriggerInstall}
           className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition cursor-pointer bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] border border-emerald-200 active:scale-95 ${className}`}
-          title="Install TailorApp on your device"
+          title="Install Madinki on your device"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Install App</span>
@@ -132,7 +132,7 @@ export function PwaInstallButton({
                 </div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900">
-                    Install TailorApp
+                    Install Madinki
                   </h3>
                   <p className="text-[11px] text-slate-500">
                     {isIos ? 'Quick 2-step setup on iOS' : 'Add to your Home Screen'}

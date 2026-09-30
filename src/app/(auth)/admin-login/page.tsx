@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin Console</h1>
-            <p className="text-slate-500 text-sm mt-1">TailorApp Platform Administration</p>
+            <p className="text-slate-500 text-sm mt-1">Madinki Platform Administration</p>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
@@ -170,7 +170,7 @@ export default function AdminLoginPage() {
         <p className="text-center text-xs text-slate-500">
           Not an administrator?{' '}
           <Link href="/login" className="text-[#1b5e20] hover:underline font-bold transition">
-            Sign in to TailorApp
+            Sign in to Madinki
           </Link>
         </p>
       </div>

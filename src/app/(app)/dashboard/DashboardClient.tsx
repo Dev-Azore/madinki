@@ -21,7 +21,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Check,
-  Sparkles as _Sparkles, // Not used
 } from 'lucide-react';
 import { AdBanner } from '@/components/ads/AdBanner';
 import type { DashboardStats, DashboardClientItem } from './actions';

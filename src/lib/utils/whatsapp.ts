@@ -38,7 +38,7 @@ export function generateWhatsAppMessage(data: WhatsAppShareData): string {
     .join('\n');
 
   const lines = [
-    `✂️ *TailorApp — Fitting Measurement Slip*`,
+    `✂️ *Madinki — Fitting Measurement Slip*`,
     `━━━━━━━━━━━━━━━━━━━━`,
     `👤 *Customer:* ${clientName}`,
     clientPhone ? `📞 *Phone:* ${clientPhone}` : null,
@@ -48,7 +48,7 @@ export function generateWhatsAppMessage(data: WhatsAppShareData): string {
     `📏 *MEASURED SIZES:*`,
     measurementsList || `(No measurements recorded)`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `🧵 *Recorded with TailorApp*`,
+    `🧵 *Recorded with Madinki*`,
   ].filter(Boolean);
 
   return lines.join('\n');

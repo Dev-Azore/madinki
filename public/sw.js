@@ -1,8 +1,8 @@
-// TailorApp Service Worker (App Shell Precache Only)
+// Madinki Service Worker (App Shell Precache Only)
 // Note: Per AGENTS.md §4, data operations require network connectivity.
 // This Service Worker is dedicated to PWA installability and app shell asset caching.
 
-const CACHE_NAME = 'tailorapp-shell-v1';
+const CACHE_NAME = 'madinki-shell-v1';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.json',

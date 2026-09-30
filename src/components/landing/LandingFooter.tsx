@@ -16,7 +16,7 @@ export function LandingFooter() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black text-slate-900 tracking-tight">
-                  TailorApp
+                  Madinki
                 </span>
                 <span className="text-xs text-[#1b5e20] font-bold -mt-0.5">
                   Digital Measurement System
@@ -50,8 +50,8 @@ export function LandingFooter() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#1b5e20] flex-shrink-0" />
-                <a href="mailto:support@tailorapp.com" className="hover:text-[#1b5e20] font-semibold text-slate-900 transition-colors">
-                  support@tailorapp.com
+                <a href="mailto:support@madinki.com" className="hover:text-[#1b5e20] font-semibold text-slate-900 transition-colors">
+                  support@madinki.com
                 </a>
               </li>
             </ul>
@@ -94,7 +94,7 @@ export function LandingFooter() {
 
         {/* Bottom copyright line */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>&copy; {new Date().getFullYear()} TailorApp. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Madinki. All rights reserved.</p>
           <p className="flex items-center gap-1 text-slate-500">
             <span>Built with precision for Nigerian Tailors</span>
           </p>

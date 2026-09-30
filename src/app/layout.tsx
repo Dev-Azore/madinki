@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'TailorApp — Measurement Management',
+  title: 'Madinki — Measurement Management',
   description: 'An installable web app for independent tailors to manage client measurements.',
   manifest: '/manifest.json',
   icons: {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'TailorApp',
+    title: 'Madinki',
   },
 };
 

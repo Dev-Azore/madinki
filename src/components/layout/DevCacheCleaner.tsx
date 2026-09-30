@@ -18,7 +18,7 @@ export function DevCacheCleaner() {
           for (const registration of registrations) {
             registration.unregister().then((unregistered) => {
               if (unregistered) {
-                console.info('[TailorApp Dev] Unregistered stale service worker on localhost.');
+                console.info('[Madinki Dev] Unregistered stale service worker on localhost.');
               }
             });
           }

@@ -36,7 +36,7 @@ const FEATURES = [
     icon: Smartphone,
     title: 'Mobile App for Your Phone',
     description:
-      'Add TailorApp straight to your Android or iPhone home screen. Use it right on your workshop cutting table without heavy downloads.',
+      'Add Madinki straight to your Android or iPhone home screen. Use it right on your workshop cutting table without heavy downloads.',
     tag: 'Mobile Friendly',
   },
   {
@@ -68,7 +68,7 @@ export function FeaturesSection() {
             Everything You Need to Run an Organized Tailoring Shop
           </h2>
           <p className="text-slate-600 text-sm sm:text-base lg:text-lg">
-            Say goodbye to stained paper notebooks, missing measuring slips, and customer size arguments. TailorApp brings order to your workshop.
+            Say goodbye to stained paper notebooks, missing measuring slips, and customer size arguments. Madinki brings order to your workshop.
           </p>
         </div>
 

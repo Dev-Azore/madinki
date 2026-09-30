@@ -19,7 +19,6 @@ import {
   Send,
   Lock,
   Smartphone,
-  Sparkles,
   Sliders,
   CheckCircle2,
 } from 'lucide-react';
@@ -160,7 +159,7 @@ export function HeroSection() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#1b5e20]" />
             </span>
             <span className="text-xs font-bold text-slate-800 tracking-tight">
-              Cloud Measurement Studio & Fitting Ledger
+              Smart Digital Measurement Book for Tailors
             </span>
           </div>
 
@@ -174,7 +173,7 @@ export function HeroSection() {
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-2xl font-normal leading-relaxed">
-            A fast, beautiful, and secure workspace designed for bespoke fashion designers and master tailors. Capture fitting snapshots, create Kaftan blueprints, and send WhatsApp measurement slips instantly.
+            A fast, beautiful, and secure workspace designed for bespoke fashion designers and master tailors. Save client measurements, customize outfit styles, and send WhatsApp slips instantly.
           </p>
 
           {/* Action CTAs */}
@@ -195,7 +194,7 @@ export function HeroSection() {
                 className="w-full sm:w-auto px-8 h-14 bg-white/90 hover:bg-slate-50 text-slate-900 border-slate-300 hover:border-slate-400 rounded-2xl font-bold flex items-center justify-center gap-2.5 shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <Ruler className="w-4 h-4 text-[#1b5e20]" />
-                <span>Try Interactive Studio</span>
+                <span>Try Live Demo</span>
               </Button>
             </a>
           </div>
@@ -254,14 +253,14 @@ export function HeroSection() {
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                    Immutable
+                    Safe Records
                   </span>
                 </div>
                 <div className="text-xs font-extrabold text-slate-900 group-hover:text-[#1b5e20] transition-colors">
                   Permanent Fitting History
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                  Every size snapshot is frozen in time. Zero overwritten tickets.
+                  Every measurement record is permanently saved. Never get overwritten.
                 </div>
               </button>
 
@@ -354,7 +353,7 @@ export function HeroSection() {
                 <div className="w-3 h-3 rounded-full bg-amber-400/80" />
                 <div className="w-3 h-3 rounded-full bg-[#1b5e20]" />
                 <span className="ml-2 text-xs font-bold text-slate-700 hidden sm:inline">
-                  TailorApp Studio • Atelier Workbench
+                  Madinki Studio • Atelier Workbench
                 </span>
               </div>
 
@@ -467,7 +466,7 @@ export function HeroSection() {
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span className="flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#1b5e20]" />
-                    <span>Isolated DB Vault</span>
+                    <span>100% Private & Safe</span>
                   </span>
                   <Link href="/register" className="text-[#1b5e20] hover:underline font-bold flex items-center gap-1">
                     <Plus className="w-3 h-3" />
@@ -636,7 +635,7 @@ export function HeroSection() {
                       <div className="bg-white rounded-xl rounded-tl-none p-3.5 shadow-sm max-w-sm border border-slate-200 text-slate-800 space-y-1.5 text-xs font-mono leading-relaxed">
                         <div className="font-bold text-slate-900 font-sans flex items-center gap-1.5 pb-1 border-b border-slate-100">
                           <Scissors className="w-3.5 h-3.5 text-[#1b5e20]" />
-                          <span>TailorApp — Fitting Slip</span>
+                          <span>Madinki — Fitting Slip</span>
                         </div>
                         <div className="text-[11px] text-slate-600">
                           <div>👤 Customer: <span className="font-bold text-slate-800">{activeClient.name}</span></div>
@@ -651,7 +650,7 @@ export function HeroSection() {
                           ))}
                         </div>
                         <div className="pt-1 text-[10px] text-slate-400 font-sans italic">
-                          🧵 Recorded with TailorApp
+                          🧵 Recorded with Madinki
                         </div>
                       </div>
                     </div>
@@ -662,7 +661,7 @@ export function HeroSection() {
                 <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-3">
                   <div className="text-xs text-slate-500 flex items-center gap-1.5">
                     <Scissors className="w-3.5 h-3.5 text-[#1b5e20]" />
-                    <span>Snapshot Ticket #TK-{activeClient.id}092</span>
+                    <span>Measurement Slip #TK-{activeClient.id}092</span>
                   </div>
 
                   <button

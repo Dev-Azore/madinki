@@ -2,8 +2,8 @@ import { ShieldX, Mail, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { logout } from '@/app/(auth)/actions';
 
 export const metadata = {
-  title: 'Account Suspended | TailorApp',
-  description: 'Your TailorApp account has been suspended.',
+  title: 'Account Suspended | Madinki',
+  description: 'Your Madinki account has been suspended.',
 };
 
 export default function SuspendedPage() {
@@ -33,7 +33,7 @@ export default function SuspendedPage() {
             Account Suspended
           </h1>
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-sm mx-auto">
-            Your TailorApp tailor account is currently inactive or suspended by platform administrators.
+            Your Madinki tailor account is currently inactive or suspended by platform administrators.
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export default function SuspendedPage() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="mailto:support@tailorapp.com"
+            href="mailto:support@madinki.com"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-xs sm:text-sm font-bold rounded-xl transition"
           >
             <Mail className="w-4 h-4" />

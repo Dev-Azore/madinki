@@ -5,16 +5,16 @@ import { ChevronDown, Star, Quote, ChevronLeft, ChevronRight } from 'lucide-reac
 
 const FAQS = [
   {
-    q: 'How does TailorApp help me avoid customer measurement mistakes?',
-    a: 'Paper measurement books easily get lost, torn, or misplaced by apprentices. TailorApp saves every single customer measurement on your phone with the exact date. When a customer returns for a new Kaftan or Babban Riga months later, you can see their exact previous sizes instantly.',
+    q: 'How does Madinki help me avoid customer measurement mistakes?',
+    a: 'Paper measurement books easily get lost, torn, or misplaced by apprentices. Madinki saves every single customer measurement on your phone with the exact date. When a customer returns for a new Kaftan or Babban Riga months later, you can see their exact previous sizes instantly.',
   },
   {
     q: 'Can I add custom measurement names for traditional clothes?',
     a: 'Yes! You can create custom measurement templates for Kaftan, Babban Riga, Senator wear, Agbada, Abayas, and Gowns. You can type names in Hausa or English (Tsawon Riga, Hannu, Kirji, Wando) in Inches or Centimeters.',
   },
   {
-    q: 'Can I use TailorApp directly on my phone in my shop?',
-    a: 'Yes! TailorApp is designed specifically for phones. Open the website on your phone (Chrome or Safari) and tap "Add to Home Screen". It opens in full screen just like a regular mobile app without taking up much phone storage.',
+    q: 'Can I use Madinki directly on my phone in my shop?',
+    a: 'Yes! Madinki is designed specifically for phones. Open the website on your phone (Chrome or Safari) and tap "Add to Home Screen". It opens in full screen just like a regular mobile app without taking up much phone storage.',
   },
   {
     q: 'Are my customer phone numbers and measurements private?',
@@ -22,21 +22,21 @@ const FAQS = [
   },
   {
     q: 'Where is your office located and how can I contact support?',
-    a: 'Our physical hub is located at No.1 & 2 Ayumsa Plaza, Sabo Bakin Zuwo Road, Kano State, Nigeria. You can call our support line on +234 706 111 0002 or email support@tailorapp.com.',
+    a: 'Our physical hub is located at No.1 & 2 Ayumsa Plaza, Sabo Bakin Zuwo Road, Kano State, Nigeria. You can call our support line on +234 706 111 0002 or email support@madinki.com.',
   },
 ];
 
 const MASTER_TESTIMONIALS = [
   {
     quote:
-      'In our workshop at Bn Isma\'eel Clothing, accuracy is our priority. TailorApp stops lost customer measurements and allows our cutters to check size history in seconds.',
+      'In our workshop at Bn Isma\'eel Clothing, accuracy is our priority. Madinki stops lost customer measurements and allows our cutters to check size history in seconds.',
     author: 'Auwal Isma\'il',
     role: 'CEO, Bn Isma\'eel Clothing',
     tag: 'Bn Isma\'eel Clothing',
   },
   {
     quote:
-      'Managing hundreds of clients used to require stacks of paper books. With TailorApp, my apprentices and I find accurate Kaftan and Babban Riga measurements without stress.',
+      'Managing hundreds of clients used to require stacks of paper books. With Madinki, my apprentices and I find accurate Kaftan and Babban Riga measurements without stress.',
     author: 'Isma\'il Zubair',
     role: 'CEO, Kankara Couture and More',
     tag: 'Kankara Couture',
@@ -102,7 +102,7 @@ export function TestimonialsAndFAQ() {
               Loved by Experienced Master Tailors
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              See what top master tailors and fashion houses have to say about using TailorApp.
+              See what top master tailors and fashion houses have to say about using Madinki.
             </p>
           </div>
 
