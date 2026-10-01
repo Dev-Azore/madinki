@@ -301,9 +301,6 @@ export async function updateLedgerEntry(
   return { success: true, data: { id: data.id } };
 }
 
-/**
- * Quick updates the status of an entry (e.g. toggling Start -> Ready -> Delivered / Tik).
- */
 export async function updateLedgerStatus(
   payload: UpdateLedgerStatusInput
 ): Promise<ActionResponse<void>> {
@@ -334,6 +331,71 @@ export async function updateLedgerStatus(
   revalidatePath('/ledger');
   revalidatePath('/dashboard');
   return { success: true };
+}
+
+/**
+ * Fast payment collection: records new payment amount into deposit and optionally updates status.
+ */
+export async function recordLedgerPayment(payload: {
+  id: string;
+  paymentAmount: number;
+  markDelivered?: boolean;
+}): Promise<ActionResponse<{ newDeposit: number; newBalance: number }>> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  if (typeof payload.paymentAmount !== 'number' || payload.paymentAmount <= 0) {
+    return { error: 'Payment amount must be greater than zero.' };
+  }
+
+  // Get current entry
+  const { data: currentEntry, error: fetchError } = await supabase
+    .from('ledger_entries')
+    .select('id, deposit_amount, total_amount, status')
+    .eq('id', payload.id)
+    .eq('tailor_id', user.id)
+    .single();
+
+  if (fetchError || !currentEntry) {
+    return { error: 'Order not found.' };
+  }
+
+  const newDeposit = Math.min(
+    currentEntry.total_amount,
+    Number(currentEntry.deposit_amount) + payload.paymentAmount
+  );
+  const newBalance = Math.max(0, currentEntry.total_amount - newDeposit);
+
+  const updates: {
+    deposit_amount: number;
+    status?: LedgerStatus;
+  } = {
+    deposit_amount: newDeposit,
+  };
+
+  if (payload.markDelivered || (newBalance === 0 && currentEntry.status === 'ready')) {
+    updates.status = 'delivered';
+  }
+
+  const { error: updateError } = await supabase
+    .from('ledger_entries')
+    .update(updates)
+    .eq('id', payload.id)
+    .eq('tailor_id', user.id);
+
+  if (updateError) {
+    return { error: 'Failed to record payment.' };
+  }
+
+  revalidatePath('/ledger');
+  revalidatePath('/dashboard');
+  return { success: true, data: { newDeposit, newBalance } };
 }
 
 /**

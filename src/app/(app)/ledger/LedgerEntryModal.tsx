@@ -3,17 +3,12 @@
 import { useState, useEffect } from 'react';
 import {
   X,
-  Plus,
   Loader2,
   AlertCircle,
   Save,
   User,
   Phone,
-  Calendar,
-  Layers,
-  Sparkles,
   Scissors,
-  DollarSign,
   CheckCircle2,
 } from 'lucide-react';
 import {
@@ -31,8 +26,26 @@ interface LedgerEntryModalProps {
   clients: Array<{ id: string; name: string; phone: string | null }>;
 }
 
-const COMMON_STYLES = ['Plain', 'Design', 'Royal Kaftan', 'Senator Wear', 'Babban Riga', 'Gown / Abaya', 'Shirt & Trouser'];
-const COMMON_WORKS = ['Plain', 'Computer', 'Monogram', 'Hand Embroidery', 'Stone Work', 'Normal Stitch'];
+const COMMON_STYLES = [
+  'Plain',
+  'Design',
+  'Royal Kaftan',
+  'Senator Wear',
+  'Babban Riga',
+  'Jalabiya / Gown',
+  'Shirt & Trouser',
+  'Suit / Safari',
+];
+
+const COMMON_WORKS = [
+  'Plain (Babu Aiki)',
+  'Computer Embroidery',
+  'Monogram (Mono)',
+  'Hand Embroidery (Hannu)',
+  'Stone Work',
+  'Normal Stitch',
+  'Piping / Neck Design',
+];
 
 export function LedgerEntryModal({
   isOpen,
@@ -50,7 +63,7 @@ export function LedgerEntryModal({
   const [deliveryDate, setDeliveryDate] = useState<string>('');
   const [setsCount, setSetsCount] = useState<number>(1);
   const [styleType, setStyleType] = useState('Plain');
-  const [embroideryWork, setEmbroideryWork] = useState('Plain');
+  const [embroideryWork, setEmbroideryWork] = useState('Plain (Babu Aiki)');
   const [agbadaCount, setAgbadaCount] = useState<number>(0);
   const [depositAmount, setDepositAmount] = useState<string>('0');
   const [totalAmount, setTotalAmount] = useState<string>('0');
@@ -70,7 +83,7 @@ export function LedgerEntryModal({
       setDeliveryDate(initialEntry.delivery_date || '');
       setSetsCount(initialEntry.sets_count || 1);
       setStyleType(initialEntry.style_type || 'Plain');
-      setEmbroideryWork(initialEntry.embroidery_work || 'Plain');
+      setEmbroideryWork(initialEntry.embroidery_work || 'Plain (Babu Aiki)');
       setAgbadaCount(initialEntry.agbada_count || 0);
       setDepositAmount(initialEntry.deposit_amount.toString());
       setTotalAmount(initialEntry.total_amount.toString());
@@ -84,7 +97,7 @@ export function LedgerEntryModal({
       setDeliveryDate('');
       setSetsCount(1);
       setStyleType('Plain');
-      setEmbroideryWork('Plain');
+      setEmbroideryWork('Plain (Babu Aiki)');
       setAgbadaCount(0);
       setDepositAmount('0');
       setTotalAmount('0');
@@ -112,6 +125,18 @@ export function LedgerEntryModal({
     if (c.phone) setClientPhone(c.phone);
     setClientId(c.id);
     setShowClientSuggestions(false);
+  };
+
+  const setDepositHalf = () => {
+    if (numTotal > 0) {
+      setDepositAmount(Math.round(numTotal / 2).toString());
+    }
+  };
+
+  const setDepositFull = () => {
+    if (numTotal > 0) {
+      setDepositAmount(numTotal.toString());
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -177,12 +202,12 @@ export function LedgerEntryModal({
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#1b5e20] flex items-center justify-center font-bold shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center font-bold shadow-2xs">
               <Scissors className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                {isEditing ? 'Edit Ledger Entry' : 'New E-Book Order Entry'}
+                {isEditing ? 'Gyara Aiki (Edit Order)' : 'Rubuta Sabon Aiki (New Order)'}
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
                 Record customer outfit order, embroidery & billing
@@ -209,8 +234,8 @@ export function LedgerEntryModal({
           {/* Customer & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1 relative">
-              <label className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
-                Customer Name <span className="text-[#1b5e20]">*</span>
+              <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
+                Mai Kayan (Customer Name) <span className="text-emerald-700">*</span>
               </label>
               <div className="relative">
                 <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -223,7 +248,7 @@ export function LedgerEntryModal({
                   }}
                   onFocus={() => setShowClientSuggestions(true)}
                   placeholder="e.g. Alhaji Ibrahim"
-                  className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
+                  className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
                   required
                 />
               </div>
@@ -247,8 +272,8 @@ export function LedgerEntryModal({
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
-                Phone Number
+              <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
+                Lambar Waya (Phone Number)
               </label>
               <div className="relative">
                 <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -257,7 +282,7 @@ export function LedgerEntryModal({
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
                   placeholder="0803..."
-                  className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] focus:bg-white rounded-xl text-slate-900 font-semibold focus:outline-none shadow-2xs"
+                  className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 focus:bg-white rounded-xl text-slate-900 font-semibold focus:outline-none shadow-2xs"
                 />
               </div>
             </div>
@@ -267,53 +292,53 @@ export function LedgerEntryModal({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Order Date
+                Ranar Karba (Booked)
               </label>
               <input
                 type="date"
                 value={entryDate}
                 onChange={(e) => setEntryDate(e.target.value)}
-                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
+                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
                 required
               />
             </div>
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Delivery Date
+                Ranar Bayarwa (Due Date)
               </label>
               <input
                 type="date"
                 value={deliveryDate}
                 onChange={(e) => setDeliveryDate(e.target.value)}
-                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
+                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
               />
             </div>
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Sets / Qty
+                Yawan Kaya (Sets)
               </label>
               <input
                 type="number"
                 min="1"
                 value={setsCount}
                 onChange={(e) => setSetsCount(parseInt(e.target.value) || 1)}
-                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-black focus:outline-none shadow-2xs text-xs"
+                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-black focus:outline-none shadow-2xs text-xs"
                 required
               />
             </div>
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Agbada Count
+                Agbada / Babban Riga
               </label>
               <input
                 type="number"
                 min="0"
                 value={agbadaCount}
                 onChange={(e) => setAgbadaCount(parseInt(e.target.value) || 0)}
-                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
+                className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs text-xs"
               />
             </div>
           </div>
@@ -322,15 +347,15 @@ export function LedgerEntryModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Style / Plain
+                Nau&apos;in Dinki (Style)
               </label>
               <input
                 type="text"
                 list="style-suggestions"
                 value={styleType}
                 onChange={(e) => setStyleType(e.target.value)}
-                placeholder="e.g. Plain, Kaftan, Senator"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
+                placeholder="e.g. Plain, Royal Kaftan"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
               />
               <datalist id="style-suggestions">
                 {COMMON_STYLES.map((s) => (
@@ -341,7 +366,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Work / Aiki (Embroidery)
+                Aiki (Embroidery / Work)
               </label>
               <input
                 type="text"
@@ -349,7 +374,7 @@ export function LedgerEntryModal({
                 value={embroideryWork}
                 onChange={(e) => setEmbroideryWork(e.target.value)}
                 placeholder="e.g. Plain, Computer, Mono"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 focus:bg-white rounded-xl text-slate-900 font-bold focus:outline-none shadow-2xs"
               />
               <datalist id="work-suggestions">
                 {COMMON_WORKS.map((w) => (
@@ -359,54 +384,87 @@ export function LedgerEntryModal({
             </div>
           </div>
 
-          {/* Deposit & Total Price & Balance */}
-          <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/90 rounded-2xl space-y-3">
+          {/* Deposit & Total Price & Balance with Quick Calculate */}
+          <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/90 rounded-2xl space-y-2.5">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <div className="space-y-1">
-                <label className="font-bold text-[#1b5e20] uppercase tracking-wider text-[10px]">
-                  Deposit Paid (₦)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="50"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  placeholder="0"
-                  className="w-full px-3 py-1.5 bg-white border border-emerald-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-black text-sm focus:outline-none shadow-2xs"
-                />
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-emerald-800 uppercase tracking-wider text-[10px]">
+                    Kudin Ajiya (Deposit)
+                  </label>
+                </div>
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-black text-xs text-emerald-800">
+                    ₦
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="50"
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(e.target.value)}
+                    placeholder="0"
+                    className="w-full pl-6 pr-2.5 py-1.5 bg-white border border-emerald-200 focus:border-emerald-800 rounded-xl text-slate-900 font-black text-sm focus:outline-none shadow-2xs"
+                  />
+                </div>
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-[#1b5e20] uppercase tracking-wider text-[10px]">
-                  Total Full Price (₦)
+                <label className="font-bold text-emerald-800 uppercase tracking-wider text-[10px]">
+                  Jimillar Kudi (Total Bill)
                 </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="50"
-                  value={totalAmount}
-                  onChange={(e) => setTotalAmount(e.target.value)}
-                  placeholder="0"
-                  className="w-full px-3 py-1.5 bg-white border border-emerald-200 focus:border-[#1b5e20] rounded-xl text-slate-900 font-black text-sm focus:outline-none shadow-2xs"
-                />
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-black text-xs text-emerald-800">
+                    ₦
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="50"
+                    value={totalAmount}
+                    onChange={(e) => setTotalAmount(e.target.value)}
+                    placeholder="0"
+                    className="w-full pl-6 pr-2.5 py-1.5 bg-white border border-emerald-200 focus:border-emerald-800 rounded-xl text-slate-900 font-black text-sm focus:outline-none shadow-2xs"
+                  />
+                </div>
               </div>
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-600 uppercase tracking-wider text-[10px]">
-                  Sauran Kudi (Balance)
+                  Ragowar Kudi (Balance)
                 </label>
                 <div className="px-3 py-1.5 bg-white/90 border border-emerald-200/80 rounded-xl font-black text-sm flex items-center text-amber-700">
                   ₦{balance.toLocaleString()}
                 </div>
               </div>
             </div>
+
+            {/* Quick deposit shortcuts */}
+            {numTotal > 0 && (
+              <div className="flex items-center gap-1.5 pt-1">
+                <span className="text-[10px] text-emerald-800 font-bold">Quick Ajiya:</span>
+                <button
+                  type="button"
+                  onClick={setDepositHalf}
+                  className="px-2 py-0.5 rounded-lg bg-white border border-emerald-300 text-emerald-800 font-bold text-[10px] hover:bg-emerald-100 transition cursor-pointer"
+                >
+                  50% (₦{Math.round(numTotal / 2).toLocaleString()})
+                </button>
+                <button
+                  type="button"
+                  onClick={setDepositFull}
+                  className="px-2 py-0.5 rounded-lg bg-white border border-emerald-300 text-emerald-800 font-bold text-[10px] hover:bg-emerald-100 transition cursor-pointer"
+                >
+                  Full Paid (₦{numTotal.toLocaleString()})
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Job Status Selector */}
           <div className="space-y-1.5">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Job Status (Matakin Aiki)
+              Matakin Aiki (Order Status)
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
@@ -418,31 +476,45 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ⏳ Start / Ana Dinki
+                ⏳ Ana Dinki (Sewing)
               </button>
               <button
                 type="button"
                 onClick={() => setStatus('ready')}
                 className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'ready'
-                    ? 'bg-blue-600 text-white border-blue-700 shadow-xs'
+                    ? 'bg-sky-600 text-white border-sky-700 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✨ Ready (An Gama)
+                ✨ Ya Shirya (Ready)
               </button>
               <button
                 type="button"
                 onClick={() => setStatus('delivered')}
                 className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'delivered'
-                    ? 'bg-[#1b5e20] text-white border-emerald-800 shadow-xs'
+                    ? 'bg-emerald-800 text-white border-emerald-900 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✅ Delivered (Tik)
+                ✅ An Karba (Delivered)
               </button>
             </div>
+          </div>
+
+          {/* Notes / Special remarks */}
+          <div className="space-y-1">
+            <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
+              Karin Bayani / Shawara (Notes / Fabric details)
+            </label>
+            <input
+              type="text"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="e.g. Yadukoji fari, button na azurfa, gaggawa ce..."
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-medium focus:outline-none shadow-2xs text-xs"
+            />
           </div>
 
           {/* Footer Actions */}
@@ -458,7 +530,7 @@ export function LedgerEntryModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] text-white font-bold rounded-xl shadow-md transition disabled:opacity-50 cursor-pointer active:scale-95"
+              className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 text-white font-bold rounded-xl shadow-md transition disabled:opacity-50 cursor-pointer active:scale-95"
             >
               {isSubmitting ? (
                 <>
