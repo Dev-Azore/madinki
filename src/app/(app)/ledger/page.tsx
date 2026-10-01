@@ -84,7 +84,7 @@ export default function TailorEBookPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('cards');
+  const [viewMode, setViewMode] = useState<ViewMode>('book');
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
 
   // Modals
@@ -491,7 +491,7 @@ export default function TailorEBookPage() {
         </div>
       </div>
 
-      {/* View Switcher & Search Bar */}
+      {/* Search Bar & View Mode Switcher */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         {/* Search Bar */}
         <div className="relative flex-1">
@@ -513,91 +513,89 @@ export default function TailorEBookPage() {
           )}
         </div>
 
-        {/* 4-Step Status Filters + Debt Tab */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl overflow-x-auto">
-            {(
-              [
-                { key: 'all', label: `All (${periodEntries.length})` },
-                {
-                  key: 'started',
-                  label: `Received (${
-                    periodEntries.filter((e) => e.status === 'started').length
-                  })`,
-                },
-                {
-                  key: 'in_progress',
-                  label: `Sewing (${
-                    periodEntries.filter((e) => e.status === 'in_progress').length
-                  })`,
-                },
-                {
-                  key: 'ready',
-                  label: `Ready (${
-                    periodEntries.filter((e) => e.status === 'ready').length
-                  })`,
-                },
-                {
-                  key: 'delivered',
-                  label: `Delivered (${
-                    periodEntries.filter(
-                      (e) => e.status === 'delivered' && e.total_amount <= e.deposit_amount
-                    ).length
-                  })`,
-                },
-                {
-                  key: 'debt',
-                  label: `Debt (${debtOrdersCount})`,
-                },
-              ] as { key: StatusFilter; label: string }[]
-            ).map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setStatusFilter(key)}
-                className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${
-                  statusFilter === key
-                    ? key === 'debt'
-                      ? 'bg-rose-600 text-white shadow-xs'
-                      : 'bg-white text-emerald-800 shadow-xs'
-                    : key === 'debt' && debtOrdersCount > 0
-                    ? 'text-rose-700 hover:text-rose-900 font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {/* View Mode */}
-          <div className="hidden sm:flex items-center gap-1 p-1 bg-slate-100 rounded-2xl">
-            <button
-              type="button"
-              onClick={() => setViewMode('cards')}
-              className={`p-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                viewMode === 'cards'
-                  ? 'bg-white text-emerald-800 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-              title="Card View"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('book')}
-              className={`p-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                viewMode === 'book'
-                  ? 'bg-white text-emerald-800 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-              title="Table Grid View"
-            >
-              <TableProperties className="w-4 h-4" />
-            </button>
-          </div>
+        {/* View Mode Switcher (Visible on Mobile & Desktop) */}
+        <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl shrink-0 self-stretch sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setViewMode('book')}
+            className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              viewMode === 'book'
+                ? 'bg-white text-emerald-800 shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <TableProperties className="w-4 h-4" />
+            <span>Master Table</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('cards')}
+            className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              viewMode === 'cards'
+                ? 'bg-white text-emerald-800 shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            <span>Order Cards</span>
+          </button>
         </div>
+      </div>
+
+      {/* 4-Step Status Filters + Debt Tab */}
+      <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl overflow-x-auto no-scrollbar scroll-smooth">
+        {(
+          [
+            { key: 'all', label: `All (${periodEntries.length})` },
+            {
+              key: 'started',
+              label: `Received (${
+                periodEntries.filter((e) => e.status === 'started').length
+              })`,
+            },
+            {
+              key: 'in_progress',
+              label: `Sewing (${
+                periodEntries.filter((e) => e.status === 'in_progress').length
+              })`,
+            },
+            {
+              key: 'ready',
+              label: `Ready (${
+                periodEntries.filter((e) => e.status === 'ready').length
+              })`,
+            },
+            {
+              key: 'delivered',
+              label: `Delivered (${
+                periodEntries.filter(
+                  (e) => e.status === 'delivered' && e.total_amount <= e.deposit_amount
+                ).length
+              })`,
+            },
+            {
+              key: 'debt',
+              label: `Debt (${debtOrdersCount})`,
+            },
+          ] as { key: StatusFilter; label: string }[]
+        ).map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setStatusFilter(key)}
+            className={`px-3 py-2 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap shrink-0 ${
+              statusFilter === key
+                ? key === 'debt'
+                  ? 'bg-rose-900 text-white shadow-xs'
+                  : 'bg-white text-emerald-800 shadow-xs'
+                : key === 'debt' && debtOrdersCount > 0
+                ? 'text-rose-800 hover:text-rose-950 font-bold'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Error */}
@@ -675,236 +673,243 @@ export default function TailorEBookPage() {
       {!isLoading && !error && filteredEntries.length > 0 && (
         <div className="space-y-3">
           {/* Table / Book View */}
-          <div
-            className={`${
-              viewMode === 'book' ? 'block' : 'hidden md:block'
-            } bg-white border border-slate-200/90 rounded-3xl shadow-xs overflow-hidden`}
-          >
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[860px]">
-                <thead>
-                  <tr className="bg-slate-50/90 border-b border-slate-200 text-[10px] font-black text-slate-600 uppercase tracking-wider">
-                    <th className="py-3 px-3 text-center">#</th>
-                    {isColEnabled('entry_date') && <th className="py-3 px-4">Date</th>}
-                    {isColEnabled('client_name') && <th className="py-3 px-4">Customer</th>}
-                    {isColEnabled('sets_count') && <th className="py-3 px-3 text-center">Qty</th>}
-                    {isColEnabled('style_type') && <th className="py-3 px-4">Style</th>}
-                    {isColEnabled('embroidery_work') && <th className="py-3 px-4">Work / Design</th>}
-                    {isColEnabled('agbada_count') && <th className="py-3 px-3 text-center">Agbada</th>}
-                    {isColEnabled('delivery_date') && <th className="py-3 px-4">Due Date</th>}
-                    {/* Custom column headers */}
-                    {activeCustomColumns.map((c) => (
-                      <th key={c.id} className="py-3 px-4">
-                        {c.label}
-                      </th>
-                    ))}
-                    {isColEnabled('deposit_amount') && <th className="py-3 px-4 text-right">Deposit</th>}
-                    {isColEnabled('total_amount') && <th className="py-3 px-4 text-right">Total Price</th>}
-                    {isColEnabled('balance') && <th className="py-3 px-4 text-right">Balance</th>}
-                    {isColEnabled('status') && <th className="py-3 px-4 text-center">Status</th>}
-                    <th className="py-3 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-xs font-medium">
-                  {filteredEntries.map((entry, index) => {
-                    const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
-                    const isFullyPaid = balance === 0 && entry.total_amount > 0;
-                    const badge = getStatusBadge(entry);
-
-                    return (
-                      <tr key={entry.id} className="hover:bg-emerald-50/20 transition-colors group">
-                        <td className="py-3 px-3 text-center font-mono text-[11px] text-slate-400">
-                          {index + 1}
-                        </td>
-
-                        {isColEnabled('entry_date') && (
-                          <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
-                            {formatDate(entry.entry_date)}
-                          </td>
-                        )}
-
-                        {isColEnabled('client_name') && (
-                          <td className="py-3 px-4">
-                            <div className="font-bold text-slate-900">{entry.client_name}</div>
-                            {entry.client_phone && (
-                              <div className="text-[10px] text-slate-400 font-mono">
-                                {entry.client_phone}
-                              </div>
-                            )}
-                          </td>
-                        )}
-
-                        {isColEnabled('sets_count') && (
-                          <td className="py-3 px-3 text-center font-mono font-bold text-slate-700">
-                            {entry.sets_count}
-                          </td>
-                        )}
-
-                        {isColEnabled('style_type') && (
-                          <td className="py-3 px-4">
-                            <span className="px-2 py-0.5 rounded-md bg-slate-100 font-semibold text-[11px] text-slate-700">
-                              {entry.style_type || 'Plain'}
-                            </span>
-                          </td>
-                        )}
-
-                        {isColEnabled('embroidery_work') && (
-                          <td className="py-3 px-4 text-slate-600 text-[11px]">
-                            {entry.embroidery_work || 'Plain'}
-                          </td>
-                        )}
-
-                        {isColEnabled('agbada_count') && (
-                          <td className="py-3 px-3 text-center font-mono">
-                            {entry.agbada_count > 0 ? (
-                              <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">
-                                {entry.agbada_count}
-                              </span>
-                            ) : (
-                              <span className="text-slate-300">—</span>
-                            )}
-                          </td>
-                        )}
-
-                        {isColEnabled('delivery_date') && (
-                          <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
-                            {entry.delivery_date ? formatDate(entry.delivery_date) : '—'}
-                          </td>
-                        )}
-
-                        {/* Custom Column Values */}
-                        {activeCustomColumns.map((c) => (
-                          <td key={c.id} className="py-3 px-4 text-slate-700 text-[11px]">
-                            {entry.custom_fields?.[c.id] || '—'}
-                          </td>
-                        ))}
-
-                        {isColEnabled('deposit_amount') && (
-                          <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">
-                            {formatCurrency(entry.deposit_amount)}
-                          </td>
-                        )}
-
-                        {isColEnabled('total_amount') && (
-                          <td className="py-3 px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">
-                            {formatCurrency(entry.total_amount)}
-                          </td>
-                        )}
-
-                        {isColEnabled('balance') && (
-                          <td className="py-3 px-4 text-right font-mono font-bold whitespace-nowrap">
-                            {isFullyPaid ? (
-                              <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-bold">
-                                <BadgeCheck className="w-3.5 h-3.5" />
-                                Paid
-                              </span>
-                            ) : (
-                              <div className="flex items-center justify-end gap-1.5">
-                                <span className="text-amber-700">{formatCurrency(balance)}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => setPaymentEntry(entry)}
-                                  className="px-1.5 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold cursor-pointer transition"
-                                  title="Collect Payment"
-                                >
-                                  Collect
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                        )}
-
-                        {isColEnabled('status') && (
-                          <td className="py-3 px-4 text-center whitespace-nowrap">
-                            <select
-                              value={entry.status}
-                              onChange={(e) =>
-                                handleQuickStatusChange(entry, e.target.value as LedgerStatus)
-                              }
-                              className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border focus:outline-none cursor-pointer ${badge.style}`}
-                            >
-                              <option value="started">Received</option>
-                              <option value="in_progress">Sewing</option>
-                              <option value="ready">Ready</option>
-                              <option value="delivered">Delivered</option>
-                            </select>
-                          </td>
-                        )}
-
-                        <td className="py-3 px-4 text-right whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-1">
-                            <button
-                              type="button"
-                              onClick={() => setWhatsAppEntry(entry)}
-                              className={`p-1.5 rounded-lg transition cursor-pointer ${
-                                entry.status === 'ready'
-                                  ? 'bg-sky-50 text-sky-700 hover:bg-sky-100'
-                                  : 'text-emerald-700 hover:bg-emerald-50'
-                              }`}
-                              title={
-                                entry.status === 'ready'
-                                  ? 'Notify customer: Outfit is ready!'
-                                  : 'Send WhatsApp Receipt'
-                              }
-                            >
-                              <MessageCircle className="w-4 h-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setEditingEntry(entry);
-                                setIsEntryModalOpen(true);
-                              }}
-                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition cursor-pointer"
-                              title="Edit Entry"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setEntryToDelete(entry)}
-                              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
-                              title="Delete"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-              <span>
-                Showing <strong>{filteredEntries.length}</strong> of{' '}
-                <strong>{allEntries.length}</strong> orders · {periodLabel[periodFilter]}
-              </span>
-              <div className="flex items-center gap-4 font-mono font-bold">
-                <span>
-                  Deposits in hand:{' '}
-                  <strong className="text-emerald-800">
-                    {formatCurrency(stats.totalDeposited)}
-                  </strong>
+          {viewMode === 'book' && (
+            <div className="bg-white border border-slate-200/90 rounded-3xl shadow-xs overflow-hidden">
+              {/* Mobile Horizontal Scroll Indicator Banner */}
+              <div className="sm:hidden flex items-center justify-between px-4 py-2.5 bg-emerald-50/80 border-b border-emerald-100 text-[11px] text-emerald-900 font-bold">
+                <span className="flex items-center gap-1.5">
+                  <TableProperties className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Master Table View</span>
                 </span>
-                <span>
-                  Unpaid Balance:{' '}
-                  <strong className="text-amber-800">
-                    {formatCurrency(stats.pendingBalance)}
-                  </strong>
+                <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
+                  <span>Swipe across columns</span>
+                  <span>→</span>
                 </span>
               </div>
+
+              <div className="overflow-x-auto touch-pan-x">
+                <table className="w-full text-left border-collapse min-w-[880px]">
+                  <thead>
+                    <tr className="bg-slate-50/90 border-b border-slate-200 text-[10px] font-black text-slate-600 uppercase tracking-wider">
+                      <th className="py-3 px-3 text-center w-10">#</th>
+                      {isColEnabled('entry_date') && <th className="py-3 px-3 sm:px-4">Date</th>}
+                      {isColEnabled('client_name') && <th className="py-3 px-3 sm:px-4 min-w-[140px]">Customer</th>}
+                      {isColEnabled('sets_count') && <th className="py-3 px-2 sm:px-3 text-center">Qty</th>}
+                      {isColEnabled('style_type') && <th className="py-3 px-3 sm:px-4">Style</th>}
+                      {isColEnabled('embroidery_work') && <th className="py-3 px-3 sm:px-4">Work / Design</th>}
+                      {isColEnabled('agbada_count') && <th className="py-3 px-2 sm:px-3 text-center">Agbada</th>}
+                      {isColEnabled('delivery_date') && <th className="py-3 px-3 sm:px-4">Due Date</th>}
+                      {/* Custom column headers */}
+                      {activeCustomColumns.map((c) => (
+                        <th key={c.id} className="py-3 px-3 sm:px-4">
+                          {c.label}
+                        </th>
+                      ))}
+                      {isColEnabled('deposit_amount') && <th className="py-3 px-3 sm:px-4 text-right">Deposit</th>}
+                      {isColEnabled('total_amount') && <th className="py-3 px-3 sm:px-4 text-right">Total Price</th>}
+                      {isColEnabled('balance') && <th className="py-3 px-3 sm:px-4 text-right">Balance</th>}
+                      {isColEnabled('status') && <th className="py-3 px-3 sm:px-4 text-center">Status</th>}
+                      <th className="py-3 px-3 sm:px-4 text-right min-w-[100px]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs font-medium">
+                    {filteredEntries.map((entry, index) => {
+                      const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
+                      const isFullyPaid = balance === 0 && entry.total_amount > 0;
+                      const badge = getStatusBadge(entry);
+
+                      return (
+                        <tr key={entry.id} className="hover:bg-emerald-50/20 transition-colors group">
+                          <td className="py-3 px-3 text-center font-mono text-[11px] text-slate-400">
+                            {index + 1}
+                          </td>
+
+                          {isColEnabled('entry_date') && (
+                            <td className="py-3 px-3 sm:px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
+                              {formatDate(entry.entry_date)}
+                            </td>
+                          )}
+
+                          {isColEnabled('client_name') && (
+                            <td className="py-3 px-3 sm:px-4">
+                              <div className="font-bold text-slate-900">{entry.client_name}</div>
+                              {entry.client_phone && (
+                                <div className="text-[10px] text-slate-400 font-mono">
+                                  {entry.client_phone}
+                                </div>
+                              )}
+                            </td>
+                          )}
+
+                          {isColEnabled('sets_count') && (
+                            <td className="py-3 px-2 sm:px-3 text-center font-mono font-bold text-slate-700">
+                              {entry.sets_count}
+                            </td>
+                          )}
+
+                          {isColEnabled('style_type') && (
+                            <td className="py-3 px-3 sm:px-4">
+                              <span className="px-2 py-0.5 rounded-md bg-slate-100 font-semibold text-[11px] text-slate-700 whitespace-nowrap">
+                                {entry.style_type || 'Plain'}
+                              </span>
+                            </td>
+                          )}
+
+                          {isColEnabled('embroidery_work') && (
+                            <td className="py-3 px-3 sm:px-4 text-slate-600 text-[11px]">
+                              {entry.embroidery_work || 'Plain'}
+                            </td>
+                          )}
+
+                          {isColEnabled('agbada_count') && (
+                            <td className="py-3 px-2 sm:px-3 text-center font-mono">
+                              {entry.agbada_count > 0 ? (
+                                <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">
+                                  {entry.agbada_count}
+                                </span>
+                              ) : (
+                                <span className="text-slate-300">—</span>
+                              )}
+                            </td>
+                          )}
+
+                          {isColEnabled('delivery_date') && (
+                            <td className="py-3 px-3 sm:px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
+                              {entry.delivery_date ? formatDate(entry.delivery_date) : '—'}
+                            </td>
+                          )}
+
+                          {/* Custom Column Values */}
+                          {activeCustomColumns.map((c) => (
+                            <td key={c.id} className="py-3 px-3 sm:px-4 text-slate-700 text-[11px]">
+                              {entry.custom_fields?.[c.id] || '—'}
+                            </td>
+                          ))}
+
+                          {isColEnabled('deposit_amount') && (
+                            <td className="py-3 px-3 sm:px-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">
+                              {formatCurrency(entry.deposit_amount)}
+                            </td>
+                          )}
+
+                          {isColEnabled('total_amount') && (
+                            <td className="py-3 px-3 sm:px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">
+                              {formatCurrency(entry.total_amount)}
+                            </td>
+                          )}
+
+                          {isColEnabled('balance') && (
+                            <td className="py-3 px-3 sm:px-4 text-right font-mono font-bold whitespace-nowrap">
+                              {isFullyPaid ? (
+                                <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-bold">
+                                  <BadgeCheck className="w-3.5 h-3.5" />
+                                  Paid
+                                </span>
+                              ) : (
+                                <div className="flex items-center justify-end gap-1.5">
+                                  <span className="text-amber-700">{formatCurrency(balance)}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => setPaymentEntry(entry)}
+                                    className="px-1.5 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold cursor-pointer transition"
+                                    title="Collect Payment"
+                                  >
+                                    Collect
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          )}
+
+                          {isColEnabled('status') && (
+                            <td className="py-3 px-3 sm:px-4 text-center whitespace-nowrap">
+                              <select
+                                value={entry.status}
+                                onChange={(e) =>
+                                  handleQuickStatusChange(entry, e.target.value as LedgerStatus)
+                                }
+                                className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border focus:outline-none cursor-pointer ${badge.style}`}
+                              >
+                                <option value="started">Received</option>
+                                <option value="in_progress">Sewing</option>
+                                <option value="ready">Ready</option>
+                                <option value="delivered">Delivered</option>
+                              </select>
+                            </td>
+                          )}
+
+                          <td className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                type="button"
+                                onClick={() => setWhatsAppEntry(entry)}
+                                className={`p-1.5 rounded-lg transition cursor-pointer ${
+                                  entry.status === 'ready'
+                                    ? 'bg-sky-50 text-sky-700 hover:bg-sky-100'
+                                    : 'text-emerald-700 hover:bg-emerald-50'
+                                }`}
+                                title={
+                                  entry.status === 'ready'
+                                    ? 'Notify customer: Outfit is ready!'
+                                    : 'Send WhatsApp Receipt'
+                                }
+                              >
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingEntry(entry);
+                                  setIsEntryModalOpen(true);
+                                }}
+                                className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                                title="Edit Entry"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEntryToDelete(entry)}
+                                className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
+                <span>
+                  Showing <strong>{filteredEntries.length}</strong> of{' '}
+                  <strong>{allEntries.length}</strong> orders · {periodLabel[periodFilter]}
+                </span>
+                <div className="flex items-center gap-4 font-mono font-bold">
+                  <span>
+                    Deposits in hand:{' '}
+                    <strong className="text-emerald-800">
+                      {formatCurrency(stats.totalDeposited)}
+                    </strong>
+                  </span>
+                  <span>
+                    Unpaid Balance:{' '}
+                    <strong className="text-amber-800">
+                      {formatCurrency(stats.pendingBalance)}
+                    </strong>
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Cards View */}
-          <div
-            className={`${
-              viewMode === 'cards' ? 'block' : 'block md:hidden'
-            } grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3`}
-          >
+          {viewMode === 'cards' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredEntries.map((entry) => {
               const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
               const isFullyPaid = balance === 0 && entry.total_amount > 0;
@@ -1139,6 +1144,7 @@ export default function TailorEBookPage() {
               );
             })}
           </div>
+          )}
 
           {/* Financial Summary */}
           <div className="p-4 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-2xs">
@@ -1240,7 +1246,7 @@ export default function TailorEBookPage() {
                 type="button"
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
-                className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
               >
                 {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Delete'}
               </button>

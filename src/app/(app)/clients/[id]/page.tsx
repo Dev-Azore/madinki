@@ -161,7 +161,7 @@ export default function ClientProfilePage() {
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-800 transition py-1 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Koma Jerin Masu Dinki (Back to Customers)</span>
+          <span>Back to Customers</span>
         </Link>
 
         {client && (
@@ -215,22 +215,22 @@ export default function ClientProfilePage() {
         <>
           {/* Outstanding Debt Alert Banner */}
           {hasDebt && (
-            <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-fade-in-up">
+            <div className="p-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 border border-amber-300/80 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-fade-in-up">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-10 h-10 rounded-2xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-black text-rose-950 text-sm">
+                    <span className="font-black text-amber-950 text-sm">
                       Outstanding Unpaid Debt:
                     </span>
-                    <span className="font-black text-rose-700 text-base font-mono">
+                    <span className="font-black text-amber-900 text-base font-mono">
                       {formatCurrency(client.total_debt || 0)}
                     </span>
                   </div>
-                  <p className="text-xs text-rose-700 mt-0.5">
-                    This customer has orders delivered on credit with an unpaid balance.
+                  <p className="text-xs text-amber-800 mt-0.5">
+                    This customer has delivered orders awaiting balance collection.
                   </p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ export default function ClientProfilePage() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('orders')}
-                  className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-2xs transition cursor-pointer"
+                  className="px-4 py-2 bg-amber-700 hover:bg-amber-800 active:scale-95 text-white font-bold rounded-xl text-xs shadow-2xs transition cursor-pointer"
                 >
                   View Debt Orders
                 </button>
@@ -261,7 +261,7 @@ export default function ClientProfilePage() {
                         {client.name}
                       </h1>
                       {hasDebt && (
-                        <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white font-black text-[10px] uppercase tracking-wider">
+                        <span className="px-2.5 py-0.5 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 font-black text-[10px] tracking-tight">
                           Debt: {formatCurrency(client.total_debt || 0)}
                         </span>
                       )}
@@ -558,7 +558,7 @@ export default function ClientProfilePage() {
                                 </span>
                               )}
                               {isDebt && (
-                                <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white font-black text-[10px] tracking-tight uppercase">
+                                <span className="px-2 py-0.5 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 font-black text-[10px] tracking-tight">
                                   Debt: {formatCurrency(balance)}
                                 </span>
                               )}
@@ -594,7 +594,7 @@ export default function ClientProfilePage() {
                                     Paid
                                   </div>
                                 ) : (
-                                  <div className={`text-xs font-black font-mono ${isDebt ? 'text-rose-600 font-black' : 'text-amber-700'}`}>
+                                  <div className={`text-xs font-black font-mono ${isDebt ? 'text-amber-800' : 'text-amber-700'}`}>
                                     {formatCurrency(balance)}
                                   </div>
                                 )}
@@ -608,9 +608,9 @@ export default function ClientProfilePage() {
                               <button
                                 type="button"
                                 onClick={() => setPaymentOrder(order)}
-                                className={`px-4 py-2 text-white font-bold rounded-xl text-xs shadow-2xs transition cursor-pointer flex items-center gap-1.5 ${
+                                className={`px-4 py-2 text-white font-bold rounded-xl text-xs shadow-2xs transition cursor-pointer flex items-center gap-1.5 active:scale-95 ${
                                   isDebt
-                                    ? 'bg-rose-600 hover:bg-rose-700'
+                                    ? 'bg-amber-700 hover:bg-amber-800'
                                     : 'bg-emerald-800 hover:bg-emerald-900'
                                 }`}
                               >
@@ -670,7 +670,7 @@ export default function ClientProfilePage() {
                     type="button"
                     onClick={handleDeleteClient}
                     disabled={isDeleting}
-                    className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
+                    className="flex-1 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
                   >
                     {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete Customer'}
                   </button>

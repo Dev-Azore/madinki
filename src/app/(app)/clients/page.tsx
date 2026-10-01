@@ -116,67 +116,43 @@ export default function ClientsPage() {
   }, [clients, filterType, searchQuery]);
 
   return (
-    <div className="space-y-6 animate-fade-in-up pb-28">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-5 animate-fade-in-up pb-28">
+      {/* 1. Header & Add Customer Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-1.5">
             <Users className="w-3.5 h-3.5" />
             <span>Customer Directory</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Customers
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Manage your customers, measurement sizes, active orders &amp; debts.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Manage customer measurement profiles, orders, and balances.
           </p>
         </div>
 
+        {/* Add New Customer Button */}
         <Link
           href="/clients/new"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition-all cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition-all cursor-pointer shrink-0 self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Customer</span>
         </Link>
       </div>
 
-      {/* Debt Warning Strip if any customer owes money */}
-      {debtClientsCount > 0 && filterType !== 'debt' && (
-        <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-4 h-4" />
-            </div>
-            <div className="text-xs">
-              <span className="font-black text-rose-950 block">
-                {debtClientsCount} customer{debtClientsCount > 1 ? 's' : ''} have unpaid debts!
-              </span>
-              <span className="text-rose-700 text-[11px]">
-                Orders delivered on credit awaiting balance collection.
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setFilterType('debt')}
-            className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[11px] font-bold shadow-2xs cursor-pointer whitespace-nowrap transition"
-          >
-            View Debtors
-          </button>
-        </div>
-      )}
-
-      {/* Search Bar & Filter Strip */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      {/* 2. SEARCH & FILTERS BAR (FIRST INTERACTIVE ELEMENT) */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+        {/* Search Input */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search customers by name or phone..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
+            placeholder="Search customer by name or phone number..."
+            className="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
           {searchQuery && (
             <button
@@ -188,8 +164,8 @@ export default function ClientsPage() {
           )}
         </div>
 
-        {/* Filters */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl shrink-0 overflow-x-auto">
+        {/* Filter Pills */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl shrink-0 overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={() => setFilterType('all')}
@@ -199,7 +175,7 @@ export default function ClientsPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Duka ({clients.length})
+            All ({clients.length})
           </button>
           <button
             type="button"
@@ -210,16 +186,16 @@ export default function ClientsPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Mai Lamba (Phone)
+            With Phone ({clients.filter((c) => Boolean(c.phone)).length})
           </button>
           <button
             type="button"
             onClick={() => setFilterType('debt')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               filterType === 'debt'
-                ? 'bg-rose-600 text-white shadow-xs'
+                ? 'bg-rose-900 text-white shadow-xs'
                 : debtClientsCount > 0
-                ? 'text-rose-700 hover:text-rose-900 font-black'
+                ? 'text-rose-800 hover:text-rose-950 font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -228,6 +204,32 @@ export default function ClientsPage() {
           </button>
         </div>
       </div>
+
+      {/* 3. WARNING / DEBT ALERT (FOLLOWING SEARCH & FILTERS) */}
+      {debtClientsCount > 0 && filterType !== 'debt' && (
+        <div className="p-3.5 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 border border-amber-300/80 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
+            <div className="text-xs">
+              <span className="font-black text-amber-950 block">
+                {debtClientsCount} customer{debtClientsCount > 1 ? 's' : ''} have unpaid balances
+              </span>
+              <span className="text-amber-800 text-[11px]">
+                Orders delivered on credit awaiting balance settlement.
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setFilterType('debt')}
+            className="px-3 py-1.5 bg-amber-700 hover:bg-amber-800 active:scale-95 text-white rounded-xl text-[11px] font-bold shadow-2xs cursor-pointer whitespace-nowrap transition"
+          >
+            View Debtors
+          </button>
+        </div>
+      )}
 
       {/* Error state */}
       {error && (
@@ -305,7 +307,7 @@ export default function ClientsPage() {
               <div
                 key={client.id}
                 className={`p-5 bg-white border rounded-3xl transition-all duration-200 flex flex-col justify-between group shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
-                  hasDebt ? 'border-rose-300 ring-1 ring-rose-200' : 'border-slate-200/90 hover:border-emerald-300'
+                  hasDebt ? 'border-amber-300 ring-1 ring-amber-200/70' : 'border-slate-200/90 hover:border-emerald-300'
                 }`}
               >
                 <div>
@@ -324,7 +326,7 @@ export default function ClientsPage() {
                             {client.name}
                           </h3>
                           {hasDebt && (
-                            <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white font-black text-[10px] tracking-tight">
+                            <span className="px-2 py-0.5 rounded-lg bg-rose-50 text-rose-900 border border-rose-300 font-black text-[10px] tracking-tight">
                               Debt: {formatCurrency(client.total_debt || 0)}
                             </span>
                           )}
@@ -433,8 +435,8 @@ export default function ClientsPage() {
       {clientToDelete && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl animate-fade-in-up">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-              <Trash2 className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center mx-auto border border-slate-200">
+              <Trash2 className="w-5 h-5" />
             </div>
             <div className="text-center">
               <h3 className="text-base font-black text-slate-900">Delete Customer?</h3>
@@ -444,7 +446,7 @@ export default function ClientsPage() {
             </div>
 
             {deleteErrorMessage && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed font-medium">
                 {deleteErrorMessage}
               </div>
             )}
@@ -462,7 +464,7 @@ export default function ClientsPage() {
                 type="button"
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
-                className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
               >
                 {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete Customer'}
               </button>
