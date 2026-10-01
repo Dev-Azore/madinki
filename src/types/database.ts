@@ -108,6 +108,113 @@ export interface Database {
         }
         Relationships: []
       }
+      ledger_entries: {
+        Row: {
+          id: string
+          tailor_id: string
+          client_id: string | null
+          client_name: string
+          client_phone: string | null
+          entry_date: string
+          delivery_date: string | null
+          sets_count: number
+          style_type: string
+          embroidery_work: string
+          agbada_count: number
+          deposit_amount: number
+          total_amount: number
+          status: string
+          notes: string | null
+          custom_fields: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tailor_id: string
+          client_id?: string | null
+          client_name: string
+          client_phone?: string | null
+          entry_date?: string
+          delivery_date?: string | null
+          sets_count?: number
+          style_type?: string
+          embroidery_work?: string
+          agbada_count?: number
+          deposit_amount?: number
+          total_amount?: number
+          status?: string
+          notes?: string | null
+          custom_fields?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tailor_id?: string
+          client_id?: string | null
+          client_name?: string
+          client_phone?: string | null
+          entry_date?: string
+          delivery_date?: string | null
+          sets_count?: number
+          style_type?: string
+          embroidery_work?: string
+          agbada_count?: number
+          deposit_amount?: number
+          total_amount?: number
+          status?: string
+          notes?: string | null
+          custom_fields?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_entries_client_id_fkey"
+            columns: ["client_id"]
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_tailor_id_fkey"
+            columns: ["tailor_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      ledger_settings: {
+        Row: {
+          id: string
+          tailor_id: string
+          columns_config: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tailor_id: string
+          columns_config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tailor_id?: string
+          columns_config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_settings_tailor_id_fkey"
+            columns: ["tailor_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       measurements: {
         Row: {
           client_id: string

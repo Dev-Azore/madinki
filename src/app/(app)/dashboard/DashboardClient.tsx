@@ -21,6 +21,7 @@ import {
   MessageCircle,
   ShieldCheck,
   Check,
+  BookOpen,
 } from 'lucide-react';
 import { AdBanner } from '@/components/ads/AdBanner';
 import type { DashboardStats, DashboardClientItem } from './actions';
@@ -231,6 +232,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
           </div>
         </div>
       )}
+
 
       {/* ── KPI Metric Cards Grid (Redesigned with Tactile Depth & Hover Lift) ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">

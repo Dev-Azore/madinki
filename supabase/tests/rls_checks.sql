@@ -35,6 +35,24 @@ BEGIN
     RAISE EXCEPTION 'RLS is not enabled on measurements table';
   END IF;
 
+  -- 2b. Check if ledger_entries table has RLS enabled
+  SELECT relrowsecurity INTO table_rls_enabled
+  FROM pg_class
+  WHERE relname = 'ledger_entries';
+
+  IF table_rls_enabled IS NOT NULL AND NOT table_rls_enabled THEN
+    RAISE EXCEPTION 'RLS is not enabled on ledger_entries table';
+  END IF;
+
+  -- 2c. Check if ledger_settings table has RLS enabled
+  SELECT relrowsecurity INTO table_rls_enabled
+  FROM pg_class
+  WHERE relname = 'ledger_settings';
+
+  IF table_rls_enabled IS NOT NULL AND NOT table_rls_enabled THEN
+    RAISE EXCEPTION 'RLS is not enabled on ledger_settings table';
+  END IF;
+
   -- 3. Check if is_admin() exists and is security definer
   SELECT 
     true, prosecdef INTO func_exists, func_security_definer
