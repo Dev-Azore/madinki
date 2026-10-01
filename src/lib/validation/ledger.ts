@@ -73,14 +73,15 @@ export type LedgerColumnConfig = z.infer<typeof ledgerColumnConfigSchema>;
 export type LedgerSettingsInput = z.infer<typeof ledgerSettingsSchema>;
 
 export const DEFAULT_LEDGER_COLUMNS: LedgerColumnConfig[] = [
-  { id: 'entry_date', label: 'Date', hausaLabel: 'Kwanan Wata', enabled: true, order: 0 },
-  { id: 'client_name', label: 'Customer Name', hausaLabel: 'Sunan Mai Kayan', enabled: true, order: 1 },
-  { id: 'sets_count', label: 'Sets / Qty', hausaLabel: 'Adadin Dinki', enabled: true, order: 2 },
-  { id: 'style_type', label: 'Style / Plain', hausaLabel: 'Kalar Dinki', enabled: true, order: 3 },
-  { id: 'embroidery_work', label: 'Work / Aiki', hausaLabel: 'Aikin Dinki (Computer/Mono)', enabled: true, order: 4 },
-  { id: 'agbada_count', label: 'Agbada', hausaLabel: 'Adadin Agbada', enabled: true, order: 5 },
-  { id: 'deposit_amount', label: 'Deposit (₦)', hausaLabel: 'Kudin Ajiya', enabled: true, order: 6 },
-  { id: 'total_amount', label: 'Total (₦)', hausaLabel: 'Cikakken Kudi', enabled: true, order: 7 },
-  { id: 'balance', label: 'Balance (₦)', hausaLabel: 'Sauran Kudi', enabled: true, order: 8 },
-  { id: 'status', label: 'Status / Tik', hausaLabel: 'Matakin Aiki', enabled: true, order: 9 },
+  { id: 'entry_date', label: 'Date', enabled: true, order: 0 },
+  { id: 'client_name', label: 'Customer', enabled: true, order: 1 },
+  { id: 'sets_count', label: 'Qty / Sets', enabled: true, order: 2 },
+  { id: 'style_type', label: 'Style', enabled: true, order: 3 },
+  { id: 'embroidery_work', label: 'Work / Design', enabled: true, order: 4 },
+  { id: 'agbada_count', label: 'Agbada', enabled: true, order: 5 },
+  { id: 'delivery_date', label: 'Due Date', enabled: false, order: 6 },
+  { id: 'deposit_amount', label: 'Deposit (₦)', enabled: true, order: 7 },
+  { id: 'total_amount', label: 'Total (₦)', enabled: true, order: 8 },
+  { id: 'balance', label: 'Balance (₦)', enabled: true, order: 9 },
+  { id: 'status', label: 'Status', enabled: true, order: 10 },
 ];

@@ -20,8 +20,6 @@ import {
   TableProperties,
   AlertTriangle,
   Scissors,
-  Package,
-  Sparkles,
 } from 'lucide-react';
 import {
   getLedgerData,
@@ -132,6 +130,20 @@ export default function TailorEBookPage() {
     });
   }, [allEntries, todayIso]);
 
+  // Active custom columns configured by tailor
+  const activeCustomColumns = useMemo(() => {
+    return columnsConfig.filter((c) => c.isCustom && c.enabled);
+  }, [columnsConfig]);
+
+  // Helper to check if a standard column is enabled
+  const isColEnabled = useCallback(
+    (colId: string) => {
+      const found = columnsConfig.find((c) => c.id === colId);
+      return found ? found.enabled : true;
+    },
+    [columnsConfig]
+  );
+
   // Filtered entries
   const filteredEntries = useMemo(() => {
     const periodStart = getPeriodStart(periodFilter);
@@ -209,7 +221,7 @@ export default function TailorEBookPage() {
       return;
     }
 
-    // 2. If tailor switches to ready, update status AND trigger WhatsApp reminder modal so tailor can notify customer!
+    // 2. If tailor switches to ready, update status AND trigger WhatsApp reminder modal
     if (nextStatus === 'ready') {
       setAllEntries((prev) =>
         prev.map((e) => (e.id === entry.id ? { ...e, status: nextStatus } : e))
@@ -218,7 +230,6 @@ export default function TailorEBookPage() {
         const res = await updateLedgerStatus({ id: entry.id, status: nextStatus });
         if (res.error) loadData();
         else {
-          // Open WhatsApp reminder immediately for tailor convenience
           setWhatsAppEntry({ ...entry, status: 'ready' });
         }
       } catch {
@@ -261,45 +272,45 @@ export default function TailorEBookPage() {
     const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
     if (entry.status === 'started') {
       return {
-        label: 'An Karba (Received)',
+        label: 'Received',
         style: 'bg-slate-100 text-slate-800 border-slate-300 font-bold',
       };
     }
     if (entry.status === 'in_progress') {
       return {
-        label: 'Ana Dinki (Sewing)',
+        label: 'Sewing',
         style: 'bg-amber-50 text-amber-900 border-amber-300 font-bold',
       };
     }
     if (entry.status === 'ready') {
       return {
-        label: 'Ya Shirya (Ready)',
+        label: 'Ready',
         style: 'bg-sky-50 text-sky-800 border-sky-300 font-black',
       };
     }
     if (entry.status === 'delivered') {
       if (balance > 0) {
         return {
-          label: `Bashi: ₦${balance.toLocaleString()}`,
+          label: `Debt: ₦${balance.toLocaleString()}`,
           style: 'bg-rose-50 text-rose-800 border-rose-300 font-black',
         };
       }
       return {
-        label: 'An Bayar (Paid)',
+        label: 'Delivered',
         style: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-black',
       };
     }
     return {
-      label: 'An Karba',
+      label: 'Received',
       style: 'bg-slate-50 text-slate-700 border-slate-200',
     };
   };
 
   const periodLabel: Record<PeriodFilter, string> = {
-    week: 'Kwanaki 7 (7 Days)',
-    month: 'Wannan Watan (This Month)',
-    year: 'Wannan Shekarar (This Year)',
-    all: 'Duka Lokaci (All Time)',
+    week: 'Last 7 Days',
+    month: 'This Month',
+    year: 'This Year',
+    all: 'All Time',
   };
 
   return (
@@ -309,13 +320,13 @@ export default function TailorEBookPage() {
         <div className="min-w-0">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-2">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Littafin Dinki (Tailor Book)</span>
+            <span>Tailor E-Book (Order Ledger)</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            Littafin Dinki &amp; Kudin Aiki
+            Order Ledger &amp; Tracking
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Duba dinki, aiki, ajiya, da sauran kudin da ake bi.
+            Track customer orders, garment styles, deposits &amp; pending balances.
           </p>
         </div>
 
@@ -325,7 +336,7 @@ export default function TailorEBookPage() {
             type="button"
             onClick={() => setIsCustomizerOpen(true)}
             className="p-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-600 rounded-2xl shadow-2xs transition cursor-pointer"
-            title="Configure Ledger Columns"
+            title="Customize Ledger Columns"
           >
             <SlidersHorizontal className="w-4 h-4" />
           </button>
@@ -340,7 +351,7 @@ export default function TailorEBookPage() {
             className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Sabon Aiki (New Order)</span>
+            <span>New Order</span>
           </button>
         </div>
       </div>
@@ -354,10 +365,10 @@ export default function TailorEBookPage() {
             </div>
             <div className="text-xs">
               <span className="font-black text-amber-950 block">
-                {overdueOrders.length} Dinki na bukatar bayarwa yau / Ya wuce lokaci!
+                {overdueOrders.length} order(s) due today or overdue for pickup!
               </span>
               <span className="text-amber-800 text-[11px]">
-                {overdueOrders.length} order(s) due today or overdue for customer pickup.
+                Check these orders and notify customers for collection.
               </span>
             </div>
           </div>
@@ -366,7 +377,7 @@ export default function TailorEBookPage() {
             onClick={() => setShowOverdueOnly(true)}
             className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-[11px] font-bold shadow-2xs whitespace-nowrap cursor-pointer transition"
           >
-            Duba Su (View)
+            View Due Orders
           </button>
         </div>
       )}
@@ -404,29 +415,29 @@ export default function TailorEBookPage() {
             }`}
           >
             {p === 'week'
-              ? 'Kwanaki 7'
+              ? '7 Days'
               : p === 'month'
-              ? 'Wannan Watan'
+              ? 'This Month'
               : p === 'year'
-              ? 'Wannan Shekarar'
-              : 'Duka (All Time)'}
+              ? 'This Year'
+              : 'All Time'}
           </button>
         ))}
       </div>
 
-      {/* Financial & Job KPIs in Simple Tailor Terms */}
+      {/* Financial & Job KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {/* Active Sewing */}
         <div className="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-              Kayan da ke Aiki
+              Active Jobs
             </span>
             <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
           </div>
           <div className="text-xl font-black text-slate-900">{stats.startedJobs}</div>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-            {stats.readyJobs} ya shirya · {stats.deliveredJobs} an bayar
+            {stats.readyJobs} ready · {stats.deliveredJobs} delivered
           </p>
         </div>
 
@@ -434,7 +445,7 @@ export default function TailorEBookPage() {
         <div className="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-              Jimillar Kudin Dinki
+              Total Billed
             </span>
             <TrendingUp className="w-3 h-3 text-slate-400" />
           </div>
@@ -442,7 +453,7 @@ export default function TailorEBookPage() {
             {formatCurrency(stats.totalRevenue)}
           </div>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-            {stats.totalJobs} dinki · {periodLabel[periodFilter]}
+            {stats.totalJobs} orders · {periodLabel[periodFilter]}
           </p>
         </div>
 
@@ -450,7 +461,7 @@ export default function TailorEBookPage() {
         <div className="p-3.5 bg-emerald-50/80 border border-emerald-200/70 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
-              Kudi a Hannu (Ajiya)
+              Deposits Collected
             </span>
             <Wallet className="w-3 h-3 text-emerald-700" />
           </div>
@@ -458,15 +469,15 @@ export default function TailorEBookPage() {
             {formatCurrency(stats.totalDeposited)}
           </div>
           <p className="text-[10px] text-emerald-700/70 font-medium mt-0.5">
-            Cash &amp; deposits collected
+            Cash &amp; upfront deposits
           </p>
         </div>
 
-        {/* Pending Balance (Ragowar Kudi a Waje) */}
+        {/* Pending Balance */}
         <div className="p-3.5 bg-amber-50/80 border border-amber-200/70 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900">
-              Ragowar Kudi (Balance)
+              Unpaid Balance
             </span>
             <Clock className="w-3 h-3 text-amber-700" />
           </div>
@@ -474,7 +485,7 @@ export default function TailorEBookPage() {
             {formatCurrency(stats.pendingBalance)}
           </div>
           <p className="text-[10px] text-amber-700/70 font-medium mt-0.5">
-            Sauran kudi da ke waje
+            Money to be collected
           </p>
         </div>
       </div>
@@ -488,7 +499,7 @@ export default function TailorEBookPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Nemi mai kaya, nau'in dinki, lamba..."
+            placeholder="Search customer, style, work, phone..."
             className="w-full pl-10 pr-8 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
           {searchQuery && (
@@ -506,28 +517,28 @@ export default function TailorEBookPage() {
           <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl overflow-x-auto">
             {(
               [
-                { key: 'all', label: `Duka (${periodEntries.length})` },
+                { key: 'all', label: `All (${periodEntries.length})` },
                 {
                   key: 'started',
-                  label: `An Karba (${
+                  label: `Received (${
                     periodEntries.filter((e) => e.status === 'started').length
                   })`,
                 },
                 {
                   key: 'in_progress',
-                  label: `Ana Dinki (${
+                  label: `Sewing (${
                     periodEntries.filter((e) => e.status === 'in_progress').length
                   })`,
                 },
                 {
                   key: 'ready',
-                  label: `Ya Shirya (${
+                  label: `Ready (${
                     periodEntries.filter((e) => e.status === 'ready').length
                   })`,
                 },
                 {
                   key: 'delivered',
-                  label: `An Bayar (${
+                  label: `Delivered (${
                     periodEntries.filter(
                       (e) => e.status === 'delivered' && e.total_amount <= e.deposit_amount
                     ).length
@@ -535,7 +546,7 @@ export default function TailorEBookPage() {
                 },
                 {
                   key: 'debt',
-                  label: `⚠️ Bashi (${debtOrdersCount})`,
+                  label: `⚠️ Debt (${debtOrdersCount})`,
                 },
               ] as { key: StatusFilter; label: string }[]
             ).map(({ key, label }) => (
@@ -568,7 +579,7 @@ export default function TailorEBookPage() {
                   ? 'bg-white text-emerald-800 shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
-              title="Card View (Aikin Hannu)"
+              title="Card View"
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
@@ -580,7 +591,7 @@ export default function TailorEBookPage() {
                   ? 'bg-white text-emerald-800 shadow-xs'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
-              title="Littafin Dinki Grid View"
+              title="Table Grid View"
             >
               <TableProperties className="w-4 h-4" />
             </button>
@@ -608,7 +619,7 @@ export default function TailorEBookPage() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-emerald-700" />
-          <p className="text-sm font-medium">Bude Littafin Dinki...</p>
+          <p className="text-sm font-medium">Loading ledger...</p>
         </div>
       )}
 
@@ -619,7 +630,7 @@ export default function TailorEBookPage() {
             <BookOpen className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-slate-900">Littafinku a bude yake</h3>
+            <h3 className="text-lg font-black text-slate-900">Your E-Book is empty</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
               Record your first customer order — every garment, deposit, and balance tracked right here.
             </p>
@@ -633,7 +644,7 @@ export default function TailorEBookPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white text-xs font-bold rounded-2xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Rubuta Sabon Dinki (New Order)</span>
+            <span>Record First Order</span>
           </button>
         </div>
       )}
@@ -641,7 +652,7 @@ export default function TailorEBookPage() {
       {/* Filter yielded no results */}
       {!isLoading && !error && allEntries.length > 0 && filteredEntries.length === 0 && (
         <div className="p-8 text-center bg-white border border-dashed border-slate-200 rounded-3xl space-y-2">
-          <p className="text-sm font-bold text-slate-700">Ba a sami dinki mai dacewa ba</p>
+          <p className="text-sm font-bold text-slate-700">No orders match your filter</p>
           <p className="text-xs text-slate-400">
             Try a different period, status, or clear the search.
           </p>
@@ -654,7 +665,7 @@ export default function TailorEBookPage() {
             }}
             className="mt-2 text-xs text-emerald-800 underline font-bold cursor-pointer"
           >
-            Clear all filters (Goge zabuka)
+            Clear all filters
           </button>
         </div>
       )}
@@ -673,17 +684,24 @@ export default function TailorEBookPage() {
                 <thead>
                   <tr className="bg-slate-50/90 border-b border-slate-200 text-[10px] font-black text-slate-600 uppercase tracking-wider">
                     <th className="py-3 px-3 text-center">#</th>
-                    <th className="py-3 px-4">Ranar Karba</th>
-                    <th className="py-3 px-4">Mai Kayan (Customer)</th>
-                    <th className="py-3 px-3 text-center">Sets</th>
-                    <th className="py-3 px-4">Nau&apos;in Dinki</th>
-                    <th className="py-3 px-4">Aiki</th>
-                    <th className="py-3 px-3 text-center">Agbada</th>
-                    <th className="py-3 px-4 text-right">Ajiya (Deposit)</th>
-                    <th className="py-3 px-4 text-right">Jimilla (Total)</th>
-                    <th className="py-3 px-4 text-right">Ragowa (Balance)</th>
-                    <th className="py-3 px-4 text-center">Mataki (Status)</th>
-                    <th className="py-3 px-4 text-right">Aiki</th>
+                    {isColEnabled('entry_date') && <th className="py-3 px-4">Date</th>}
+                    {isColEnabled('client_name') && <th className="py-3 px-4">Customer</th>}
+                    {isColEnabled('sets_count') && <th className="py-3 px-3 text-center">Qty</th>}
+                    {isColEnabled('style_type') && <th className="py-3 px-4">Style</th>}
+                    {isColEnabled('embroidery_work') && <th className="py-3 px-4">Work / Design</th>}
+                    {isColEnabled('agbada_count') && <th className="py-3 px-3 text-center">Agbada</th>}
+                    {isColEnabled('delivery_date') && <th className="py-3 px-4">Due Date</th>}
+                    {/* Custom column headers */}
+                    {activeCustomColumns.map((c) => (
+                      <th key={c.id} className="py-3 px-4">
+                        {c.label}
+                      </th>
+                    ))}
+                    {isColEnabled('deposit_amount') && <th className="py-3 px-4 text-right">Deposit</th>}
+                    {isColEnabled('total_amount') && <th className="py-3 px-4 text-right">Total Price</th>}
+                    {isColEnabled('balance') && <th className="py-3 px-4 text-right">Balance</th>}
+                    {isColEnabled('status') && <th className="py-3 px-4 text-center">Status</th>}
+                    <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs font-medium">
@@ -697,83 +715,122 @@ export default function TailorEBookPage() {
                         <td className="py-3 px-3 text-center font-mono text-[11px] text-slate-400">
                           {index + 1}
                         </td>
-                        <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
-                          {formatDate(entry.entry_date)}
-                          {entry.delivery_date && (
-                            <div className="text-[10px] text-slate-400 font-sans">
-                              Due: {formatDate(entry.delivery_date)}
-                            </div>
-                          )}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="font-bold text-slate-900">{entry.client_name}</div>
-                          {entry.client_phone && (
-                            <div className="text-[10px] text-slate-400 font-mono">
-                              {entry.client_phone}
-                            </div>
-                          )}
-                        </td>
-                        <td className="py-3 px-3 text-center font-mono font-bold text-slate-700">
-                          {entry.sets_count}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 font-semibold text-[11px] text-slate-700">
-                            {entry.style_type || 'Plain'}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-slate-600 text-[11px]">
-                          {entry.embroidery_work || 'Plain'}
-                        </td>
-                        <td className="py-3 px-3 text-center font-mono">
-                          {entry.agbada_count > 0 ? (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">
-                              {entry.agbada_count}
+
+                        {isColEnabled('entry_date') && (
+                          <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
+                            {formatDate(entry.entry_date)}
+                          </td>
+                        )}
+
+                        {isColEnabled('client_name') && (
+                          <td className="py-3 px-4">
+                            <div className="font-bold text-slate-900">{entry.client_name}</div>
+                            {entry.client_phone && (
+                              <div className="text-[10px] text-slate-400 font-mono">
+                                {entry.client_phone}
+                              </div>
+                            )}
+                          </td>
+                        )}
+
+                        {isColEnabled('sets_count') && (
+                          <td className="py-3 px-3 text-center font-mono font-bold text-slate-700">
+                            {entry.sets_count}
+                          </td>
+                        )}
+
+                        {isColEnabled('style_type') && (
+                          <td className="py-3 px-4">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-100 font-semibold text-[11px] text-slate-700">
+                              {entry.style_type || 'Plain'}
                             </span>
-                          ) : (
-                            <span className="text-slate-300">—</span>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">
-                          {formatCurrency(entry.deposit_amount)}
-                        </td>
-                        <td className="py-3 px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">
-                          {formatCurrency(entry.total_amount)}
-                        </td>
-                        <td className="py-3 px-4 text-right font-mono font-bold whitespace-nowrap">
-                          {isFullyPaid ? (
-                            <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-black">
-                              <BadgeCheck className="w-3.5 h-3.5" />
-                              Paid
-                            </span>
-                          ) : (
-                            <div className="flex items-center justify-end gap-1.5">
-                              <span className="text-amber-700">{formatCurrency(balance)}</span>
-                              <button
-                                type="button"
-                                onClick={() => setPaymentEntry(entry)}
-                                className="px-1.5 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold cursor-pointer transition"
-                                title="Collect Payment"
-                              >
-                                Karba
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-center whitespace-nowrap">
-                          {/* 4-Step Status Selector */}
-                          <select
-                            value={entry.status}
-                            onChange={(e) =>
-                              handleQuickStatusChange(entry, e.target.value as LedgerStatus)
-                            }
-                            className={`px-2.5 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
-                          >
-                            <option value="started">📦 An Karba (Received)</option>
-                            <option value="in_progress">✂️ Ana Dinki (Sewing)</option>
-                            <option value="ready">✨ Ya Shirya (Ready)</option>
-                            <option value="delivered">✅ An Bayar (Delivered)</option>
-                          </select>
-                        </td>
+                          </td>
+                        )}
+
+                        {isColEnabled('embroidery_work') && (
+                          <td className="py-3 px-4 text-slate-600 text-[11px]">
+                            {entry.embroidery_work || 'Plain'}
+                          </td>
+                        )}
+
+                        {isColEnabled('agbada_count') && (
+                          <td className="py-3 px-3 text-center font-mono">
+                            {entry.agbada_count > 0 ? (
+                              <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">
+                                {entry.agbada_count}
+                              </span>
+                            ) : (
+                              <span className="text-slate-300">—</span>
+                            )}
+                          </td>
+                        )}
+
+                        {isColEnabled('delivery_date') && (
+                          <td className="py-3 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
+                            {entry.delivery_date ? formatDate(entry.delivery_date) : '—'}
+                          </td>
+                        )}
+
+                        {/* Custom Column Values */}
+                        {activeCustomColumns.map((c) => (
+                          <td key={c.id} className="py-3 px-4 text-slate-700 text-[11px]">
+                            {entry.custom_fields?.[c.id] || '—'}
+                          </td>
+                        ))}
+
+                        {isColEnabled('deposit_amount') && (
+                          <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">
+                            {formatCurrency(entry.deposit_amount)}
+                          </td>
+                        )}
+
+                        {isColEnabled('total_amount') && (
+                          <td className="py-3 px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">
+                            {formatCurrency(entry.total_amount)}
+                          </td>
+                        )}
+
+                        {isColEnabled('balance') && (
+                          <td className="py-3 px-4 text-right font-mono font-bold whitespace-nowrap">
+                            {isFullyPaid ? (
+                              <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-black">
+                                <BadgeCheck className="w-3.5 h-3.5" />
+                                Paid
+                              </span>
+                            ) : (
+                              <div className="flex items-center justify-end gap-1.5">
+                                <span className="text-amber-700">{formatCurrency(balance)}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setPaymentEntry(entry)}
+                                  className="px-1.5 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold cursor-pointer transition"
+                                  title="Collect Payment"
+                                >
+                                  Collect
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        )}
+
+                        {isColEnabled('status') && (
+                          <td className="py-3 px-4 text-center whitespace-nowrap">
+                            {/* 4-Step Status Selector */}
+                            <select
+                              value={entry.status}
+                              onChange={(e) =>
+                                handleQuickStatusChange(entry, e.target.value as LedgerStatus)
+                              }
+                              className={`px-2.5 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
+                            >
+                              <option value="started">📦 Received</option>
+                              <option value="in_progress">✂️ Sewing</option>
+                              <option value="ready">✨ Ready</option>
+                              <option value="delivered">✅ Delivered</option>
+                            </select>
+                          </td>
+                        )}
+
                         <td className="py-3 px-4 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1">
                             <button
@@ -786,7 +843,7 @@ export default function TailorEBookPage() {
                               }`}
                               title={
                                 entry.status === 'ready'
-                                  ? 'Tura WhatsApp: Kayan ya shirya!'
+                                  ? 'Notify customer: Outfit is ready!'
                                   : 'Send WhatsApp Receipt'
                               }
                             >
@@ -833,7 +890,7 @@ export default function TailorEBookPage() {
                   </strong>
                 </span>
                 <span>
-                  Pending Balance:{' '}
+                  Unpaid Balance:{' '}
                   <strong className="text-amber-800">
                     {formatCurrency(stats.pendingBalance)}
                   </strong>
@@ -881,12 +938,12 @@ export default function TailorEBookPage() {
                           </h3>
                           {entry.status === 'delivered' && balance > 0 && (
                             <span className="px-1.5 py-0.5 rounded-md bg-rose-600 text-white font-black text-[9px] uppercase tracking-wider">
-                              Bashi
+                              Debt
                             </span>
                           )}
                           {isReady && (
                             <span className="px-1.5 py-0.5 rounded-md bg-sky-600 text-white font-black text-[9px] uppercase tracking-wider">
-                              Shirya!
+                              Ready!
                             </span>
                           )}
                           {isOverdue && !isReady && (
@@ -935,6 +992,19 @@ export default function TailorEBookPage() {
                           +{entry.agbada_count} Agbada
                         </span>
                       )}
+                      {/* Render custom tag fields */}
+                      {activeCustomColumns.map((c) => {
+                        const val = entry.custom_fields?.[c.id];
+                        if (!val) return null;
+                        return (
+                          <span
+                            key={c.id}
+                            className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 text-[11px] font-medium"
+                          >
+                            {c.label}: <strong>{val}</strong>
+                          </span>
+                        );
+                      })}
                     </div>
 
                     {/* Notes if any */}
@@ -948,7 +1018,7 @@ export default function TailorEBookPage() {
                     <div className="p-3 bg-slate-50/90 border border-slate-100 rounded-2xl grid grid-cols-3 gap-2 text-center mt-2">
                       <div>
                         <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
-                          Jimilla (Total)
+                          Total Price
                         </div>
                         <div className="text-xs font-black text-slate-900 font-mono">
                           {formatCurrency(entry.total_amount)}
@@ -956,7 +1026,7 @@ export default function TailorEBookPage() {
                       </div>
                       <div>
                         <div className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                          Ajiya (Paid)
+                          Deposit Paid
                         </div>
                         <div className="text-xs font-black text-emerald-800 font-mono">
                           {formatCurrency(entry.deposit_amount)}
@@ -964,7 +1034,7 @@ export default function TailorEBookPage() {
                       </div>
                       <div>
                         <div className="text-[9px] font-bold uppercase tracking-wider text-amber-700">
-                          Ragowa (Balance)
+                          Balance
                         </div>
                         {isFullyPaid ? (
                           <div className="text-xs font-black text-emerald-800 flex items-center justify-center gap-0.5 font-mono">
@@ -994,7 +1064,7 @@ export default function TailorEBookPage() {
                         className="w-full py-2 px-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Tura WhatsApp: Kayan Ya Shirya!</span>
+                        <span>Send WhatsApp: Outfit Ready for Pickup!</span>
                       </button>
                     )}
 
@@ -1012,8 +1082,8 @@ export default function TailorEBookPage() {
                         <Wallet className="w-3.5 h-3.5" />
                         <span>
                           {entry.status === 'delivered'
-                            ? `Biya Kudin Bashi (${formatCurrency(balance)})`
-                            : `Karbi Ragowar Kudi (${formatCurrency(balance)})`}
+                            ? `Settle Debt (${formatCurrency(balance)})`
+                            : `Collect Balance (${formatCurrency(balance)})`}
                         </span>
                       </button>
                     )}
@@ -1027,10 +1097,10 @@ export default function TailorEBookPage() {
                         }
                         className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
                       >
-                        <option value="started">📦 An Karba (Received)</option>
-                        <option value="in_progress">✂️ Ana Dinki (Sewing)</option>
-                        <option value="ready">✨ Ya Shirya (Ready)</option>
-                        <option value="delivered">✅ An Bayar (Delivered)</option>
+                        <option value="started">📦 Received</option>
+                        <option value="in_progress">✂️ Sewing</option>
+                        <option value="ready">✨ Ready</option>
+                        <option value="delivered">✅ Delivered</option>
                       </select>
 
                       {/* Tool buttons */}
@@ -1073,20 +1143,20 @@ export default function TailorEBookPage() {
           {/* Financial Summary */}
           <div className="p-4 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-2xs">
             <span>
-              Kudin Shiga a {periodLabel[periodFilter]}:{' '}
+              Total Billed in {periodLabel[periodFilter]}:{' '}
               <strong className="text-slate-900 font-mono font-black text-sm">
                 {formatCurrency(stats.totalRevenue)}
               </strong>
             </span>
             <div className="flex items-center gap-4 font-mono font-bold">
               <span>
-                Kudi a Hannu:{' '}
+                Deposits Collected:{' '}
                 <strong className="text-emerald-800 font-black">
                   {formatCurrency(stats.totalDeposited)}
                 </strong>
               </span>
               <span>
-                Ragowa a Waje:{' '}
+                Unpaid Balance:{' '}
                 <strong className="text-amber-800 font-black">
                   {formatCurrency(stats.pendingBalance)}
                 </strong>
@@ -1106,6 +1176,7 @@ export default function TailorEBookPage() {
         onSuccess={loadData}
         initialEntry={editingEntry}
         clients={clients}
+        columnsConfig={columnsConfig}
       />
 
       <DeliveryConfirmationModal
@@ -1144,7 +1215,7 @@ export default function TailorEBookPage() {
             </div>
             <div>
               <h3 className="text-base font-black text-slate-900">
-                Goge Wannan Dinki? (Delete Record)
+                Delete Order Record?
               </h3>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
                 You are about to remove <strong>{entryToDelete.client_name}</strong>&apos;s order (
@@ -1152,9 +1223,7 @@ export default function TailorEBookPage() {
               </p>
               <div className="mt-2.5 p-2.5 bg-amber-50 border border-amber-200 rounded-xl">
                 <p className="text-[11px] text-amber-800 font-semibold leading-relaxed">
-                  Shawara: Kayan da aka gama kuma aka bayar yana da kyau a bar shi a littafi don
-                  lissafin ribar mako, wata da shekara. Goge shi kawai idan kuskure aka yi wajen
-                  rubutawa.
+                  Tip: Keep delivered orders — they count toward your weekly, monthly and yearly profit reports. Delete only if recorded by mistake.
                 </p>
               </div>
             </div>
@@ -1165,7 +1234,7 @@ export default function TailorEBookPage() {
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
               >
-                A&apos;a, Bar Shi (Keep It)
+                Keep It
               </button>
               <button
                 type="button"
@@ -1173,7 +1242,7 @@ export default function TailorEBookPage() {
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Eh, Goge (Delete)'}
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Delete'}
               </button>
             </div>
           </div>

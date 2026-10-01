@@ -16,7 +16,12 @@ import {
   updateLedgerEntry,
   LedgerEntryItem,
 } from './actions';
-import { CreateLedgerEntryInput, LedgerStatus } from '@/lib/validation/ledger';
+import {
+  CreateLedgerEntryInput,
+  LedgerStatus,
+  LedgerColumnConfig,
+  DEFAULT_LEDGER_COLUMNS,
+} from '@/lib/validation/ledger';
 
 interface LedgerEntryModalProps {
   isOpen: boolean;
@@ -24,6 +29,7 @@ interface LedgerEntryModalProps {
   onSuccess: () => void;
   initialEntry?: LedgerEntryItem | null;
   clients: Array<{ id: string; name: string; phone: string | null }>;
+  columnsConfig?: LedgerColumnConfig[];
 }
 
 const COMMON_STYLES = [
@@ -38,10 +44,10 @@ const COMMON_STYLES = [
 ];
 
 const COMMON_WORKS = [
-  'Plain (Babu Aiki)',
+  'Plain (No Work)',
   'Computer Embroidery',
-  'Monogram (Mono)',
-  'Hand Embroidery (Hannu)',
+  'Monogram',
+  'Hand Embroidery',
   'Stone Work',
   'Normal Stitch',
   'Piping / Neck Design',
@@ -53,6 +59,7 @@ export function LedgerEntryModal({
   onSuccess,
   initialEntry,
   clients,
+  columnsConfig = DEFAULT_LEDGER_COLUMNS,
 }: LedgerEntryModalProps) {
   const isEditing = Boolean(initialEntry);
 
@@ -63,16 +70,20 @@ export function LedgerEntryModal({
   const [deliveryDate, setDeliveryDate] = useState<string>('');
   const [setsCount, setSetsCount] = useState<number>(1);
   const [styleType, setStyleType] = useState('Plain');
-  const [embroideryWork, setEmbroideryWork] = useState('Plain (Babu Aiki)');
+  const [embroideryWork, setEmbroideryWork] = useState('Plain (No Work)');
   const [agbadaCount, setAgbadaCount] = useState<number>(0);
   const [depositAmount, setDepositAmount] = useState<string>('0');
   const [totalAmount, setTotalAmount] = useState<string>('0');
   const [status, setStatus] = useState<LedgerStatus>('started');
   const [notes, setNotes] = useState('');
+  const [customFields, setCustomFields] = useState<Record<string, string>>({});
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showClientSuggestions, setShowClientSuggestions] = useState(false);
+
+  // Active custom columns configured by the tailor
+  const activeCustomColumns = columnsConfig.filter((c) => c.isCustom && c.enabled);
 
   useEffect(() => {
     if (initialEntry) {
@@ -83,12 +94,13 @@ export function LedgerEntryModal({
       setDeliveryDate(initialEntry.delivery_date || '');
       setSetsCount(initialEntry.sets_count || 1);
       setStyleType(initialEntry.style_type || 'Plain');
-      setEmbroideryWork(initialEntry.embroidery_work || 'Plain (Babu Aiki)');
+      setEmbroideryWork(initialEntry.embroidery_work || 'Plain (No Work)');
       setAgbadaCount(initialEntry.agbada_count || 0);
       setDepositAmount(initialEntry.deposit_amount.toString());
       setTotalAmount(initialEntry.total_amount.toString());
       setStatus(initialEntry.status || 'started');
       setNotes(initialEntry.notes || '');
+      setCustomFields(initialEntry.custom_fields || {});
     } else {
       setClientName('');
       setClientPhone('');
@@ -97,12 +109,13 @@ export function LedgerEntryModal({
       setDeliveryDate('');
       setSetsCount(1);
       setStyleType('Plain');
-      setEmbroideryWork('Plain (Babu Aiki)');
+      setEmbroideryWork('Plain (No Work)');
       setAgbadaCount(0);
       setDepositAmount('0');
       setTotalAmount('0');
       setStatus('started');
       setNotes('');
+      setCustomFields({});
     }
     setError(null);
   }, [initialEntry, isOpen]);
@@ -139,6 +152,10 @@ export function LedgerEntryModal({
     }
   };
 
+  const handleCustomFieldChange = (fieldId: string, val: string) => {
+    setCustomFields((prev) => ({ ...prev, [fieldId]: val }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -165,7 +182,7 @@ export function LedgerEntryModal({
         total_amount: numTotal,
         status,
         notes: notes.trim() || null,
-        custom_fields: {},
+        custom_fields: customFields,
       };
 
       if (isEditing && initialEntry) {
@@ -207,10 +224,10 @@ export function LedgerEntryModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                {isEditing ? 'Gyara Aiki (Edit Order)' : 'Rubuta Sabon Aiki (New Order)'}
+                {isEditing ? 'Edit Order Entry' : 'Record New Order'}
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
-                Record customer outfit order, embroidery & billing
+                Record customer outfit details, styles &amp; billing
               </p>
             </div>
           </div>
@@ -235,7 +252,7 @@ export function LedgerEntryModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1 relative">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Mai Kayan (Customer Name) <span className="text-emerald-700">*</span>
+                Customer Name <span className="text-emerald-700">*</span>
               </label>
               <div className="relative">
                 <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -253,7 +270,7 @@ export function LedgerEntryModal({
                 />
               </div>
 
-              {/* Autocomplete dropdown */}
+              {/* Autocomplete suggestions */}
               {showClientSuggestions && filteredClients.length > 0 && (
                 <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 max-h-36 overflow-y-auto">
                   {filteredClients.map((c) => (
@@ -273,7 +290,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Lambar Waya (Phone Number)
+                Phone Number
               </label>
               <div className="relative">
                 <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -292,7 +309,7 @@ export function LedgerEntryModal({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Ranar Karba (Booked)
+                Order Date
               </label>
               <input
                 type="date"
@@ -305,7 +322,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Ranar Bayarwa (Due Date)
+                Due Date
               </label>
               <input
                 type="date"
@@ -317,7 +334,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Yawan Kaya (Sets)
+                Sets / Qty
               </label>
               <input
                 type="number"
@@ -331,7 +348,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Agbada / Babban Riga
+                Agbada
               </label>
               <input
                 type="number"
@@ -347,7 +364,7 @@ export function LedgerEntryModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Nau&apos;in Dinki (Style)
+                Outfit Style
               </label>
               <input
                 type="text"
@@ -366,7 +383,7 @@ export function LedgerEntryModal({
 
             <div className="space-y-1">
               <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-                Aiki (Embroidery / Work)
+                Embroidery / Work
               </label>
               <input
                 type="text"
@@ -384,15 +401,38 @@ export function LedgerEntryModal({
             </div>
           </div>
 
-          {/* Deposit & Total Price & Balance with Quick Calculate */}
+          {/* Dynamic Custom Fields (Configured by Tailor) */}
+          {activeCustomColumns.length > 0 && (
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5">
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">
+                Custom Fields
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {activeCustomColumns.map((col) => (
+                  <div key={col.id} className="space-y-1">
+                    <label className="font-bold text-slate-700 text-[10px]">
+                      {col.label}
+                    </label>
+                    <input
+                      type="text"
+                      value={customFields[col.id] || ''}
+                      onChange={(e) => handleCustomFieldChange(col.id, e.target.value)}
+                      placeholder={`Enter ${col.label.toLowerCase()}...`}
+                      className="w-full px-3 py-1.5 bg-white border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-medium focus:outline-none shadow-2xs text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Deposit & Total Price & Balance */}
           <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/90 rounded-2xl space-y-2.5">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="font-bold text-emerald-800 uppercase tracking-wider text-[10px]">
-                    Kudin Ajiya (Deposit)
-                  </label>
-                </div>
+                <label className="font-bold text-emerald-800 uppercase tracking-wider text-[10px]">
+                  Deposit (₦)
+                </label>
                 <div className="relative">
                   <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-black text-xs text-emerald-800">
                     ₦
@@ -411,7 +451,7 @@ export function LedgerEntryModal({
 
               <div className="space-y-1">
                 <label className="font-bold text-emerald-800 uppercase tracking-wider text-[10px]">
-                  Jimillar Kudi (Total Bill)
+                  Total Price (₦)
                 </label>
                 <div className="relative">
                   <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-black text-xs text-emerald-800">
@@ -431,7 +471,7 @@ export function LedgerEntryModal({
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-600 uppercase tracking-wider text-[10px]">
-                  Ragowar Kudi (Balance)
+                  Remaining Balance
                 </label>
                 <div className="px-3 py-1.5 bg-white/90 border border-emerald-200/80 rounded-xl font-black text-sm flex items-center text-amber-700">
                   ₦{balance.toLocaleString()}
@@ -442,7 +482,7 @@ export function LedgerEntryModal({
             {/* Quick deposit shortcuts */}
             {numTotal > 0 && (
               <div className="flex items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-emerald-800 font-bold">Quick Ajiya:</span>
+                <span className="text-[10px] text-emerald-800 font-bold">Quick Deposit:</span>
                 <button
                   type="button"
                   onClick={setDepositHalf}
@@ -461,10 +501,10 @@ export function LedgerEntryModal({
             )}
           </div>
 
-          {/* Job Status Selector (4 Steps) */}
+          {/* 4-Step Order Status Selector */}
           <div className="space-y-1.5">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Matakin Aiki (4-Step Order Status)
+              Order Status
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
@@ -476,7 +516,7 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                📦 An Karba (Received)
+                📦 Received
               </button>
               <button
                 type="button"
@@ -487,7 +527,7 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✂️ Ana Dinki (Sewing)
+                ✂️ Sewing
               </button>
               <button
                 type="button"
@@ -498,7 +538,7 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✨ Ya Shirya (Ready)
+                ✨ Ready
               </button>
               <button
                 type="button"
@@ -509,21 +549,21 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✅ An Bayar (Delivered)
+                ✅ Delivered
               </button>
             </div>
           </div>
 
-          {/* Notes / Special remarks */}
+          {/* Notes */}
           <div className="space-y-1">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Karin Bayani / Shawara (Notes / Fabric details)
+              Notes / Special Instructions
             </label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Yadukoji fari, button na azurfa, gaggawa ce..."
+              placeholder="e.g. White fabric, silver buttons, urgent delivery..."
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-medium focus:outline-none shadow-2xs text-xs"
             />
           </div>
@@ -551,7 +591,7 @@ export function LedgerEntryModal({
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  <span>{isEditing ? 'Save Changes' : 'Record in Ledger'}</span>
+                  <span>{isEditing ? 'Save Changes' : 'Record Order'}</span>
                 </>
               )}
             </button>
