@@ -10,11 +10,11 @@ import {
   Layers,
   Sparkles,
 } from 'lucide-react';
+import { saveLedgerSettings } from './actions';
 import {
-  saveLedgerSettings,
+  LedgerColumnConfig,
   DEFAULT_LEDGER_COLUMNS,
-} from './actions';
-import { LedgerColumnConfig } from '@/lib/validation/ledger';
+} from '@/lib/validation/ledger';
 
 interface LedgerColumnCustomizerProps {
   isOpen: boolean;

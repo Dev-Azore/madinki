@@ -31,9 +31,12 @@ import {
   updateLedgerStatus,
   LedgerEntryItem,
   LedgerStats,
-  DEFAULT_LEDGER_COLUMNS,
 } from './actions';
-import { LedgerColumnConfig, LedgerStatus } from '@/lib/validation/ledger';
+import {
+  LedgerColumnConfig,
+  LedgerStatus,
+  DEFAULT_LEDGER_COLUMNS,
+} from '@/lib/validation/ledger';
 import { LedgerEntryModal } from './LedgerEntryModal';
 import { LedgerColumnCustomizer } from './LedgerColumnCustomizer';
 import { AdBanner } from '@/components/ads/AdBanner';
