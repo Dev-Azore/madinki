@@ -70,12 +70,12 @@ export default function EditTemplatePage() {
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#0B2545] flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
             <Ruler className="w-6 h-6 text-[#1b5e20]" />
-            Edit Template
+            Edit Garment Style
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Update fields and garment structure for future measurements.
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Update measurement points and units for this garment style.
           </p>
         </div>
       </div>

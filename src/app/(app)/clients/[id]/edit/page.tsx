@@ -64,12 +64,12 @@ export default function EditClientPage() {
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-[#0B2545] flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
             <Users className="w-6 h-6 text-[#1b5e20]" />
-            Edit Client Information
+            Edit Customer Information
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Update contact numbers and client preferences.
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Update contact numbers and customer preferences.
           </p>
         </div>
       </div>

@@ -112,34 +112,32 @@ export default function ClientsPage() {
     }
   };
 
-  const [filterType, setFilterType] = useState<'all' | 'has_phone' | 'with_notes'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'has_phone'>('all');
 
   const filteredClients = clients.filter((c) => {
     const matchesSearch =
       c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (c.phone && c.phone.includes(searchQuery)) ||
-      (c.notes && c.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+      (c.phone && c.phone.includes(searchQuery));
 
     if (!matchesSearch) return false;
     if (filterType === 'has_phone') return Boolean(c.phone);
-    if (filterType === 'with_notes') return Boolean(c.notes);
     return true;
   });
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* Header & New Client CTA */}
+      {/* Header & New Customer CTA */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#1b5e20] text-xs font-bold tracking-tight">
             <Users className="w-3.5 h-3.5" />
-            <span>Customer Directory</span>
+            <span>My Customers</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2">
-            Client Profiles
+            Customer Directory
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Manage your client contacts, notes, and direct fitting access.
+            Browse your customers, view past measurements, and send WhatsApp slips.
           </p>
         </div>
 
@@ -148,7 +146,7 @@ export default function ClientsPage() {
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] active:scale-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-950/15 transition-all cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Add New Client</span>
+          <span>Add New Customer</span>
         </Link>
       </div>
 
@@ -161,7 +159,7 @@ export default function ClientsPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, phone, or notes..."
+            placeholder="Type customer name or phone number..."
             className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
           {clients.length > 0 && (
@@ -194,17 +192,6 @@ export default function ClientsPage() {
             }`}
           >
             With Phone
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilterType('with_notes')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-              filterType === 'with_notes'
-                ? 'bg-white text-[#1b5e20] shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            With Notes
           </button>
         </div>
       </div>
@@ -240,9 +227,9 @@ export default function ClientsPage() {
             <Users className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-slate-900">No clients added yet</h3>
+            <h3 className="text-lg font-black text-slate-900">No customers added yet</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-              Add your first customer to start recording fittings, sizes, and sending WhatsApp slips.
+              Add your first customer to start recording measurements and sending WhatsApp slips.
             </p>
           </div>
           <Link
@@ -250,7 +237,7 @@ export default function ClientsPage() {
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Add First Client</span>
+            <span>Add First Customer</span>
           </Link>
         </div>
       )}
@@ -258,7 +245,7 @@ export default function ClientsPage() {
       {/* Filtered No Results */}
       {!isLoading && !error && clients.length > 0 && filteredClients.length === 0 && (
         <div className="p-10 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs">
-          <p className="text-sm font-medium">No clients found matching &ldquo;{searchQuery}&rdquo;</p>
+          <p className="text-sm font-medium">No customers found matching &ldquo;{searchQuery}&rdquo;</p>
           <button
             onClick={() => {
               setSearchQuery('');
@@ -305,7 +292,7 @@ export default function ClientsPage() {
                     <div className="flex items-center gap-1 shrink-0">
                       <Link
                         href={`/clients/${client.id}/edit`}
-                        title="Edit Client"
+                        title="Edit Customer"
                         className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition cursor-pointer"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -315,7 +302,7 @@ export default function ClientsPage() {
                           setDeleteErrorMessage(null);
                           setClientToDelete(client);
                         }}
-                        title="Delete Client"
+                        title="Delete Customer"
                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -386,7 +373,7 @@ export default function ClientsPage() {
                       href={`/clients/${client.id}`}
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition active:scale-95"
                     >
-                      <span>History</span>
+                      <span>View Profile</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
@@ -406,9 +393,9 @@ export default function ClientsPage() {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Delete Client Profile</h3>
+              <h3 className="text-lg font-bold text-slate-900">Delete Customer</h3>
               <p className="text-xs text-slate-600 mt-1">
-                Are you sure you want to delete <strong>{clientToDelete.name}</strong>? This will remove their client record.
+                Are you sure you want to delete <strong>{clientToDelete.name}</strong>? This will remove their customer record.
               </p>
             </div>
 

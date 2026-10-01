@@ -21,8 +21,12 @@ export const measurementFieldValueSchema = z.object({
 });
 
 export const recordMeasurementSchema = z.object({
-  client_id: z.string().uuid('Please select a valid client'),
-  template_id: z.string().uuid('Please select a valid template'),
+  client_id: z.string().uuid('Please select a valid customer').optional().nullable(),
+  new_client_name: z.string().trim().max(100).optional().nullable(),
+  new_client_phone: z.string().trim().max(30).optional().nullable(),
+  template_id: z.string().uuid().optional().nullable(),
+  style_name: z.string().trim().max(100).optional().nullable(),
+  save_as_default_points: z.boolean().optional(),
   taken_at: z
     .string()
     .optional()

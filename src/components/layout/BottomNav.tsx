@@ -5,10 +5,10 @@ import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, ClipboardList, Ruler } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-  { href: '/clients', label: 'Clients', Icon: Users },
+  { href: '/dashboard', label: 'Home', Icon: LayoutDashboard },
+  { href: '/clients', label: 'Customers', Icon: Users },
   { href: '/measurements/new', label: 'Measure', Icon: ClipboardList },
-  { href: '/templates', label: 'Templates', Icon: Ruler },
+  { href: '/templates', label: 'My Styles', Icon: Ruler },
 ] as const;
 
 export function BottomNav() {

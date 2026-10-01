@@ -13,6 +13,7 @@ import {
   Loader2,
   ChevronRight,
   Scissors,
+  Sparkles,
 } from 'lucide-react';
 import { getTemplates, deleteTemplate } from './actions';
 import { AdBanner } from '@/components/ads/AdBanner';
@@ -50,7 +51,7 @@ export default function TemplatesPage() {
         setTemplates(res.data as TemplateItem[]);
       }
     } catch {
-      setError('Failed to load templates. Please try again.');
+      setError('Failed to load styles. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +71,7 @@ export default function TemplatesPage() {
         }
       } catch {
         if (!ignore) {
-          setError('Failed to load templates. Please try again.');
+          setError('Failed to load styles. Please try again.');
         }
       } finally {
         if (!ignore) {
@@ -99,7 +100,7 @@ export default function TemplatesPage() {
         setTemplateToDelete(null);
       }
     } catch {
-      alert('Failed to delete template. Please try again.');
+      alert('Failed to delete style. Please try again.');
     } finally {
       setIsDeleting(false);
     }
@@ -113,30 +114,28 @@ export default function TemplatesPage() {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="space-y-6 animate-fade-in-up pb-12">
       {/* Header & Quick Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#2e7d32]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#1b5e20]">
-              Garment Blueprints
-            </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#1b5e20] text-xs font-bold tracking-tight">
+            <Layers className="w-3.5 h-3.5" />
+            <span>Garment Styles</span>
           </div>
-          <h1 className="text-2xl font-black text-[#0B2545] mt-1">
-            Measurement Templates
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2">
+            My Garment Styles
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Create and organize custom garment forms for quick fittings.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Manage your saved outfit types and body measurement points.
           </p>
         </div>
 
         <Link
           href="/templates/new"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#2e7d32] to-[#388e3c] hover:from-[#1b5e20] hover:to-[#2e7d32] active:scale-95 text-white font-bold rounded-xl text-sm shadow-md shadow-[#2e7d32]/25 transition cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] active:scale-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-950/15 transition cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>New Template</span>
+          <span>Add New Style</span>
         </Link>
       </div>
 
@@ -147,11 +146,11 @@ export default function TemplatesPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search templates or measurement fields..."
-          className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-300 focus:border-[#2e7d32] focus:ring-2 focus:ring-[#2e7d32]/20 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
+          placeholder="Search styles or measurement points..."
+          className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
         />
         {templates.length > 0 && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-slate-100 text-[#1b5e20] text-[11px] font-mono border border-slate-200">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-mono border border-slate-200">
             {filteredTemplates.length} of {templates.length}
           </span>
         )}
@@ -165,7 +164,7 @@ export default function TemplatesPage() {
             <p>{error}</p>
             <button
               onClick={loadTemplates}
-              className="text-xs text-red-600 underline hover:text-red-800 mt-1 cursor-pointer"
+              className="text-xs text-red-600 underline hover:text-red-800 mt-1 cursor-pointer font-bold"
             >
               Try again
             </button>
@@ -177,7 +176,7 @@ export default function TemplatesPage() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-16 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
-          <p className="text-sm">Loading templates...</p>
+          <p className="text-sm font-medium">Loading garment styles...</p>
         </div>
       )}
 
@@ -188,28 +187,28 @@ export default function TemplatesPage() {
             <Layers className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#0B2545]">No templates created yet</h3>
-            <p className="text-xs text-slate-600 mt-1">
-              Create your custom templates for Kaftan, Babban Riga, Senator, or Gowns to speed up measurement sessions.
+            <h3 className="text-base font-black text-slate-900">No custom styles saved yet</h3>
+            <p className="text-xs text-slate-500 mt-1">
+              Styles are automatically saved whenever you take measurements, or you can add your custom styles here.
             </p>
           </div>
           <Link
             href="/templates/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-xs font-bold rounded-xl shadow-sm transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] text-white text-xs font-bold rounded-xl shadow-xs transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Create First Template</span>
+            <span>Create First Style</span>
           </Link>
         </div>
       )}
 
       {/* Filtered No Results */}
       {!isLoading && !error && templates.length > 0 && filteredTemplates.length === 0 && (
-        <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-2xl shadow-xs">
-          <p className="text-sm">No templates found matching &ldquo;{searchQuery}&rdquo;</p>
+        <div className="p-8 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs">
+          <p className="text-sm font-medium">No styles found matching &ldquo;{searchQuery}&rdquo;</p>
           <button
             onClick={() => setSearchQuery('')}
-            className="text-xs text-[#1b5e20] hover:underline mt-1 cursor-pointer font-semibold"
+            className="text-xs text-[#1b5e20] hover:underline mt-1 cursor-pointer font-bold"
           >
             Clear search
           </button>
@@ -222,16 +221,16 @@ export default function TemplatesPage() {
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="p-5 bg-white border border-slate-200/90 hover:border-[#2e7d32]/50 rounded-3xl transition flex flex-col justify-between group shadow-xs hover:shadow-lg hover:shadow-emerald-900/5"
+              className="p-5 bg-white border border-slate-200/90 hover:border-emerald-300 rounded-3xl transition-all duration-200 flex flex-col justify-between group shadow-xs hover:shadow-md hover:-translate-y-0.5"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-[#1b5e20] flex items-center justify-center font-bold text-sm shadow-xs">
-                      <Scissors className="w-4 h-4" />
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200/90 text-[#1b5e20] flex items-center justify-center font-bold text-sm shadow-2xs group-hover:scale-105 transition-transform">
+                      <Scissors className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-[#0B2545] text-base group-hover:text-[#1b5e20] transition">
+                      <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#1b5e20] transition">
                         {template.name}
                       </h3>
                       <p className="text-xs text-slate-500 mt-0.5">
@@ -243,15 +242,15 @@ export default function TemplatesPage() {
                   <div className="flex items-center gap-1">
                     <Link
                       href={`/templates/${template.id}/edit`}
-                      title="Edit Template"
-                      className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                      title="Edit Style"
+                      className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition cursor-pointer"
                     >
                       <Edit2 className="w-4 h-4" />
                     </Link>
                     <button
                       onClick={() => setTemplateToDelete(template)}
-                      title="Delete Template"
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                      title="Delete Style"
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -263,16 +262,16 @@ export default function TemplatesPage() {
                   {template.template_fields.slice(0, 6).map((field) => (
                     <span
                       key={field.id}
-                      className="inline-flex items-center px-2 py-0.5 rounded-lg bg-slate-50 text-[11px] font-medium text-slate-700 border border-slate-200"
+                      className="inline-flex items-center px-2.5 py-1 rounded-xl bg-slate-50 text-[11px] font-semibold text-slate-700 border border-slate-200/80"
                     >
                       {field.field_name}
                       {field.unit && (
-                        <span className="text-[#1b5e20] ml-1 font-semibold">({field.unit})</span>
+                        <span className="text-[#1b5e20] ml-1 font-mono font-bold">({field.unit})</span>
                       )}
                     </span>
                   ))}
                   {template.template_fields.length > 6 && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-500 border border-slate-200">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-xl bg-slate-100 text-[11px] font-bold text-slate-500 border border-slate-200">
                       +{template.template_fields.length - 6} more
                     </span>
                   )}
@@ -285,11 +284,11 @@ export default function TemplatesPage() {
                   ID: #{template.id.slice(0, 6)}
                 </span>
                 <Link
-                  href={`/measurements/new?templateId=${template.id}`}
-                  className="flex items-center gap-1 text-xs font-bold text-[#1b5e20] hover:underline"
+                  href={`/measurements/new`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] text-xs font-bold border border-emerald-200/90 transition shadow-2xs active:scale-95"
                 >
-                  <span>Use for Fitting</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <Ruler className="w-3.5 h-3.5" />
+                  <span>Measure</span>
                 </Link>
               </div>
             </div>
@@ -306,9 +305,9 @@ export default function TemplatesPage() {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-[#0B2545]">Delete Template</h3>
+              <h3 className="text-lg font-bold text-slate-900">Delete Garment Style</h3>
               <p className="text-xs text-slate-600 mt-1">
-                Are you sure you want to delete <strong>{templateToDelete.name}</strong>? Existing historical measurement tickets will remain preserved.
+                Are you sure you want to delete <strong>{templateToDelete.name}</strong>? Existing customer size cards will remain safely preserved.
               </p>
             </div>
 

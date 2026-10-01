@@ -105,52 +105,52 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
   const statCards = [
     {
       id: 'clients',
-      label: 'Client Roster',
+      label: 'My Customers',
       value: stats ? stats.client_count.toString() : '0',
       icon: Users,
-      badge: 'Active Directory',
+      badge: 'Customers',
       badgeColor: 'bg-emerald-50 text-[#1b5e20] border-emerald-200/80',
       accentColor: 'text-[#1b5e20]',
       iconBg: 'bg-emerald-50 border-emerald-200/90 text-[#1b5e20]',
       glow: 'from-emerald-200/30 via-emerald-100/10 to-transparent',
       borderColor: 'hover:border-emerald-400/80',
       href: '/clients',
-      subtext: 'Registered clients',
+      subtext: 'People you sew for',
     },
     {
       id: 'fittings',
-      label: 'Fitting Tickets',
+      label: 'Take Measurement',
       value: stats ? stats.measurement_count.toString() : '0',
       icon: Ruler,
-      badge: 'Immutable Vault',
+      badge: 'Record Sizes',
       badgeColor: 'bg-sky-50 text-sky-800 border-sky-200/80',
       accentColor: 'text-sky-700',
       iconBg: 'bg-sky-50 border-sky-200/90 text-sky-700',
       glow: 'from-sky-200/30 via-sky-100/10 to-transparent',
       borderColor: 'hover:border-sky-400/80',
       href: '/measurements/new',
-      subtext: 'Captured size blueprints',
+      subtext: 'Customer size cards',
     },
     {
       id: 'templates',
-      label: 'Garment Presets',
+      label: 'My Styles',
       value: stats ? stats.template_count.toString() : '0',
       icon: Layers,
-      badge: 'Style Cuts',
+      badge: 'Garments',
       badgeColor: 'bg-purple-50 text-purple-800 border-purple-200/80',
       accentColor: 'text-purple-700',
       iconBg: 'bg-purple-50 border-purple-200/90 text-purple-700',
       glow: 'from-purple-200/30 via-purple-100/10 to-transparent',
       borderColor: 'hover:border-purple-400/80',
       href: '/templates',
-      subtext: 'Kaftan, Riga & Gowns',
+      subtext: 'Saved garment styles',
     },
     {
       id: 'activity',
-      label: 'Latest Fitting',
+      label: 'Last Fitting',
       value: stats ? formatLastActivity(stats.last_activity) : 'No records',
       icon: Clock,
-      badge: 'Shop Activity',
+      badge: 'Recent',
       badgeColor: 'bg-amber-50 text-amber-900 border-amber-200/80',
       accentColor: 'text-amber-800',
       iconBg: 'bg-amber-50 border-amber-200/90 text-amber-800',
@@ -158,28 +158,28 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
       borderColor: 'hover:border-amber-400/80',
       href: '/clients',
       small: true,
-      subtext: 'Most recent ticket',
+      subtext: 'Most recent customer',
     },
   ];
 
   const quickTips = [
     {
-      title: 'Direct WhatsApp Customer Delivery',
-      desc: 'After saving a client measurement, tap the WhatsApp button to instantly share a pre-formatted slip directly to their phone.',
+      title: 'Send Size Card on WhatsApp',
+      desc: 'After saving a customer measurement, tap the WhatsApp button to immediately send a neat size receipt directly to their phone.',
     },
     {
-      title: 'Permanent Fitting Records',
-      desc: 'Measurements can never be overwritten by mistake. Every record gets its own permanent timestamped entry.',
+      title: 'Measurements Are Safely Saved',
+      desc: 'All measurements are permanently stored with date and time, so you can always check what you measured before.',
     },
     {
-      title: 'Taking Babban Riga Wingspan',
-      desc: 'Measure wrist-to-wrist across outstretched arms with tape held straight along the collarline for the grand royal drape.',
+      title: 'Customizing Your Measurement Points',
+      desc: 'You can easily add, remove, or change any body point (Shoulder, Length, Chest, Waist) anytime when measuring a customer.',
     },
   ];
 
   return (
     <div className="space-y-6 animate-fade-in-up max-w-3xl mx-auto pb-8">
-      {/* ── Atelier Executive Header Card ── */}
+      {/* ── Dashboard Welcome Card ── */}
       <div className="relative rounded-3xl bg-white/95 backdrop-blur-md p-5 sm:p-7 border border-slate-200/90 shadow-sm overflow-hidden group">
         {/* Ambient background glows */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-100/50 via-teal-50/30 to-transparent rounded-full blur-3xl pointer-events-none" />
@@ -189,13 +189,13 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50/90 border border-emerald-200/80 text-[#1b5e20] text-[11px] font-extrabold uppercase tracking-wider shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#1b5e20] animate-pulse" />
-              <span>Madinki Dashboard</span>
+              <span>Tailor Workspace</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               {greeting}, {firstName}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Manage your clients, record fittings, and send instant WhatsApp slips.
+              Search your customers, take measurements, and send WhatsApp size slips.
             </p>
           </div>
 
@@ -206,7 +206,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4.5 py-3 rounded-2xl bg-gradient-to-r from-[#1b5e20] via-[#17521c] to-[#113f15] hover:from-[#144818] hover:to-[#0e3310] text-white text-xs font-black shadow-md shadow-emerald-950/15 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Record Fitting</span>
+              <span>Take Measurement</span>
             </Link>
 
             <Link
@@ -215,7 +215,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               title="Add New Customer"
             >
               <UserPlus className="w-4 h-4 text-[#1b5e20]" />
-              <span>Add Client</span>
+              <span>Add Customer</span>
             </Link>
           </div>
         </div>
@@ -295,7 +295,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               </div>
               <div>
                 <h2 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-                  Customer Fitting Directory
+                  Search Your Customers
                 </h2>
                 <p className="text-[11px] sm:text-xs text-slate-500">
                   Instant search by customer name, phone number, or garment style
@@ -307,7 +307,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               href="/clients"
               className="text-xs font-bold text-[#1b5e20] hover:underline flex items-center gap-1 transition"
             >
-              <span>All Clients</span>
+              <span>All Customers</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -319,7 +319,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name, 080... or Kaftan, Riga..."
+              placeholder="Type customer name or phone number..."
               className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/10 rounded-2xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none transition-all shadow-inner"
             />
             {searchQuery && (
@@ -344,7 +344,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              All Clients ({recentClients.length})
+              All Customers ({recentClients.length})
             </button>
             <button
               type="button"
@@ -355,7 +355,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              With Fitting Records
+              With Measurements
             </button>
             <button
               type="button"
@@ -366,7 +366,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Pending 1st Fitting
+              No Measurements Yet
             </button>
           </div>
         </div>
@@ -379,9 +379,9 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                 <Users className="w-6 h-6" />
               </div>
               <div className="max-w-xs mx-auto">
-                <p className="text-sm font-black text-slate-800">Your customer directory is empty</p>
+                <p className="text-sm font-black text-slate-800">Your customer list is empty</p>
                 <p className="text-xs text-slate-500 mt-1">
-                  Add your first customer to start recording permanent digital measurements and sending WhatsApp slips.
+                  Add your first customer to start recording sizes and sending WhatsApp slips.
                 </p>
               </div>
               <Link
@@ -426,7 +426,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                                   <span>{client.phone}</span>
                                 </span>
                               ) : (
-                                <span className="text-slate-400">No phone attached</span>
+                                <span className="text-slate-400">No phone number</span>
                               )}
                             </div>
                           </div>
@@ -457,7 +457,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                           </div>
                         ) : (
                           <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 text-[10.5px] font-semibold">
-                            <span>Ready for 1st fitting</span>
+                            <span>Ready for measurement</span>
                           </div>
                         )}
                       </div>
@@ -470,7 +470,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                         className="px-2.5 py-1.5 rounded-xl hover:bg-slate-100 text-[11px] font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 transition"
                       >
                         <Eye className="w-3.5 h-3.5 text-slate-400" />
-                        <span>View History</span>
+                        <span>View Customer</span>
                       </Link>
 
                       <Link
@@ -478,7 +478,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
                         className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 text-[11px] font-black text-[#1b5e20] flex items-center gap-1 transition shadow-2xs hover:scale-[1.02]"
                       >
                         <Plus className="w-3.5 h-3.5" />
-                        <span>Record Fitting</span>
+                        <span>Measure</span>
                       </Link>
                     </div>
                   </div>
@@ -494,27 +494,27 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
         {[
           {
             href: '/measurements/new',
-            title: 'Take New Fitting',
-            desc: 'Record and save client measurements into a permanent fitting record',
+            title: 'Take New Measurement',
+            desc: 'Open the measurement sheet and record sizes for any customer',
             Icon: Ruler,
             color: 'bg-emerald-50 border-emerald-200/90 text-[#1b5e20]',
-            badge: 'Start Ticket',
+            badge: 'Start',
           },
           {
             href: '/clients',
-            title: 'Customer Directory',
-            desc: 'Browse complete client rosters, phone numbers, and past slips',
+            title: 'My Customers',
+            desc: 'View all your customers, phone numbers, and past sizes',
             Icon: Users,
             color: 'bg-sky-50 border-sky-200/90 text-sky-700',
-            badge: 'Client CRM',
+            badge: 'Directory',
           },
           {
             href: '/templates',
-            title: 'Garment Style Blueprints',
-            desc: 'Configure field definitions for Kaftan, Babban Riga, and Gowns',
+            title: 'My Styles',
+            desc: 'Check and manage your custom garment styles and measurement points',
             Icon: Layers,
             color: 'bg-purple-50 border-purple-200/90 text-purple-700',
-            badge: 'Custom Cuts',
+            badge: 'Styles',
           },
         ].map(({ href, title, desc, Icon, color, badge }) => (
           <Link
@@ -540,7 +540,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
             </div>
 
             <div className="pt-4 flex items-center text-xs font-bold text-[#1b5e20] group-hover:translate-x-0.5 transition-transform gap-1">
-              <span>Open Tool</span>
+              <span>Open</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </Link>
@@ -555,7 +555,7 @@ export function DashboardClient({ stats, statsError }: DashboardClientProps) {
               <Scissors className="w-4 h-4" />
             </div>
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-800">
-              Master Tailoring Tips & Best Practices
+              Helpful Tailoring Tips
             </h3>
           </div>
         </div>

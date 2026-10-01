@@ -216,40 +216,40 @@ export function ProfileClient({ initialProfile, errorMessage }: ProfileClientPro
       {/* ── Studio Statistics Grid ── */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-          Workshop Metrics
+          My Workshop Numbers
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-              <span>Clients</span>
+              <span>Customers</span>
               <Users className="w-3.5 h-3.5 text-sky-600" />
             </div>
             <div className="text-xl font-black text-slate-900 font-mono">
               {profile.stats.client_count}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">In directory</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Total registered</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-              <span>Templates</span>
+              <span>Garment Styles</span>
               <Layers className="w-3.5 h-3.5 text-purple-600" />
             </div>
             <div className="text-xl font-black text-slate-900 font-mono">
               {profile.stats.template_count}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Garment styles</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Saved styles</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-              <span>Fittings</span>
+              <span>Measurements</span>
               <Ruler className="w-3.5 h-3.5 text-[#1b5e20]" />
             </div>
             <div className="text-xl font-black text-slate-900 font-mono">
               {profile.stats.measurement_count}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Total tickets</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Saved size cards</div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs">

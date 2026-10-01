@@ -142,7 +142,7 @@ export default function ClientProfilePage() {
           className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-slate-900 rounded-2xl shadow-xs transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 text-[#1b5e20]" />
-          <span className="text-xs font-bold pr-1">Client Directory</span>
+          <span className="text-xs font-bold pr-1">Customers</span>
         </Link>
 
         {client && (
@@ -160,7 +160,7 @@ export default function ClientProfilePage() {
                 setShowDeleteModal(true);
               }}
               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-2xl border border-slate-200 hover:border-red-200 transition cursor-pointer shadow-2xs"
-              title="Delete Client"
+              title="Delete Customer"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -171,7 +171,7 @@ export default function ClientProfilePage() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
-          <p className="text-sm font-medium">Loading client profile...</p>
+          <p className="text-sm font-medium">Loading customer profile...</p>
         </div>
       )}
 
@@ -184,7 +184,7 @@ export default function ClientProfilePage() {
               href="/clients"
               className="text-xs text-red-600 underline hover:text-red-800 mt-1 inline-block font-semibold"
             >
-              Back to Client Directory
+              Back to Customers
             </Link>
           </div>
         </div>
@@ -235,16 +235,6 @@ export default function ClientProfilePage() {
                     <span className="text-xs text-slate-400 italic">No phone number on file</span>
                   )}
                 </div>
-
-                {client.notes && (
-                  <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs text-slate-700 space-y-1">
-                    <p className="text-[11px] font-bold text-[#1b5e20] flex items-center gap-1">
-                      <FileText className="w-3 h-3" />
-                      Fitting Preferences & Notes:
-                    </p>
-                    <p className="text-slate-600 whitespace-pre-wrap">{client.notes}</p>
-                  </div>
-                )}
               </div>
 
               {/* Action: Take Measurement */}
@@ -293,7 +283,7 @@ export default function ClientProfilePage() {
                   No measurements recorded yet
                 </h3>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Record measurements using a garment template to start building this customer&apos;s size history.
+                  Take this customer&apos;s sizes to start building their permanent measurement history.
                 </p>
                 <Link
                   href={`/measurements/new?clientId=${client.id}`}
@@ -386,7 +376,7 @@ export default function ClientProfilePage() {
                               ))
                             ) : (
                               <p className="text-xs text-slate-500 col-span-full">
-                                No field values recorded.
+                                No measurement points recorded.
                               </p>
                             )}
                           </div>
@@ -397,7 +387,7 @@ export default function ClientProfilePage() {
                               <span className="text-slate-300">•</span>
                               <span className="flex items-center gap-1 text-[#1b5e20] font-medium">
                                 <ShieldCheck className="w-3.5 h-3.5" />
-                                <span>Permanent Record</span>
+                                <span>Saved Measurement</span>
                               </span>
                             </div>
 
@@ -434,7 +424,7 @@ export default function ClientProfilePage() {
               <div className="p-2.5 bg-red-50 rounded-2xl">
                 <Trash2 className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Delete Client?</h3>
+              <h3 className="text-lg font-bold text-slate-900">Delete Customer?</h3>
             </div>
 
             <p className="text-sm text-slate-600">
