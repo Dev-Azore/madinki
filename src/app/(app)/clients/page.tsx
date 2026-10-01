@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Plus,
@@ -8,12 +8,14 @@ import {
   Search,
   Phone,
   Ruler,
-  ChevronRight,
   AlertCircle,
   Loader2,
   Trash2,
   Edit2,
   Calendar,
+  AlertTriangle,
+  Scissors,
+  BookOpen,
 } from 'lucide-react';
 import { getClients, deleteClientAction } from './actions';
 import { AdBanner } from '@/components/ads/AdBanner';
@@ -25,6 +27,9 @@ interface ClientItem {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  total_debt?: number;
+  active_orders_count?: number;
+  total_orders_count?: number;
 }
 
 function getInitials(name: string): string {
@@ -35,9 +40,14 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase() || 'CL';
 }
 
+function formatCurrency(n: number) {
+  return `₦${(n || 0).toLocaleString('en-NG', { minimumFractionDigits: 0 })}`;
+}
+
 export default function ClientsPage() {
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState<'all' | 'has_phone' | 'debt'>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,34 +73,8 @@ export default function ClientsPage() {
   }, []);
 
   useEffect(() => {
-    let ignore = false;
-
-    async function fetchClients() {
-      try {
-        const res = await getClients();
-        if (ignore) return;
-        if (res.error) {
-          setError(res.error);
-        } else if (res.data) {
-          setClients(res.data as ClientItem[]);
-        }
-      } catch {
-        if (!ignore) {
-          setError('Failed to load clients. Please try again.');
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    fetchClients();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
+    loadClients();
+  }, [loadClients]);
 
   const handleDeleteConfirm = async () => {
     if (!clientToDelete) return;
@@ -106,92 +90,140 @@ export default function ClientsPage() {
         setClientToDelete(null);
       }
     } catch {
-      setDeleteErrorMessage('An error occurred while deleting the client.');
+      setDeleteErrorMessage('An error occurred while deleting the customer.');
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const [filterType, setFilterType] = useState<'all' | 'has_phone'>('all');
+  const debtClientsCount = useMemo(() => {
+    return clients.filter((c) => (c.total_debt || 0) > 0).length;
+  }, [clients]);
 
-  const filteredClients = clients.filter((c) => {
-    const matchesSearch =
-      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (c.phone && c.phone.includes(searchQuery));
+  const filteredClients = useMemo(() => {
+    return clients.filter((client) => {
+      if (filterType === 'has_phone' && !client.phone) return false;
+      if (filterType === 'debt' && (client.total_debt || 0) <= 0) return false;
 
-    if (!matchesSearch) return false;
-    if (filterType === 'has_phone') return Boolean(c.phone);
-    return true;
-  });
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = client.name.toLowerCase().includes(query);
+        const matchesPhone = client.phone ? client.phone.toLowerCase().includes(query) : false;
+        return matchesName || matchesPhone;
+      }
+      return true;
+    });
+  }, [clients, filterType, searchQuery]);
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
-      {/* Header & New Customer CTA */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 animate-fade-in-up pb-28">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#1b5e20] text-xs font-bold tracking-tight">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-2">
             <Users className="w-3.5 h-3.5" />
-            <span>My Customers</span>
+            <span>Masu Dinki (Customer Directory)</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2">
-            Customer Directory
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Masu Kayan Dinki
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Browse your customers, view past measurements, and send WhatsApp slips.
+          <p className="text-xs text-slate-500 mt-1">
+            Manage your customers, measurement sizes, active orders &amp; debts.
           </p>
         </div>
 
         <Link
           href="/clients/new"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] hover:from-[#144818] hover:to-[#0e3310] active:scale-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-950/15 transition-all cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition-all cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Add New Customer</span>
+          <span>Sabuwar Rijista (New Customer)</span>
         </Link>
       </div>
 
-      {/* Controls Bar: Search & Filter Tabs */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-        {/* Search Bar with Counter Pill */}
+      {/* Debt Warning Strip if any customer owes money */}
+      {debtClientsCount > 0 && filterType !== 'debt' && (
+        <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
+            <div className="text-xs">
+              <span className="font-black text-rose-950 block">
+                Akwai mutum {debtClientsCount} da ake bin sa bashi!
+              </span>
+              <span className="text-rose-700 text-[11px]">
+                {debtClientsCount} customer(s) have unpaid balances / outstanding debts.
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setFilterType('debt')}
+            className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[11px] font-bold shadow-2xs cursor-pointer whitespace-nowrap transition"
+          >
+            Duba Masu Bashi
+          </button>
+        </div>
+      )}
+
+      {/* Search Bar & Filter Strip */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Type customer name or phone number..."
-            className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 focus:border-[#1b5e20] focus:ring-2 focus:ring-[#1b5e20]/15 rounded-2xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
+            placeholder="Nemi mai kaya da suna ko lamba..."
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
-          {clients.length > 0 && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-mono border border-slate-200">
-              {filteredClients.length} of {clients.length}
-            </span>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer text-base leading-none"
+            >
+              &times;
+            </button>
           )}
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl shrink-0 self-start sm:self-auto">
+        {/* Filters */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl shrink-0 overflow-x-auto">
           <button
             type="button"
             onClick={() => setFilterType('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               filterType === 'all'
-                ? 'bg-white text-[#1b5e20] shadow-xs'
+                ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            All ({clients.length})
+            Duka ({clients.length})
           </button>
           <button
             type="button"
             onClick={() => setFilterType('has_phone')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               filterType === 'has_phone'
-                ? 'bg-white text-[#1b5e20] shadow-xs'
+                ? 'bg-white text-emerald-800 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            With Phone
+            Mai Lamba (Phone)
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('debt')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              filterType === 'debt'
+                ? 'bg-rose-600 text-white shadow-xs'
+                : debtClientsCount > 0
+                ? 'text-rose-700 hover:text-rose-900 font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            ⚠️ Masu Bashi ({debtClientsCount})
           </button>
         </div>
       </div>
@@ -215,45 +247,47 @@ export default function ClientsPage() {
       {/* Loading state */}
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#1b5e20]" />
-          <p className="text-sm font-medium">Loading client directory...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-700" />
+          <p className="text-sm font-medium">Bude jerin masu dinki...</p>
         </div>
       )}
 
       {/* Empty State */}
       {!isLoading && !error && clients.length === 0 && (
         <div className="p-10 text-center bg-white border border-dashed border-slate-300 rounded-3xl max-w-md mx-auto space-y-4 shadow-xs">
-          <div className="w-16 h-16 bg-emerald-50 text-[#1b5e20] rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
+          <div className="w-16 h-16 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
             <Users className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-slate-900">No customers added yet</h3>
+            <h3 className="text-lg font-black text-slate-900">Ba a saka kowa ba tukuna</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-              Add your first customer to start recording measurements and sending WhatsApp slips.
+              Add your first customer to start recording measurements and tracking orders in your E-Book.
             </p>
           </div>
           <Link
             href="/clients/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1b5e20] to-[#144818] text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Add First Customer</span>
+            <span>Saka Sabon Mai Dinki</span>
           </Link>
         </div>
       )}
 
       {/* Filtered No Results */}
       {!isLoading && !error && clients.length > 0 && filteredClients.length === 0 && (
-        <div className="p-10 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs">
-          <p className="text-sm font-medium">No customers found matching &ldquo;{searchQuery}&rdquo;</p>
+        <div className="p-10 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs space-y-2">
+          <p className="text-sm font-medium">
+            Ba a sami mai dinki mai dacewa da &ldquo;{searchQuery}&rdquo; ba
+          </p>
           <button
             onClick={() => {
               setSearchQuery('');
               setFilterType('all');
             }}
-            className="text-xs text-[#1b5e20] hover:underline mt-2 cursor-pointer font-bold inline-block"
+            className="text-xs text-emerald-800 hover:underline cursor-pointer font-bold inline-block"
           >
-            Clear search & filters
+            Goge zabuka (Clear search &amp; filters)
           </button>
         </div>
       )}
@@ -263,32 +297,44 @@ export default function ClientsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredClients.map((client) => {
             const initials = getInitials(client.name);
+            const hasDebt = (client.total_debt || 0) > 0;
+            const hasActiveOrders = (client.active_orders_count || 0) > 0;
+
             return (
               <div
                 key={client.id}
-                className="p-5 bg-white border border-slate-200/90 hover:border-emerald-300 rounded-3xl transition-all duration-200 flex flex-col justify-between group shadow-xs hover:shadow-md hover:-translate-y-0.5"
+                className={`p-5 bg-white border rounded-3xl transition-all duration-200 flex flex-col justify-between group shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+                  hasDebt ? 'border-rose-300 ring-1 ring-rose-200' : 'border-slate-200/90 hover:border-emerald-300'
+                }`}
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <Link
                       href={`/clients/${client.id}`}
-                      className="flex items-center gap-3.5 group-hover:text-[#1b5e20] transition cursor-pointer flex-1 min-w-0"
+                      className="flex items-center gap-3.5 group-hover:text-emerald-800 transition cursor-pointer flex-1 min-w-0"
                     >
                       {/* Client Avatar */}
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200/90 text-[#1b5e20] font-black text-sm flex items-center justify-center flex-shrink-0 font-mono shadow-2xs group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200/90 text-emerald-800 font-black text-sm flex items-center justify-center flex-shrink-0 font-mono shadow-2xs group-hover:scale-105 transition-transform">
                         {initials}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-extrabold text-slate-900 text-base group-hover:text-[#1b5e20] transition truncate">
-                          {client.name}
-                        </h3>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-extrabold text-slate-900 text-base group-hover:text-emerald-800 transition truncate">
+                            {client.name}
+                          </h3>
+                          {hasDebt && (
+                            <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white font-black text-[10px] tracking-tight">
+                              Bashi: {formatCurrency(client.total_debt || 0)}
+                            </span>
+                          )}
+                        </div>
                         <span className="text-[10px] text-slate-400 font-mono">
                           ID: #{client.id.slice(0, 6)}
                         </span>
                       </div>
                     </Link>
 
-                    {/* Top Action Cluster */}
+                    {/* Top Actions */}
                     <div className="flex items-center gap-1 shrink-0">
                       <Link
                         href={`/clients/${client.id}/edit`}
@@ -310,73 +356,71 @@ export default function ClientsPage() {
                     </div>
                   </div>
 
-                  {/* Contact & Notes Snippet */}
-                  <div className="mt-4 space-y-2 text-xs">
+                  {/* Badges / Order stats */}
+                  <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
+                    {hasActiveOrders && (
+                      <span className="px-2 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px] flex items-center gap-1">
+                        <Scissors className="w-3 h-3 text-amber-700" />
+                        {client.active_orders_count} Dinki a Hannu
+                      </span>
+                    )}
+                    {(client.total_orders_count || 0) > 0 && (
+                      <span className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 font-medium text-[10px] flex items-center gap-1">
+                        <BookOpen className="w-3 h-3 text-slate-500" />
+                        {client.total_orders_count} Orders a Littafi
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Phone & Date */}
+                  <div className="mt-3 space-y-2 text-xs">
                     {client.phone ? (
                       <div className="flex items-center justify-between gap-2">
                         <a
                           href={`tel:${client.phone}`}
-                          className="flex items-center gap-2 text-slate-700 hover:text-[#1b5e20] transition font-bold"
+                          className="flex items-center gap-2 text-slate-700 hover:text-emerald-800 transition font-bold"
                         >
-                          <div className="w-6 h-6 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#1b5e20] shrink-0">
-                            <Phone className="w-3 h-3" />
-                          </div>
-                          <span>{client.phone}</span>
+                          <Phone className="w-3.5 h-3.5 text-emerald-800" />
+                          <span className="font-mono">{client.phone}</span>
                         </a>
-
                         <a
                           href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[11px] font-bold text-[#1b5e20] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 px-2 py-0.5 rounded-lg transition"
+                          className="text-[11px] font-bold text-emerald-800 hover:underline"
                         >
                           WhatsApp
                         </a>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 text-slate-400 italic">
-                        <Phone className="w-3.5 h-3.5 text-slate-300" />
-                        <span>No phone number</span>
-                      </div>
+                      <span className="text-slate-400 italic text-[11px]">Babu lambar waya</span>
                     )}
 
-                    {client.notes && (
-                      <p className="text-[11px] text-slate-600 line-clamp-2 italic bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
-                        &ldquo;{client.notes}&rdquo;
-                      </p>
-                    )}
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <span>
+                        Registered {new Date(client.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Footer Quick Actions */}
-                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    {new Date(client.created_at).toLocaleDateString('en-GB', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })}
-                  </span>
+                {/* Bottom Action Cards */}
+                <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/clients/${client.id}`}
+                    className="text-xs font-bold text-slate-600 hover:text-emerald-800 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Duba Asusun (View Profile)</span>
+                  </Link>
 
-                  <div className="flex items-center gap-2">
-                    {/* Direct 1-Tap Measure Button */}
-                    <Link
-                      href={`/measurements/new?clientId=${client.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1b5e20] text-xs font-bold border border-emerald-200/90 transition shadow-2xs active:scale-95"
-                    >
-                      <Ruler className="w-3.5 h-3.5" />
-                      <span>Measure</span>
-                    </Link>
-
-                    <Link
-                      href={`/clients/${client.id}`}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition active:scale-95"
-                    >
-                      <span>View Profile</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/measurements/new?clientId=${client.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/90 rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer active:scale-95"
+                  >
+                    <Ruler className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Auna Kaya</span>
+                  </Link>
                 </div>
               </div>
             );
@@ -387,15 +431,14 @@ export default function ClientsPage() {
       {/* Delete Confirmation Modal */}
       {clientToDelete && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-red-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl animate-fade-in-up">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl animate-fade-in-up">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Delete Customer</h3>
-              <p className="text-xs text-slate-600 mt-1">
-                Are you sure you want to delete <strong>{clientToDelete.name}</strong>? This will remove their customer record.
+            <div className="text-center">
+              <h3 className="text-base font-black text-slate-900">Goge Mai Dinki?</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Shin kuna da tabbacin kuna son goge <strong>{clientToDelete.name}</strong>?
               </p>
             </div>
 
@@ -405,27 +448,28 @@ export default function ClientsPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2 pt-2">
               <button
+                type="button"
                 onClick={() => setClientToDelete(null)}
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
               >
-                Cancel
+                A&apos;a, Bar Shi
               </button>
               <button
+                type="button"
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm Delete'}
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Eh, Goge'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Ad Banner bottom */}
       <div className="pt-2">
         <AdBanner slotId="clients_bottom" />
       </div>

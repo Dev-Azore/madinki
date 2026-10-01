@@ -15,14 +15,11 @@ import {
   Clock,
   TrendingUp,
   Wallet,
-  Calendar,
-  Layers,
-  Sparkles,
   Phone,
-  CheckCircle2,
-  TableProperties,
   LayoutGrid,
+  TableProperties,
   AlertTriangle,
+  ShieldAlert,
 } from 'lucide-react';
 import {
   getLedgerData,
@@ -39,10 +36,11 @@ import {
 import { LedgerEntryModal } from './LedgerEntryModal';
 import { QuickPaymentModal } from './QuickPaymentModal';
 import { WhatsAppReceiptModal } from './WhatsAppReceiptModal';
+import { DeliveryConfirmationModal } from './DeliveryConfirmationModal';
 import { LedgerColumnCustomizer } from './LedgerColumnCustomizer';
 import { AdBanner } from '@/components/ads/AdBanner';
 
-type StatusFilter = 'all' | 'started' | 'ready' | 'delivered';
+type StatusFilter = 'all' | 'started' | 'ready' | 'delivered' | 'debt';
 type PeriodFilter = 'week' | 'month' | 'year' | 'all';
 type ViewMode = 'cards' | 'book';
 
@@ -74,20 +72,6 @@ function formatDate(iso: string) {
   }
 }
 
-const STATUS_LABELS: Record<LedgerStatus, string> = {
-  started: 'Ana Dinki (Sewing)',
-  in_progress: 'In Progress',
-  ready: 'Ya Shirya (Ready)',
-  delivered: 'An Karba (Delivered)',
-};
-
-const STATUS_BADGES: Record<LedgerStatus, { text: string; bg: string; border: string }> = {
-  started: { text: 'Ana Dinki (Sewing)', bg: 'bg-amber-50 text-amber-800', border: 'border-amber-200' },
-  in_progress: { text: 'In Progress', bg: 'bg-blue-50 text-blue-700', border: 'border-blue-200' },
-  ready: { text: 'Ya Shirya (Ready)', bg: 'bg-sky-50 text-sky-700', border: 'border-sky-200' },
-  delivered: { text: 'An Karba (Delivered)', bg: 'bg-emerald-50 text-emerald-800', border: 'border-emerald-200' },
-};
-
 export default function TailorEBookPage() {
   const [allEntries, setAllEntries] = useState<LedgerEntryItem[]>([]);
   const [clients, setClients] = useState<Array<{ id: string; name: string; phone: string | null }>>([]);
@@ -106,6 +90,7 @@ export default function TailorEBookPage() {
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<LedgerEntryItem | null>(null);
   const [paymentEntry, setPaymentEntry] = useState<LedgerEntryItem | null>(null);
+  const [deliveryEntry, setDeliveryEntry] = useState<LedgerEntryItem | null>(null);
   const [whatsAppEntry, setWhatsAppEntry] = useState<LedgerEntryItem | null>(null);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [entryToDelete, setEntryToDelete] = useState<LedgerEntryItem | null>(null);
@@ -134,9 +119,9 @@ export default function TailorEBookPage() {
     loadData();
   }, [loadData]);
 
-  // Check for overdue / due today items
   const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
+  // Urgent deliveries (Due today or overdue and not delivered)
   const overdueOrders = useMemo(() => {
     return allEntries.filter((e) => {
       if (e.status === 'delivered') return false;
@@ -157,11 +142,14 @@ export default function TailorEBookPage() {
 
       if (periodStart && new Date(entry.entry_date) < periodStart) return false;
 
+      const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
+
       if (statusFilter === 'started' && entry.status !== 'started' && entry.status !== 'in_progress') {
         return false;
       }
       if (statusFilter === 'ready' && entry.status !== 'ready') return false;
-      if (statusFilter === 'delivered' && entry.status !== 'delivered') return false;
+      if (statusFilter === 'delivered' && (entry.status !== 'delivered' || balance > 0)) return false;
+      if (statusFilter === 'debt' && (entry.status !== 'delivered' || balance === 0)) return false;
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -177,7 +165,7 @@ export default function TailorEBookPage() {
     });
   }, [allEntries, periodFilter, statusFilter, searchQuery, showOverdueOnly, todayIso]);
 
-  // Dynamic statistics
+  // Statistics
   const stats = useMemo<LedgerStats>(() => {
     const out: LedgerStats = {
       totalJobs: filteredEntries.length,
@@ -206,7 +194,20 @@ export default function TailorEBookPage() {
     return allEntries.filter((e) => new Date(e.entry_date) >= periodStart);
   }, [allEntries, periodFilter]);
 
+  // Debt orders count (delivered on credit)
+  const debtOrdersCount = useMemo(() => {
+    return periodEntries.filter(
+      (e) => e.status === 'delivered' && e.total_amount > e.deposit_amount
+    ).length;
+  }, [periodEntries]);
+
   const handleQuickStatusChange = async (entry: LedgerEntryItem, nextStatus: LedgerStatus) => {
+    // If tailor selects delivered, show confirmation so they can check payment vs credit!
+    if (nextStatus === 'delivered') {
+      setDeliveryEntry(entry);
+      return;
+    }
+
     setAllEntries((prev) =>
       prev.map((e) => (e.id === entry.id ? { ...e, status: nextStatus } : e))
     );
@@ -236,6 +237,38 @@ export default function TailorEBookPage() {
     }
   };
 
+  const getStatusBadge = (entry: LedgerEntryItem) => {
+    const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
+    if (entry.status === 'started' || entry.status === 'in_progress') {
+      return {
+        label: 'Ana Dinki (Sewing)',
+        style: 'bg-amber-50 text-amber-900 border-amber-200',
+      };
+    }
+    if (entry.status === 'ready') {
+      return {
+        label: 'Ya Shirya (Ready)',
+        style: 'bg-sky-50 text-sky-800 border-sky-200',
+      };
+    }
+    if (entry.status === 'delivered') {
+      if (balance > 0) {
+        return {
+          label: `Bashi: ₦${balance.toLocaleString()}`,
+          style: 'bg-rose-50 text-rose-800 border-rose-300 font-black',
+        };
+      }
+      return {
+        label: 'An Bayar (Paid)',
+        style: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-black',
+      };
+    }
+    return {
+      label: 'Ana Dinki',
+      style: 'bg-slate-50 text-slate-700 border-slate-200',
+    };
+  };
+
   const periodLabel: Record<PeriodFilter, string> = {
     week: 'Kwanaki 7 (7 Days)',
     month: 'Wannan Watan (This Month)',
@@ -250,13 +283,13 @@ export default function TailorEBookPage() {
         <div className="min-w-0">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-2">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Littafin Dinki (Tailor E-Book)</span>
+            <span>Littafin Dinki (Tailor Book)</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             Littafin Dinki &amp; Kudin Aiki
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Track customer orders, plain &amp; design styles, deposits &amp; pending balances.
+            Duba dinki, aiki, ajiya, da sauran kudin da ake bi.
           </p>
         </div>
 
@@ -344,12 +377,18 @@ export default function TailorEBookPage() {
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            {p === 'week' ? 'Kwanaki 7' : p === 'month' ? 'Wannan Watan' : p === 'year' ? 'Wannan Shekarar' : 'Duka (All Time)'}
+            {p === 'week'
+              ? 'Kwanaki 7'
+              : p === 'month'
+              ? 'Wannan Watan'
+              : p === 'year'
+              ? 'Wannan Shekarar'
+              : 'Duka (All Time)'}
           </button>
         ))}
       </div>
 
-      {/* Financial & Job KPIs in Tailor Language */}
+      {/* Financial & Job KPIs in Simple Tailor Terms */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {/* Active Sewing */}
         <div className="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-2xs">
@@ -361,7 +400,7 @@ export default function TailorEBookPage() {
           </div>
           <div className="text-xl font-black text-slate-900">{stats.startedJobs}</div>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-            {stats.readyJobs} ya shirya · {stats.deliveredJobs} an karba
+            {stats.readyJobs} ya shirya · {stats.deliveredJobs} an bayar
           </p>
         </div>
 
@@ -423,7 +462,7 @@ export default function TailorEBookPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Nemi mai kaya, nau'in dinki, lamba... (Search)"
+            placeholder="Nemi mai kaya, nau'in dinki, lamba..."
             className="w-full pl-10 pr-8 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
           {searchQuery && (
@@ -436,9 +475,8 @@ export default function TailorEBookPage() {
           )}
         </div>
 
-        {/* View Toggle (Cards vs Littafin Dinki Grid) + Status Filter */}
+        {/* Status Filters */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Status Filter */}
           <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl overflow-x-auto">
             {(
               [
@@ -459,9 +497,15 @@ export default function TailorEBookPage() {
                 },
                 {
                   key: 'delivered',
-                  label: `An Karba (${
-                    periodEntries.filter((e) => e.status === 'delivered').length
+                  label: `An Bayar (${
+                    periodEntries.filter(
+                      (e) => e.status === 'delivered' && e.total_amount <= e.deposit_amount
+                    ).length
                   })`,
+                },
+                {
+                  key: 'debt',
+                  label: `⚠️ Bashi (${debtOrdersCount})`,
                 },
               ] as { key: StatusFilter; label: string }[]
             ).map(({ key, label }) => (
@@ -471,7 +515,11 @@ export default function TailorEBookPage() {
                 onClick={() => setStatusFilter(key)}
                 className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${
                   statusFilter === key
-                    ? 'bg-white text-emerald-800 shadow-xs'
+                    ? key === 'debt'
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'bg-white text-emerald-800 shadow-xs'
+                    : key === 'debt' && debtOrdersCount > 0
+                    ? 'text-rose-700 hover:text-rose-900 font-black'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -510,7 +558,7 @@ export default function TailorEBookPage() {
         </div>
       </div>
 
-      {/* Error state */}
+      {/* Error */}
       {error && (
         <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
           <AlertCircle className="w-5 h-5 shrink-0 text-red-600 mt-0.5" />
@@ -526,7 +574,7 @@ export default function TailorEBookPage() {
         </div>
       )}
 
-      {/* Loading state */}
+      {/* Loading */}
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-emerald-700" />
@@ -581,10 +629,10 @@ export default function TailorEBookPage() {
         </div>
       )}
 
-      {/* Content Rendering: Either Table / Book or Cards */}
+      {/* Content Rendering */}
       {!isLoading && !error && filteredEntries.length > 0 && (
         <div className="space-y-3">
-          {/* Book View (Desktop Table) */}
+          {/* Table / Book View */}
           <div
             className={`${
               viewMode === 'book' ? 'block' : 'hidden md:block'
@@ -612,7 +660,7 @@ export default function TailorEBookPage() {
                   {filteredEntries.map((entry, index) => {
                     const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
                     const isFullyPaid = balance === 0 && entry.total_amount > 0;
-                    const badge = STATUS_BADGES[entry.status];
+                    const badge = getStatusBadge(entry);
 
                     return (
                       <tr key={entry.id} className="hover:bg-emerald-50/20 transition-colors group">
@@ -676,7 +724,7 @@ export default function TailorEBookPage() {
                                 className="px-1.5 py-0.5 rounded-md bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold cursor-pointer transition"
                                 title="Collect Payment"
                               >
-                                Collect
+                                Karba
                               </button>
                             </div>
                           )}
@@ -687,11 +735,11 @@ export default function TailorEBookPage() {
                             onChange={(e) =>
                               handleQuickStatusChange(entry, e.target.value as LedgerStatus)
                             }
-                            className={`px-2 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.bg} ${badge.border}`}
+                            className={`px-2.5 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
                           >
                             <option value="started">Ana Dinki (Sewing)</option>
                             <option value="ready">Ya Shirya (Ready)</option>
-                            <option value="delivered">An Karba (Delivered)</option>
+                            <option value="delivered">An Bayar (Delivered)</option>
                           </select>
                         </td>
                         <td className="py-3 px-4 text-right whitespace-nowrap">
@@ -754,7 +802,7 @@ export default function TailorEBookPage() {
             </div>
           </div>
 
-          {/* Cards View (Mobile + Responsive Grid) */}
+          {/* Cards View */}
           <div
             className={`${
               viewMode === 'cards' ? 'block' : 'block md:hidden'
@@ -767,13 +815,15 @@ export default function TailorEBookPage() {
                 entry.status !== 'delivered' &&
                 entry.delivery_date &&
                 entry.delivery_date <= todayIso;
-              const badge = STATUS_BADGES[entry.status];
+              const badge = getStatusBadge(entry);
 
               return (
                 <div
                   key={entry.id}
                   className={`bg-white border rounded-3xl shadow-2xs overflow-hidden flex flex-col justify-between transition-all hover:shadow-md ${
-                    isOverdue
+                    entry.status === 'delivered' && balance > 0
+                      ? 'border-rose-300 ring-1 ring-rose-300/60'
+                      : isOverdue
                       ? 'border-amber-300 ring-1 ring-amber-300/60'
                       : 'border-slate-200'
                   }`}
@@ -786,6 +836,11 @@ export default function TailorEBookPage() {
                           <h3 className="font-black text-sm text-slate-900 leading-snug">
                             {entry.client_name}
                           </h3>
+                          {entry.status === 'delivered' && balance > 0 && (
+                            <span className="px-1.5 py-0.5 rounded-md bg-rose-600 text-white font-black text-[9px] uppercase tracking-wider">
+                              Bashi
+                            </span>
+                          )}
                           {isOverdue && (
                             <span className="px-1.5 py-0.5 rounded-md bg-amber-500 text-white font-black text-[9px] uppercase tracking-wider animate-pulse">
                               Due!
@@ -869,7 +924,11 @@ export default function TailorEBookPage() {
                             Paid
                           </div>
                         ) : (
-                          <div className="text-xs font-black text-amber-700 font-mono">
+                          <div
+                            className={`text-xs font-black font-mono ${
+                              entry.status === 'delivered' ? 'text-rose-600' : 'text-amber-700'
+                            }`}
+                          >
                             {formatCurrency(balance)}
                           </div>
                         )}
@@ -884,10 +943,18 @@ export default function TailorEBookPage() {
                       <button
                         type="button"
                         onClick={() => setPaymentEntry(entry)}
-                        className="w-full py-2 px-3 bg-emerald-800 hover:bg-emerald-900 active:scale-98 text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                        className={`w-full py-2 px-3 rounded-xl text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98 ${
+                          entry.status === 'delivered'
+                            ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                            : 'bg-emerald-800 hover:bg-emerald-900 text-white'
+                        }`}
                       >
                         <Wallet className="w-3.5 h-3.5" />
-                        <span>Karbi Ragowar Kudi (Collect {formatCurrency(balance)})</span>
+                        <span>
+                          {entry.status === 'delivered'
+                            ? `Biya Kudin Bashi (${formatCurrency(balance)})`
+                            : `Karbi Ragowar Kudi (${formatCurrency(balance)})`}
+                        </span>
                       </button>
                     )}
 
@@ -898,11 +965,11 @@ export default function TailorEBookPage() {
                         onChange={(e) =>
                           handleQuickStatusChange(entry, e.target.value as LedgerStatus)
                         }
-                        className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black border focus:outline-none cursor-pointer ${badge.bg} ${badge.border}`}
+                        className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
                       >
                         <option value="started">Ana Dinki (Sewing)</option>
                         <option value="ready">Ya Shirya (Ready)</option>
-                        <option value="delivered">An Karba (Delivered)</option>
+                        <option value="delivered">An Bayar (Delivered)</option>
                       </select>
 
                       {/* Tool buttons */}
@@ -942,7 +1009,7 @@ export default function TailorEBookPage() {
             })}
           </div>
 
-          {/* Period Financial Summary Bar */}
+          {/* Financial Summary */}
           <div className="p-4 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-2xs">
             <span>
               Kudin Shiga a {periodLabel[periodFilter]}:{' '}
@@ -978,6 +1045,13 @@ export default function TailorEBookPage() {
         onSuccess={loadData}
         initialEntry={editingEntry}
         clients={clients}
+      />
+
+      <DeliveryConfirmationModal
+        isOpen={Boolean(deliveryEntry)}
+        entry={deliveryEntry}
+        onClose={() => setDeliveryEntry(null)}
+        onSuccess={loadData}
       />
 
       <QuickPaymentModal
@@ -1045,7 +1119,6 @@ export default function TailorEBookPage() {
         </div>
       )}
 
-      {/* Bottom Ad banner */}
       <div className="pt-2">
         <AdBanner slotId="ledger_bottom" />
       </div>
