@@ -153,7 +153,7 @@ export default function TailorEBookPage() {
   }, [allEntries, periodFilter]);
 
   const handleQuickStatusChange = async (entry: LedgerEntryItem, nextStatus: LedgerStatus) => {
-    setAllEntries((prev) => prev.map((e) => (e.id === entry.id · { ...e, status: nextStatus } : e)));
+    setAllEntries((prev) => prev.map((e) => (e.id === entry.id ? { ...e, status: nextStatus } : e)));
     try {
       const res = await updateLedgerStatus({ id: entry.id, status: nextStatus });
       if (res.error) loadData();
@@ -173,10 +173,10 @@ export default function TailorEBookPage() {
 
   const formatWhatsAppOrderLink = (entry: LedgerEntryItem) => {
     const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
-    const text = `Tailor E-Book Receipt\n\nCustomer: ${entry.client_name}\nDate: ${entry.entry_date}\nStyle: ${entry.style_type}\nWork: ${entry.embroidery_work}\nSets: ${entry.sets_count}${entry.agbada_count > 0 · ' + ' + entry.agbada_count + ' Agbada' : ''}\n\nTotal: N${entry.total_amount.toLocaleString()}\nDeposit: N${entry.deposit_amount.toLocaleString()}\nBalance: N${balance.toLocaleString()}\nStatus: ${STATUS_LABELS[entry.status]}\n\nThank you!`;
+    const text = `Tailor E-Book Receipt\n\nCustomer: ${entry.client_name}\nDate: ${entry.entry_date}\nStyle: ${entry.style_type}\nWork: ${entry.embroidery_work}\nSets: ${entry.sets_count}${entry.agbada_count > 0 ? ' + ' + entry.agbada_count + ' Agbada' : ''}\n\nTotal: N${entry.total_amount.toLocaleString()}\nDeposit: N${entry.deposit_amount.toLocaleString()}\nBalance: N${balance.toLocaleString()}\nStatus: ${STATUS_LABELS[entry.status]}\n\nThank you!`;
     let phone = (entry.client_phone || '').replace(/[^0-9]/g, '');
     if (phone.startsWith('0') && phone.length === 11) phone = '234' + phone.slice(1);
-    return phone · `https://wa.me/${phone}·text=${encodeURIComponent(text)}` : `https://wa.me/·text=${encodeURIComponent(text)}`;
+    return phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
   };
 
   const periodLabel: Record<PeriodFilter, string> = { week: 'Last 7 Days', month: 'This Month', year: 'This Year', all: 'All Time' };
@@ -208,8 +208,8 @@ export default function TailorEBookPage() {
       <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl">
         {(['week', 'month', 'year', 'all'] as PeriodFilter[]).map((p) => (
           <button key={p} type="button" onClick={() => setPeriodFilter(p)}
-            className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${periodFilter === p · 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}>
-            {p === 'week' · '7 Days' : p === 'month' · 'Month' : p === 'year' · 'Year' : 'All Time'}
+            className={`flex-1 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${periodFilter === p ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}>
+            {p === 'week' ? '7 Days' : p === 'month' ? 'Month' : p === 'year' ? 'Year' : 'All Time'}
           </button>
         ))}
       </div>
@@ -222,7 +222,7 @@ export default function TailorEBookPage() {
             <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
           </div>
           <div className="text-xl font-black text-slate-900">{stats.startedJobs}</div>
-          <p className="text-[10px] text-slate-400 font-medium mt-0.5">{stats.readyJobs} ready · {stats.deliveredJobs} delivered</p>
+          <p className="text-[10px] text-slate-400 font-medium mt-0.5">{stats.readyJobs} ready ? {stats.deliveredJobs} delivered</p>
         </div>
         <div className="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
@@ -230,7 +230,7 @@ export default function TailorEBookPage() {
             <TrendingUp className="w-3 h-3 text-slate-400" />
           </div>
           <div className="text-xl font-black text-slate-900">{formatCurrency(stats.totalRevenue)}</div>
-          <p className="text-[10px] text-slate-400 font-medium mt-0.5">{stats.totalJobs} orders · {periodLabel[periodFilter]}</p>
+          <p className="text-[10px] text-slate-400 font-medium mt-0.5">{stats.totalJobs} orders ? {periodLabel[periodFilter]}</p>
         </div>
         <div className="p-3.5 bg-emerald-50/80 border border-emerald-200/70 rounded-2xl shadow-2xs">
           <div className="flex items-center justify-between mb-1">
@@ -265,7 +265,7 @@ export default function TailorEBookPage() {
             { key: 'delivered', label: `Done (${periodEntries.filter(e => e.status === 'delivered').length})` },
           ] as { key: StatusFilter; label: string }[]).map(({ key, label }) => (
             <button key={key} type="button" onClick={() => setStatusFilter(key)}
-              className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${statusFilter === key · 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}>
+              className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap ${statusFilter === key ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-500 hover:text-slate-800'}`}>
               {label}
             </button>
           ))}
@@ -353,12 +353,12 @@ export default function TailorEBookPage() {
                         <td className="py-3 px-4"><span className="px-2 py-0.5 rounded-md bg-slate-100 font-semibold text-[11px] text-slate-700">{entry.style_type || 'Plain'}</span></td>
                         <td className="py-3 px-4 text-slate-600 text-[11px]">{entry.embroidery_work || 'Plain'}</td>
                         <td className="py-3 px-3 text-center font-mono">
-                          {entry.agbada_count > 0 · <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">{entry.agbada_count}</span> : <span className="text-slate-300">—</span>}
+                          {entry.agbada_count > 0 ? <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">{entry.agbada_count}</span> : <span className="text-slate-300">—</span>}
                         </td>
                         <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">{formatCurrency(entry.deposit_amount)}</td>
                         <td className="py-3 px-4 text-right font-mono font-black text-slate-900 whitespace-nowrap">{formatCurrency(entry.total_amount)}</td>
                         <td className="py-3 px-4 text-right font-mono font-bold whitespace-nowrap">
-                          {isFullyPaid · (
+                          {isFullyPaid ? (
                             <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[10px] font-black"><BadgeCheck className="w-3 h-3" />Paid</span>
                           ) : (
                             <span className="text-amber-700">{formatCurrency(balance)}</span>
@@ -385,7 +385,7 @@ export default function TailorEBookPage() {
               </table>
             </div>
             <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 font-medium">
-              <span>Showing <strong>{filteredEntries.length}</strong> of <strong>{allEntries.length}</strong> orders · {periodLabel[periodFilter]}</span>
+              <span>Showing <strong>{filteredEntries.length}</strong> of <strong>{allEntries.length}</strong> orders ? {periodLabel[periodFilter]}</span>
               <div className="flex items-center gap-4 font-mono font-bold">
                 <span>Deposits: <strong className="text-emerald-800">{formatCurrency(stats.totalDeposited)}</strong></span>
                 <span>Uncollected: <strong className="text-amber-800">{formatCurrency(stats.pendingBalance)}</strong></span>
@@ -415,7 +415,7 @@ export default function TailorEBookPage() {
                   <div className="px-3.5 pb-2.5 flex flex-wrap gap-1.5">
                     <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">{entry.style_type || 'Plain'}</span>
                     <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">{entry.embroidery_work || 'Plain'} work</span>
-                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">{entry.sets_count} set{entry.sets_count !== 1 · 's' : ''}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-semibold">{entry.sets_count} set{entry.sets_count !== 1 ? 's' : ''}</span>
                     {entry.agbada_count > 0 && <span className="px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold">{entry.agbada_count} Agbada</span>}
                   </div>
                   {/* Financial */}
@@ -430,7 +430,7 @@ export default function TailorEBookPage() {
                     </div>
                     <div>
                       <div className="text-[9px] font-bold uppercase tracking-wider text-amber-700">Balance</div>
-                      {isFullyPaid · (
+                      {isFullyPaid ? (
                         <div className="text-sm font-black text-emerald-800 flex items-center justify-center gap-0.5"><BadgeCheck className="w-3.5 h-3.5" />Paid</div>
                       ) : (
                         <div className="text-sm font-black text-amber-700">{formatCurrency(balance)}</div>
@@ -473,7 +473,7 @@ export default function TailorEBookPage() {
           <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-xl animate-fade-in-up">
             <div className="w-11 h-11 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center"><Trash2 className="w-5 h-5" /></div>
             <div>
-              <h3 className="text-base font-black text-slate-900">Delete Order Record·</h3>
+              <h3 className="text-base font-black text-slate-900">Delete Order Record?</h3>
               <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">You are about to remove <strong>{entryToDelete.client_name}</strong>&apos;s order ({formatDate(entryToDelete.entry_date)}) from your ledger.</p>
               <div className="mt-2.5 p-2.5 bg-amber-50 border border-amber-200 rounded-xl">
                 <p className="text-[11px] text-amber-800 font-semibold leading-relaxed">Tip: Keep delivered orders — they count toward your weekly, monthly and yearly profit reports. Delete only if recorded by mistake.</p>
@@ -482,7 +482,7 @@ export default function TailorEBookPage() {
             <div className="flex items-center gap-2.5">
               <button type="button" onClick={() => setEntryToDelete(null)} disabled={isDeleting} className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">Keep It</button>
               <button type="button" onClick={handleDeleteConfirm} disabled={isDeleting} className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5">
-                {isDeleting · <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Delete'}
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Yes, Delete'}
               </button>
             </div>
           </div>
