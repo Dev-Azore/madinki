@@ -638,19 +638,19 @@ export function HeroSection() {
                           <span>Madinki — Fitting Slip</span>
                         </div>
                         <div className="text-[11px] text-slate-600">
-                          <div>👤 Customer: <span className="font-bold text-slate-800">{activeClient.name}</span></div>
-                          <div>📞 Phone: {activeClient.phone}</div>
-                          <div>👗 Garment: {activeClient.garment}</div>
-                          <div>📅 Date: {activeClient.date}</div>
+                          <div>*Customer:* <span className="font-bold text-slate-800">{activeClient.name}</span></div>
+                          <div>*Phone:* {activeClient.phone}</div>
+                          <div>*Garment:* {activeClient.garment}</div>
+                          <div>*Date:* {activeClient.date}</div>
                         </div>
                         <div className="pt-1 border-t border-dashed border-slate-200 text-[11px]">
-                          <div className="font-bold text-slate-900 mb-0.5">📏 SIZES:</div>
+                          <div className="font-bold text-slate-900 mb-0.5">*MEASURED SIZES:*</div>
                           {activeClient.measurements.map((m, i) => (
                             <div key={i}>• {m.label}: {m.value}</div>
                           ))}
                         </div>
                         <div className="pt-1 text-[10px] text-slate-400 font-sans italic">
-                          🧵 Recorded with Madinki
+                          _Recorded with Madinki_
                         </div>
                       </div>
                     </div>

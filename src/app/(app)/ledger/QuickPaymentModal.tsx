@@ -7,8 +7,6 @@ import {
   CheckCircle2,
   Loader2,
   AlertCircle,
-  MessageCircle,
-  Sparkles,
 } from 'lucide-react';
 import { recordLedgerPayment, LedgerEntryItem } from './actions';
 
@@ -91,10 +89,10 @@ export function QuickPaymentModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                Collect Payment (Karbar Kudi)
+                Collect Payment
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
-                {entry.client_name} · {entry.style_type || 'Plain'}
+                {entry.client_name} · {entry.style_type || 'Plain Outfit'}
               </p>
             </div>
           </div>
@@ -126,7 +124,7 @@ export function QuickPaymentModal({
           </div>
           <div>
             <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-              Already Paid
+              Paid Upfront
             </span>
             <div className="text-xs font-black text-emerald-800">
               ₦{currentDeposit.toLocaleString()}
@@ -146,7 +144,7 @@ export function QuickPaymentModal({
           {/* Amount to collect input */}
           <div className="space-y-1.5">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Amount Paying Now (Kudin da Za a Karba)
+              Amount Paying Now
             </label>
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-base text-emerald-800">
@@ -172,7 +170,7 @@ export function QuickPaymentModal({
           {/* Quick presets */}
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Quick Select
+              Quick Presets
             </span>
             <div className="flex flex-wrap gap-1.5">
               <button
@@ -184,7 +182,7 @@ export function QuickPaymentModal({
                     : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
                 }`}
               >
-                ✨ Pay Full ₦{balance.toLocaleString()}
+                Pay Full ₦{balance.toLocaleString()}
               </button>
               {balance > 1000 && (
                 <button
@@ -220,7 +218,7 @@ export function QuickPaymentModal({
           <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl flex items-center justify-between text-xs">
             <span className="text-emerald-900 font-medium">Remaining balance after payment:</span>
             <span className="font-black text-emerald-900 font-mono text-sm">
-              {newBalance === 0 ? '₦0 (Fully Settled ✅)' : `₦${newBalance.toLocaleString()}`}
+              {newBalance === 0 ? '₦0 (Fully Settled)' : `₦${newBalance.toLocaleString()}`}
             </span>
           </div>
 
@@ -234,10 +232,10 @@ export function QuickPaymentModal({
             />
             <div className="text-[11px]">
               <span className="font-bold text-slate-800 block">
-                Mark as Delivered / Collected (An Karba)
+                Mark Order as Delivered
               </span>
               <span className="text-slate-500 text-[10px]">
-                Customer is taking the clothes now and order is completed.
+                Customer is collecting the completed outfit now.
               </span>
             </div>
           </label>

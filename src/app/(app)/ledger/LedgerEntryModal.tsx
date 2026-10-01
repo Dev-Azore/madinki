@@ -10,6 +10,8 @@ import {
   Phone,
   Scissors,
   CheckCircle2,
+  Package,
+  Sparkles,
 } from 'lucide-react';
 import {
   createLedgerEntry,
@@ -510,46 +512,50 @@ export function LedgerEntryModal({
               <button
                 type="button"
                 onClick={() => setStatus('started')}
-                className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
+                className={`py-2 px-2 flex items-center justify-center gap-1.5 rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'started'
                     ? 'bg-slate-800 text-white border-slate-900 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                📦 Received
+                <Package className="w-3.5 h-3.5" />
+                <span>Received</span>
               </button>
               <button
                 type="button"
                 onClick={() => setStatus('in_progress')}
-                className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
+                className={`py-2 px-2 flex items-center justify-center gap-1.5 rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'in_progress'
-                    ? 'bg-amber-500 text-white border-amber-600 shadow-xs'
+                    ? 'bg-amber-600 text-white border-amber-700 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✂️ Sewing
+                <Scissors className="w-3.5 h-3.5" />
+                <span>Sewing</span>
               </button>
               <button
                 type="button"
                 onClick={() => setStatus('ready')}
-                className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
+                className={`py-2 px-2 flex items-center justify-center gap-1.5 rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'ready'
                     ? 'bg-sky-600 text-white border-sky-700 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✨ Ready
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Ready</span>
               </button>
               <button
                 type="button"
                 onClick={() => setStatus('delivered')}
-                className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
+                className={`py-2 px-2 flex items-center justify-center gap-1.5 rounded-xl font-bold border transition cursor-pointer text-xs ${
                   status === 'delivered'
                     ? 'bg-emerald-800 text-white border-emerald-900 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✅ Delivered
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Delivered</span>
               </button>
             </div>
           </div>
@@ -557,14 +563,14 @@ export function LedgerEntryModal({
           {/* Notes */}
           <div className="space-y-1">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Notes / Special Instructions
+              Fabric Details & Tailoring Instructions
             </label>
-            <input
-              type="text"
+            <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. White fabric, silver buttons, urgent delivery..."
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-medium focus:outline-none shadow-2xs text-xs"
+              rows={3}
+              placeholder="e.g. Navy blue cashmere fabric, 2 side pockets, cuff links style, loose collar, gold embroidery on chest..."
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 focus:border-emerald-700 rounded-xl text-slate-900 font-medium focus:outline-none shadow-2xs text-xs resize-none leading-relaxed"
             />
           </div>
 

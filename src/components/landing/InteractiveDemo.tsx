@@ -290,7 +290,7 @@ export function InteractiveDemo() {
                     Measurement Points ({current.fields.length})
                   </div>
                   <span className="text-[11px] text-[#1b5e20] font-semibold">
-                    💡 Click + / - to see live slip update
+                    Click + / - to see live slip update
                   </span>
                 </div>
 
@@ -427,7 +427,7 @@ export function InteractiveDemo() {
                         <div className="font-bold text-slate-900 font-sans flex items-center justify-between pb-2 border-b border-slate-100">
                           <span className="flex items-center gap-1.5">
                             <Scissors className="w-3.5 h-3.5 text-[#1b5e20]" />
-                            <span>✂️ Madinki — Fitting Slip</span>
+                            <span>Madinki — Fitting Slip</span>
                           </span>
                           <span className="text-[10px] text-slate-400 font-sans">
                             {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -436,15 +436,15 @@ export function InteractiveDemo() {
 
                         <div className="text-[11px] text-slate-600 space-y-0.5">
                           <div>━━━━━━━━━━━━━━━━━━━━</div>
-                          <div>👤 *Customer:* <span className="font-bold text-slate-900">{clientName || 'Customer'}</span></div>
-                          <div>📞 *Phone:* {clientPhone || 'N/A'}</div>
-                          <div>👗 *Style:* {current.title}</div>
-                          <div>📅 *Date:* {new Date().toLocaleDateString('en-GB')}</div>
+                          <div>*Customer:* <span className="font-bold text-slate-900">{clientName || 'Customer'}</span></div>
+                          <div>*Phone:* {clientPhone || 'N/A'}</div>
+                          <div>*Style:* {current.title}</div>
+                          <div>*Date:* {new Date().toLocaleDateString('en-GB')}</div>
                           <div>━━━━━━━━━━━━━━━━━━━━</div>
                         </div>
 
                         <div className="py-1">
-                          <div className="font-bold text-slate-900 text-[11px] mb-1">📏 *MEASURED SIZES ({unit}):*</div>
+                          <div className="font-bold text-slate-900 text-[11px] mb-1">*MEASURED SIZES ({unit}):*</div>
                           {current.fields.map((f) => (
                             <div key={f.name} className="text-[11px]">
                               • *{f.shortName}:* {fieldValues[f.name] || f.defaultVal} {unit}
@@ -453,7 +453,7 @@ export function InteractiveDemo() {
                         </div>
 
                         <div className="pt-2 border-t border-dashed border-slate-200 text-[10px] text-slate-500 font-sans flex items-center justify-between">
-                          <span>🧵 *Recorded with Madinki*</span>
+                          <span>_Recorded with Madinki_</span>
                           <span className="text-emerald-700 font-bold">✓✓ Sent</span>
                         </div>
                       </div>
@@ -487,7 +487,7 @@ export function InteractiveDemo() {
                           <div className="text-[11px] text-slate-500">{current.title}</div>
                         </div>
                         <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-[#1b5e20] text-[10px] font-black uppercase border border-emerald-200">
-                          {isSaved ? '🔒 Saved Record' : 'Draft Slip'}
+                          {isSaved ? 'Saved Record' : 'Draft Slip'}
                         </span>
                       </div>
 

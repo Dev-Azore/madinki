@@ -207,13 +207,13 @@ export default function ClientProfilePage() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-24 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-emerald-800" />
-          <p className="text-sm font-medium">Bude asusun mai dinki...</p>
+          <p className="text-sm font-medium">Loading customer profile...</p>
         </div>
       )}
 
       {!isLoading && !error && client && (
         <>
-          {/* Outstanding Debt Alert Banner (Tailor Psychology) */}
+          {/* Outstanding Debt Alert Banner */}
           {hasDebt && (
             <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-fade-in-up">
               <div className="flex items-start gap-3">
@@ -223,14 +223,14 @@ export default function ClientProfilePage() {
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-black text-rose-950 text-sm">
-                      ⚠️ Yana da Bashi (Has Unpaid Debt):
+                      Outstanding Unpaid Debt:
                     </span>
                     <span className="font-black text-rose-700 text-base font-mono">
                       {formatCurrency(client.total_debt || 0)}
                     </span>
                   </div>
                   <p className="text-xs text-rose-700 mt-0.5">
-                    Wannan mai dinki ya karbi kaya ba tare da ya kammala biyan kudi ba.
+                    This customer has orders delivered on credit with an unpaid balance.
                   </p>
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function ClientProfilePage() {
                   onClick={() => setActiveTab('orders')}
                   className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-2xs transition cursor-pointer"
                 >
-                  Duba Kayan da ke da Bashi
+                  View Debt Orders
                 </button>
               </div>
             </div>
@@ -262,13 +262,13 @@ export default function ClientProfilePage() {
                       </h1>
                       {hasDebt && (
                         <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white font-black text-[10px] uppercase tracking-wider">
-                          Bashi: {formatCurrency(client.total_debt || 0)}
+                          Debt: {formatCurrency(client.total_debt || 0)}
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      Rijista: {formatDate(client.created_at)}
+                      Joined: {formatDate(client.created_at)}
                     </p>
                   </div>
                 </div>
@@ -295,7 +295,7 @@ export default function ClientProfilePage() {
                       </a>
                     </>
                   ) : (
-                    <span className="text-xs text-slate-400 italic">Babu lambar waya a ajiye</span>
+                    <span className="text-xs text-slate-400 italic">No phone number saved</span>
                   )}
                 </div>
 
@@ -314,7 +314,7 @@ export default function ClientProfilePage() {
                   className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition-all cursor-pointer flex-1"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Auna Sabon Kaya</span>
+                  <span>Take New Measurements</span>
                 </Link>
               </div>
             </div>
@@ -332,7 +332,7 @@ export default function ClientProfilePage() {
               }`}
             >
               <Ruler className="w-4 h-4" />
-              <span>Auna Kayan (Measurements: {measurements.length})</span>
+              <span>Measurements ({measurements.length})</span>
             </button>
 
             <button
@@ -345,7 +345,7 @@ export default function ClientProfilePage() {
               }`}
             >
               <BookOpen className="w-4 h-4" />
-              <span>Littafin Dinki (Orders in E-Book: {orders.length})</span>
+              <span>Orders in E-Book ({orders.length})</span>
               {hasDebt && (
                 <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
               )}
@@ -359,7 +359,7 @@ export default function ClientProfilePage() {
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
                     <Ruler className="w-5 h-5 text-emerald-800" />
-                    <span>Tarihin Awo (Measurement History)</span>
+                    <span>Measurement History</span>
                   </h2>
                   <p className="text-xs text-slate-500">
                     Sizes recorded for {client.name} are stored permanently.
@@ -385,7 +385,7 @@ export default function ClientProfilePage() {
                     <Ruler className="w-7 h-7" />
                   </div>
                   <h3 className="text-base font-bold text-slate-900">
-                    Babu awo a ajiye tukuna
+                    No measurements recorded yet
                   </h3>
                   <p className="text-xs text-slate-500 max-w-sm mx-auto">
                     Take this customer&apos;s sizes to start building their permanent measurement history.
@@ -395,7 +395,7 @@ export default function ClientProfilePage() {
                     className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Auna Kaya Yanzu</span>
+                    <span>Take Measurements Now</span>
                   </Link>
                 </div>
               ) : (
@@ -425,7 +425,7 @@ export default function ClientProfilePage() {
                                 </h3>
                                 {index === 0 && (
                                   <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px] tracking-tight">
-                                    Mafi Kusa (Latest)
+                                    Latest
                                   </span>
                                 )}
                               </div>
@@ -500,10 +500,10 @@ export default function ClientProfilePage() {
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-emerald-800" />
-                    <span>Dinkin {client.name} a Littafin Aiki ({orders.length})</span>
+                    <span>Orders for {client.name} ({orders.length})</span>
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Track all garments, deposits, remaining balances &amp; delivery statuses.
+                    Track all outfits, deposits, remaining balances &amp; delivery statuses.
                   </p>
                 </div>
               </div>
@@ -514,17 +514,17 @@ export default function ClientProfilePage() {
                     <BookOpen className="w-7 h-7" />
                   </div>
                   <h3 className="text-base font-bold text-slate-900">
-                    Babu dinki a littafi ga {client.name}
+                    No orders recorded for {client.name}
                   </h3>
                   <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                    Record a garment order for this client in the E-Book to track stitching progress and payments.
+                    Record an outfit order for this client in the E-Book to track stitching progress and payments.
                   </p>
                   <Link
                     href="/ledger"
                     className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Bude Littafin Dinki (Go to E-Book)</span>
+                    <span>Go to E-Book</span>
                   </Link>
                 </div>
               ) : (
@@ -559,16 +559,16 @@ export default function ClientProfilePage() {
                               )}
                               {isDebt && (
                                 <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white font-black text-[10px] tracking-tight uppercase">
-                                  Bashi: {formatCurrency(balance)}
+                                  Debt: {formatCurrency(balance)}
                                 </span>
                               )}
                             </div>
 
                             <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
-                              <span>Aiki: <strong>{order.embroidery_work || 'Plain'}</strong></span>
-                              <span>Karba: <strong>{formatDate(order.entry_date)}</strong></span>
+                              <span>Work: <strong>{order.embroidery_work || 'Plain'}</strong></span>
+                              <span>Received: <strong>{formatDate(order.entry_date)}</strong></span>
                               {order.delivery_date && (
-                                <span>Bayarwa: <strong>{formatDate(order.delivery_date)}</strong></span>
+                                <span>Delivery: <strong>{formatDate(order.delivery_date)}</strong></span>
                               )}
                             </div>
 
@@ -581,7 +581,7 @@ export default function ClientProfilePage() {
                                 </div>
                               </div>
                               <div>
-                                <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">Ajiya (Paid)</span>
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700">Deposit Paid</span>
                                 <div className="text-xs font-black text-emerald-800 font-mono">
                                   {formatCurrency(order.deposit_amount)}
                                 </div>
@@ -615,7 +615,7 @@ export default function ClientProfilePage() {
                                 }`}
                               >
                                 <Wallet className="w-3.5 h-3.5" />
-                                <span>Biya {formatCurrency(balance)}</span>
+                                <span>Collect {formatCurrency(balance)}</span>
                               </button>
                             )}
 
@@ -625,7 +625,7 @@ export default function ClientProfilePage() {
                               className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5"
                             >
                               <MessageCircle className="w-3.5 h-3.5 text-emerald-800" />
-                              <span>Rasidi (WhatsApp)</span>
+                              <span>WhatsApp Receipt</span>
                             </button>
                           </div>
                         </div>
@@ -645,9 +645,9 @@ export default function ClientProfilePage() {
                   <Trash2 className="w-6 h-6" />
                 </div>
                 <div className="text-center">
-                  <h3 className="text-base font-black text-slate-900">Goge Mai Dinki?</h3>
+                  <h3 className="text-base font-black text-slate-900">Delete Customer?</h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    Shin kuna da tabbacin kuna son goge asusun <strong>{client.name}</strong>?
+                    Are you sure you want to delete <strong>{client.name}</strong>? This will remove all their saved measurement profiles.
                   </p>
                 </div>
 
@@ -664,7 +664,7 @@ export default function ClientProfilePage() {
                     disabled={isDeleting}
                     className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
                   >
-                    A&apos;a, Bar Shi
+                    Cancel
                   </button>
                   <button
                     type="button"
@@ -672,7 +672,7 @@ export default function ClientProfilePage() {
                     disabled={isDeleting}
                     className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Eh, Goge'}
+                    {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete Customer'}
                   </button>
                 </div>
               </div>

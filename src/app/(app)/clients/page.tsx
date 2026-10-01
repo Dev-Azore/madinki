@@ -122,10 +122,10 @@ export default function ClientsPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold tracking-tight mb-2">
             <Users className="w-3.5 h-3.5" />
-            <span>Masu Dinki (Customer Directory)</span>
+            <span>Customer Directory</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Masu Kayan Dinki
+            Customers
           </h1>
           <p className="text-xs text-slate-500 mt-1">
             Manage your customers, measurement sizes, active orders &amp; debts.
@@ -137,7 +137,7 @@ export default function ClientsPage() {
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 hover:from-emerald-900 hover:to-emerald-950 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-md transition-all cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Sabuwar Rijista (New Customer)</span>
+          <span>Add New Customer</span>
         </Link>
       </div>
 
@@ -150,10 +150,10 @@ export default function ClientsPage() {
             </div>
             <div className="text-xs">
               <span className="font-black text-rose-950 block">
-                Akwai mutum {debtClientsCount} da ake bin sa bashi!
+                {debtClientsCount} customer{debtClientsCount > 1 ? 's' : ''} have unpaid debts!
               </span>
               <span className="text-rose-700 text-[11px]">
-                {debtClientsCount} customer(s) have unpaid balances / outstanding debts.
+                Orders delivered on credit awaiting balance collection.
               </span>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function ClientsPage() {
             onClick={() => setFilterType('debt')}
             className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[11px] font-bold shadow-2xs cursor-pointer whitespace-nowrap transition"
           >
-            Duba Masu Bashi
+            View Debtors
           </button>
         </div>
       )}
@@ -175,7 +175,7 @@ export default function ClientsPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Nemi mai kaya da suna ko lamba..."
+            placeholder="Search customers by name or phone..."
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 rounded-2xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none shadow-xs transition"
           />
           {searchQuery && (
@@ -215,7 +215,7 @@ export default function ClientsPage() {
           <button
             type="button"
             onClick={() => setFilterType('debt')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               filterType === 'debt'
                 ? 'bg-rose-600 text-white shadow-xs'
                 : debtClientsCount > 0
@@ -223,7 +223,8 @@ export default function ClientsPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            ⚠️ Masu Bashi ({debtClientsCount})
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-current" />
+            <span>With Debt ({debtClientsCount})</span>
           </button>
         </div>
       </div>
@@ -248,7 +249,7 @@ export default function ClientsPage() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
           <Loader2 className="w-8 h-8 animate-spin text-emerald-700" />
-          <p className="text-sm font-medium">Bude jerin masu dinki...</p>
+          <p className="text-sm font-medium">Loading customers...</p>
         </div>
       )}
 
@@ -259,7 +260,7 @@ export default function ClientsPage() {
             <Users className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-slate-900">Ba a saka kowa ba tukuna</h3>
+            <h3 className="text-lg font-black text-slate-900">No customers added yet</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
               Add your first customer to start recording measurements and tracking orders in your E-Book.
             </p>
@@ -269,7 +270,7 @@ export default function ClientsPage() {
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-800 to-emerald-900 text-white text-xs font-bold rounded-xl shadow-sm transition hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Saka Sabon Mai Dinki</span>
+            <span>Add New Customer</span>
           </Link>
         </div>
       )}
@@ -278,7 +279,7 @@ export default function ClientsPage() {
       {!isLoading && !error && clients.length > 0 && filteredClients.length === 0 && (
         <div className="p-10 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl shadow-xs space-y-2">
           <p className="text-sm font-medium">
-            Ba a sami mai dinki mai dacewa da &ldquo;{searchQuery}&rdquo; ba
+            No customers found matching &ldquo;{searchQuery}&rdquo;
           </p>
           <button
             onClick={() => {
@@ -287,7 +288,7 @@ export default function ClientsPage() {
             }}
             className="text-xs text-emerald-800 hover:underline cursor-pointer font-bold inline-block"
           >
-            Goge zabuka (Clear search &amp; filters)
+            Clear search &amp; filters
           </button>
         </div>
       )}
@@ -324,7 +325,7 @@ export default function ClientsPage() {
                           </h3>
                           {hasDebt && (
                             <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white font-black text-[10px] tracking-tight">
-                              Bashi: {formatCurrency(client.total_debt || 0)}
+                              Debt: {formatCurrency(client.total_debt || 0)}
                             </span>
                           )}
                         </div>
@@ -361,13 +362,13 @@ export default function ClientsPage() {
                     {hasActiveOrders && (
                       <span className="px-2 py-0.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px] flex items-center gap-1">
                         <Scissors className="w-3 h-3 text-amber-700" />
-                        {client.active_orders_count} Dinki a Hannu
+                        {client.active_orders_count} In Progress
                       </span>
                     )}
                     {(client.total_orders_count || 0) > 0 && (
                       <span className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 font-medium text-[10px] flex items-center gap-1">
                         <BookOpen className="w-3 h-3 text-slate-500" />
-                        {client.total_orders_count} Orders a Littafi
+                        {client.total_orders_count} Orders in E-Book
                       </span>
                     )}
                   </div>
@@ -393,7 +394,7 @@ export default function ClientsPage() {
                         </a>
                       </div>
                     ) : (
-                      <span className="text-slate-400 italic text-[11px]">Babu lambar waya</span>
+                      <span className="text-slate-400 italic text-[11px]">No phone number</span>
                     )}
 
                     <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
@@ -411,7 +412,7 @@ export default function ClientsPage() {
                     href={`/clients/${client.id}`}
                     className="text-xs font-bold text-slate-600 hover:text-emerald-800 transition flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Duba Asusun (View Profile)</span>
+                    <span>View Profile</span>
                   </Link>
 
                   <Link
@@ -419,7 +420,7 @@ export default function ClientsPage() {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/90 rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer active:scale-95"
                   >
                     <Ruler className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Auna Kaya</span>
+                    <span>Take Measurements</span>
                   </Link>
                 </div>
               </div>
@@ -436,9 +437,9 @@ export default function ClientsPage() {
               <Trash2 className="w-6 h-6" />
             </div>
             <div className="text-center">
-              <h3 className="text-base font-black text-slate-900">Goge Mai Dinki?</h3>
+              <h3 className="text-base font-black text-slate-900">Delete Customer?</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Shin kuna da tabbacin kuna son goge <strong>{clientToDelete.name}</strong>?
+                Are you sure you want to delete <strong>{clientToDelete.name}</strong>?
               </p>
             </div>
 
@@ -455,7 +456,7 @@ export default function ClientsPage() {
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
               >
-                A&apos;a, Bar Shi
+                Cancel
               </button>
               <button
                 type="button"
@@ -463,7 +464,7 @@ export default function ClientsPage() {
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Eh, Goge'}
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Delete Customer'}
               </button>
             </div>
           </div>

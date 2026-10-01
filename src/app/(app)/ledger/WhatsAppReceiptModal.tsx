@@ -7,9 +7,7 @@ import {
   Copy,
   Check,
   Send,
-  Sparkles,
   Scissors,
-  CheckCircle2,
 } from 'lucide-react';
 import { LedgerEntryItem } from './actions';
 
@@ -68,22 +66,22 @@ export function WhatsAppReceiptModal({
     if (lang === 'hausa') {
       if (msgType === 'ready') {
         return `Assalamu alaikum ${entry.client_name},\n\nDinkinku na ${entry.style_type || 'Kaftan'} (${setsText}, Aiki: ${entry.embroidery_work || 'Plain'}) ya kammala kuma ya shirya a shagon dinki.\n\n` +
-          `💰 Jimillar Kudi: ₦${entry.total_amount.toLocaleString()}\n` +
-          `💵 Ajiya da aka bayar: ₦${entry.deposit_amount.toLocaleString()}\n` +
-          `⏳ Ragowar Kudi: ${balance > 0 ? `₦${balance.toLocaleString()}` : 'Babu (An biya duka ✅)'}\n\n` +
-          `Za a iya zuwa karba a kowane lokaci. Mun gode da aminci! ✂️`;
+          `• Jimillar Kudi: ₦${entry.total_amount.toLocaleString()}\n` +
+          `• Kudin Ajiya da aka bayar: ₦${entry.deposit_amount.toLocaleString()}\n` +
+          `• Ragowar Kudi: ${balance > 0 ? `₦${balance.toLocaleString()}` : 'Babu (An biya duka)'}\n\n` +
+          `Za a iya zuwa karba a kowane lokaci. Mun gode da aminci!`;
       }
       if (msgType === 'receipt') {
-        return `Assalamu alaikum ${entry.client_name},\n\nMun karbi dinkinku a Littafin Aikinmu:\n\n` +
-          `📅 Ranar Karba: ${formattedDate}\n` +
-          `✂️ Nau'in Dinki: ${entry.style_type || 'Plain'}\n` +
-          `🪡 Aikin Dinki: ${entry.embroidery_work || 'Plain'}\n` +
-          `📦 Yawan Kaya: ${setsText}\n` +
-          (deliveryDateFormatted ? `🗓️ Ranar Kammalawa: ${deliveryDateFormatted}\n` : '') +
-          `\n💰 Jimillar Kudi: ₦${entry.total_amount.toLocaleString()}\n` +
-          `💵 Kudin Ajiya (Deposit): ₦${entry.deposit_amount.toLocaleString()}\n` +
-          `⏳ Sauran Kudi (Balance): ₦${balance.toLocaleString()}\n\n` +
-          `Nagode kwarai da zabin shagonmu!`;
+        return `Assalamu alaikum ${entry.client_name},\n\nMun karbi dinkinku a shagonmu:\n\n` +
+          `• Ranar Karba: ${formattedDate}\n` +
+          `• Nau'in Dinki: ${entry.style_type || 'Plain'}\n` +
+          `• Aiki: ${entry.embroidery_work || 'Plain'}\n` +
+          `• Yawan Kaya: ${setsText}\n` +
+          (deliveryDateFormatted ? `• Ranar Bayarwa: ${deliveryDateFormatted}\n` : '') +
+          `\n• Jimillar Kudi: ₦${entry.total_amount.toLocaleString()}\n` +
+          `• Kudin Ajiya: ₦${entry.deposit_amount.toLocaleString()}\n` +
+          `• Ragowar Kudi: ₦${balance.toLocaleString()}\n\n` +
+          `Mun gode kwarai da zabin shagonmu.`;
       }
       // reminder
       return `Assalamu alaikum ${entry.client_name},\n\nMuna tunatar da ku cikin girmamawa game da ragowar kudin dinkinku na ₦${balance.toLocaleString()} (${entry.style_type || 'Kaftan'}).\n\nNagode sosai!`;
@@ -91,23 +89,23 @@ export function WhatsAppReceiptModal({
 
     // English
     if (msgType === 'ready') {
-      return `Hello ${entry.client_name},\n\nYour order of ${entry.style_type || 'Outfit'} (${setsText}, Work: ${entry.embroidery_work || 'Plain'}) is ready for collection at our tailor shop!\n\n` +
-        `💰 Total: ₦${entry.total_amount.toLocaleString()}\n` +
-        `💵 Deposit Paid: ₦${entry.deposit_amount.toLocaleString()}\n` +
-        `⏳ Balance Remaining: ${balance > 0 ? `₦${balance.toLocaleString()}` : '₦0 (Fully Paid ✅)'}\n\n` +
-        `You can stop by anytime to pick up. Thank you for your business! ✂️`;
+      return `Hello ${entry.client_name},\n\nYour order of ${entry.style_type || 'Outfit'} (${setsText}, Work: ${entry.embroidery_work || 'Plain'}) is ready for collection at our tailor shop.\n\n` +
+        `• Total Bill: ₦${entry.total_amount.toLocaleString()}\n` +
+        `• Deposit Paid: ₦${entry.deposit_amount.toLocaleString()}\n` +
+        `• Balance Due: ${balance > 0 ? `₦${balance.toLocaleString()}` : '₦0 (Fully Paid)'}\n\n` +
+        `You can stop by anytime to pick up. Thank you for your business!`;
     }
     if (msgType === 'receipt') {
       return `Hello ${entry.client_name},\n\nThank you for placing your tailoring order with us:\n\n` +
-        `📅 Order Date: ${formattedDate}\n` +
-        `✂️ Style: ${entry.style_type || 'Plain'}\n` +
-        `🪡 Embroidery/Work: ${entry.embroidery_work || 'Plain'}\n` +
-        `📦 Quantity: ${setsText}\n` +
-        (deliveryDateFormatted ? `🗓️ Promised Delivery: ${deliveryDateFormatted}\n` : '') +
-        `\n💰 Total Bill: ₦${entry.total_amount.toLocaleString()}\n` +
-        `💵 Deposit: ₦${entry.deposit_amount.toLocaleString()}\n` +
-        `⏳ Balance Due: ₦${balance.toLocaleString()}\n\n` +
-        `We appreciate your custom!`;
+        `• Order Date: ${formattedDate}\n` +
+        `• Style: ${entry.style_type || 'Plain'}\n` +
+        `• Embroidery / Work: ${entry.embroidery_work || 'Plain'}\n` +
+        `• Quantity: ${setsText}\n` +
+        (deliveryDateFormatted ? `• Promised Delivery Date: ${deliveryDateFormatted}\n` : '') +
+        `\n• Total Bill: ₦${entry.total_amount.toLocaleString()}\n` +
+        `• Deposit Paid: ₦${entry.deposit_amount.toLocaleString()}\n` +
+        `• Balance Due: ₦${balance.toLocaleString()}\n\n` +
+        `We appreciate your business!`;
     }
     return `Hello ${entry.client_name},\n\nThis is a friendly reminder regarding your outstanding tailoring balance of ₦${balance.toLocaleString()} for your ${entry.style_type || 'order'}.\n\nThank you!`;
   };
@@ -142,10 +140,10 @@ export function WhatsAppReceiptModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                WhatsApp Receipt & Notification
+                WhatsApp Notification &amp; Receipt
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
-                Send professional messages directly to {entry.client_name}
+                Send updates directly to {entry.client_name}
               </p>
             </div>
           </div>
@@ -169,7 +167,7 @@ export function WhatsAppReceiptModal({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            ✨ Ready for Pickup
+            Ready for Pickup
           </button>
           <button
             type="button"
@@ -180,7 +178,7 @@ export function WhatsAppReceiptModal({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            🧾 Booking Receipt
+            Order Receipt
           </button>
           <button
             type="button"
@@ -191,14 +189,14 @@ export function WhatsAppReceiptModal({
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            💰 Balance Note
+            Balance Reminder
           </button>
         </div>
 
         {/* Language selector */}
         <div className="flex items-center justify-between px-1">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            Language / Harshe:
+            Message Language:
           </span>
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
             <button
@@ -241,12 +239,12 @@ export function WhatsAppReceiptModal({
             {copied ? (
               <>
                 <Check className="w-4 h-4 text-emerald-700" />
-                <span>Copied!</span>
+                <span>Copied</span>
               </>
             ) : (
               <>
                 <Copy className="w-4 h-4" />
-                <span>Copy Text</span>
+                <span>Copy Message</span>
               </>
             )}
           </button>
@@ -257,7 +255,7 @@ export function WhatsAppReceiptModal({
             className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold rounded-xl shadow-md transition cursor-pointer active:scale-95 text-xs"
           >
             <MessageCircle className="w-4 h-4 fill-current" />
-            <span>Send on WhatsApp</span>
+            <span>Open in WhatsApp</span>
           </button>
         </div>
       </div>

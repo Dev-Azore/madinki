@@ -38,17 +38,17 @@ export function generateWhatsAppMessage(data: WhatsAppShareData): string {
     .join('\n');
 
   const lines = [
-    `✂️ Madinki — Fitting Measurement Slip`,
+    `*Madinki — Fitting Measurement Slip*`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `👤 Customer: ${clientName}`,
-    clientPhone ? `📞 Phone: ${clientPhone}` : null,
-    `👗 Garment Style: ${templateName}`,
-    `📅 Fitting Date: ${dateStr}`,
+    `*Customer:* ${clientName}`,
+    clientPhone ? `*Phone:* ${clientPhone}` : null,
+    `*Garment Style:* ${templateName}`,
+    `*Fitting Date:* ${dateStr}`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `📏 MEASURED SIZES:`,
+    `*MEASURED SIZES:*`,
     measurementsList || `(No measurements recorded)`,
     `━━━━━━━━━━━━━━━━━━━━`,
-    `🧵 Recorded with Madinki`,
+    `_Recorded with Madinki_`,
   ].filter(Boolean);
 
   return lines.join('\n');

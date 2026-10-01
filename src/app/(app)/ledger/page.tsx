@@ -20,6 +20,7 @@ import {
   TableProperties,
   AlertTriangle,
   Scissors,
+  CheckCircle2,
 } from 'lucide-react';
 import {
   getLedgerData,
@@ -285,19 +286,19 @@ export default function TailorEBookPage() {
     if (entry.status === 'ready') {
       return {
         label: 'Ready',
-        style: 'bg-sky-50 text-sky-800 border-sky-300 font-black',
+        style: 'bg-sky-50 text-sky-800 border-sky-300 font-bold',
       };
     }
     if (entry.status === 'delivered') {
       if (balance > 0) {
         return {
           label: `Debt: ₦${balance.toLocaleString()}`,
-          style: 'bg-rose-50 text-rose-800 border-rose-300 font-black',
+          style: 'bg-rose-50 text-rose-800 border-rose-300 font-bold',
         };
       }
       return {
         label: 'Delivered',
-        style: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-black',
+        style: 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold',
       };
     }
     return {
@@ -365,7 +366,7 @@ export default function TailorEBookPage() {
             </div>
             <div className="text-xs">
               <span className="font-black text-amber-950 block">
-                {overdueOrders.length} order(s) due today or overdue for pickup!
+                {overdueOrders.length} order(s) due today or overdue for pickup
               </span>
               <span className="text-amber-800 text-[11px]">
                 Check these orders and notify customers for collection.
@@ -546,7 +547,7 @@ export default function TailorEBookPage() {
                 },
                 {
                   key: 'debt',
-                  label: `⚠️ Debt (${debtOrdersCount})`,
+                  label: `Debt (${debtOrdersCount})`,
                 },
               ] as { key: StatusFilter; label: string }[]
             ).map(({ key, label }) => (
@@ -560,7 +561,7 @@ export default function TailorEBookPage() {
                       ? 'bg-rose-600 text-white shadow-xs'
                       : 'bg-white text-emerald-800 shadow-xs'
                     : key === 'debt' && debtOrdersCount > 0
-                    ? 'text-rose-700 hover:text-rose-900 font-black'
+                    ? 'text-rose-700 hover:text-rose-900 font-bold'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -793,7 +794,7 @@ export default function TailorEBookPage() {
                         {isColEnabled('balance') && (
                           <td className="py-3 px-4 text-right font-mono font-bold whitespace-nowrap">
                             {isFullyPaid ? (
-                              <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-black">
+                              <span className="inline-flex items-center gap-0.5 text-emerald-800 text-[11px] font-bold">
                                 <BadgeCheck className="w-3.5 h-3.5" />
                                 Paid
                               </span>
@@ -815,18 +816,17 @@ export default function TailorEBookPage() {
 
                         {isColEnabled('status') && (
                           <td className="py-3 px-4 text-center whitespace-nowrap">
-                            {/* 4-Step Status Selector */}
                             <select
                               value={entry.status}
                               onChange={(e) =>
                                 handleQuickStatusChange(entry, e.target.value as LedgerStatus)
                               }
-                              className={`px-2.5 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
+                              className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border focus:outline-none cursor-pointer ${badge.style}`}
                             >
-                              <option value="started">📦 Received</option>
-                              <option value="in_progress">✂️ Sewing</option>
-                              <option value="ready">✨ Ready</option>
-                              <option value="delivered">✅ Delivered</option>
+                              <option value="started">Received</option>
+                              <option value="in_progress">Sewing</option>
+                              <option value="ready">Ready</option>
+                              <option value="delivered">Delivered</option>
                             </select>
                           </td>
                         )}
@@ -937,18 +937,18 @@ export default function TailorEBookPage() {
                             {entry.client_name}
                           </h3>
                           {entry.status === 'delivered' && balance > 0 && (
-                            <span className="px-1.5 py-0.5 rounded-md bg-rose-600 text-white font-black text-[9px] uppercase tracking-wider">
-                              Debt
+                            <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200 font-bold text-[10px]">
+                              Debt: {formatCurrency(balance)}
                             </span>
                           )}
                           {isReady && (
-                            <span className="px-1.5 py-0.5 rounded-md bg-sky-600 text-white font-black text-[9px] uppercase tracking-wider">
-                              Ready!
+                            <span className="px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 font-bold text-[10px]">
+                              Ready
                             </span>
                           )}
                           {isOverdue && !isReady && (
-                            <span className="px-1.5 py-0.5 rounded-md bg-amber-500 text-white font-black text-[9px] uppercase tracking-wider animate-pulse">
-                              Due!
+                            <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px]">
+                              Due
                             </span>
                           )}
                         </div>
@@ -967,7 +967,7 @@ export default function TailorEBookPage() {
                         {entry.delivery_date && (
                           <span
                             className={`text-[9px] font-bold block ${
-                              isOverdue ? 'text-red-600 font-black' : 'text-slate-500'
+                              isOverdue ? 'text-red-600 font-bold' : 'text-slate-500'
                             }`}
                           >
                             Due: {formatDate(entry.delivery_date)}
@@ -1009,8 +1009,8 @@ export default function TailorEBookPage() {
 
                     {/* Notes if any */}
                     {entry.notes && (
-                      <p className="text-[11px] text-slate-500 bg-slate-50 p-2 rounded-xl border border-slate-100 italic">
-                        &ldquo;{entry.notes}&rdquo;
+                      <p className="text-[11px] text-slate-600 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                        {entry.notes}
                       </p>
                     )}
 
@@ -1061,10 +1061,10 @@ export default function TailorEBookPage() {
                       <button
                         type="button"
                         onClick={() => setWhatsAppEntry(entry)}
-                        className="w-full py-2 px-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="w-full py-2 px-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Send WhatsApp: Outfit Ready for Pickup!</span>
+                        <span>Send WhatsApp Pickup Alert</span>
                       </button>
                     )}
 
@@ -1095,12 +1095,12 @@ export default function TailorEBookPage() {
                         onChange={(e) =>
                           handleQuickStatusChange(entry, e.target.value as LedgerStatus)
                         }
-                        className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
+                        className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-bold border focus:outline-none cursor-pointer ${badge.style}`}
                       >
-                        <option value="started">📦 Received</option>
-                        <option value="in_progress">✂️ Sewing</option>
-                        <option value="ready">✨ Ready</option>
-                        <option value="delivered">✅ Delivered</option>
+                        <option value="started">Received</option>
+                        <option value="in_progress">Sewing</option>
+                        <option value="ready">Ready</option>
+                        <option value="delivered">Delivered</option>
                       </select>
 
                       {/* Tool buttons */}

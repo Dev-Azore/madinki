@@ -67,7 +67,7 @@ export function DeliveryConfirmationModal({
       onSuccess();
       onClose();
     } catch {
-      setError('An error occurred. Please try again.');
+      setError('An error occurred while updating the order.');
       setIsSubmitting(false);
     }
   };
@@ -91,7 +91,7 @@ export function DeliveryConfirmationModal({
       onSuccess();
       onClose();
     } catch {
-      setError('An error occurred. Please try again.');
+      setError('An error occurred while updating the order.');
       setIsSubmitting(false);
     }
   };
@@ -107,10 +107,10 @@ export function DeliveryConfirmationModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                Bayar da Kayan Dinki (Hand Over Clothes)
+                Confirm Order Delivery
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
-                {entry.client_name} · {entry.style_type || 'Plain'}
+                {entry.client_name} · {entry.style_type || 'Plain Outfit'}
               </p>
             </div>
           </div>
@@ -133,20 +133,20 @@ export function DeliveryConfirmationModal({
         {/* Financial Details */}
         <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-600">Jimillar Kudin Dinki (Total Price):</span>
+            <span className="text-slate-600">Total Bill:</span>
             <strong className="text-slate-900 font-mono font-black text-sm">
               ₦{total.toLocaleString()}
             </strong>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-emerald-700">Kudin Ajiya da ya biya (Deposit):</span>
+            <span className="text-emerald-700">Deposit Paid:</span>
             <strong className="text-emerald-800 font-mono font-bold">
-              {hasZeroDeposit ? '₦0 (Babu ajiya)' : `₦${deposit.toLocaleString()}`}
+              {hasZeroDeposit ? '₦0 (No deposit paid)' : `₦${deposit.toLocaleString()}`}
             </strong>
           </div>
           <div className="border-t border-slate-200/60 pt-2 flex items-center justify-between text-xs">
             <span className="text-amber-800 font-black">
-              {hasZeroDeposit ? 'Kudin da ya rage ba a biya ba:' : 'Ragowar Kudi (Remaining Balance):'}
+              {hasZeroDeposit ? 'Total Amount Due:' : 'Remaining Balance:'}
             </span>
             <strong className="text-amber-800 font-mono font-black text-base">
               ₦{balance.toLocaleString()}
@@ -158,15 +158,15 @@ export function DeliveryConfirmationModal({
         {balance > 0 ? (
           <div className="space-y-3">
             <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs space-y-1">
-              <span className="font-black block flex items-center gap-1">
+              <span className="font-black flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
-                Tabbatar da Biyan Kudin Dinki
+                Payment Verification
               </span>
               <p className="text-[11px] leading-relaxed text-amber-800">
                 {hasZeroDeposit ? (
-                  <>Mai kayan bai biya ko sisi na ajiya a baya ba. Shin ya biya duka <strong>₦{total.toLocaleString()}</strong> kafin ya karba, ko kuma da bashi ya tafi?</>
+                  <>The customer did not pay a deposit upfront. Did they pay the full <strong>₦{total.toLocaleString()}</strong> before collecting, or are they taking the clothes on credit?</>
                 ) : (
-                  <>Akwai sauran <strong>₦{balance.toLocaleString()}</strong> da ba a biya ba. Shin mai kayan ya biya ragowar kafin ya tafi, ko kuma da bashi ya karba?</>
+                  <>There is an outstanding balance of <strong>₦{balance.toLocaleString()}</strong>. Did the customer settle the remaining balance before collecting, or are they taking the clothes on credit?</>
                 )}
               </p>
             </div>
@@ -186,8 +186,8 @@ export function DeliveryConfirmationModal({
                     <CheckCircle2 className="w-4 h-4" />
                     <span>
                       {hasZeroDeposit
-                        ? `Eh, Ya Biya Duka ₦${total.toLocaleString()} (Paid Full)`
-                        : `Eh, Ya Biya Ragowar ₦${balance.toLocaleString()} (Paid Full)`}
+                        ? `Yes, Paid Full ₦${total.toLocaleString()}`
+                        : `Yes, Paid Remaining ₦${balance.toLocaleString()}`}
                     </span>
                   </>
                 )}
@@ -205,7 +205,7 @@ export function DeliveryConfirmationModal({
                   <>
                     <ShieldAlert className="w-4 h-4 text-rose-600" />
                     <span>
-                      A&apos;a, Ya Karbi Kaya da Bashi (Delivered on Debt: ₦{balance.toLocaleString()})
+                      No, Customer Took on Credit (Debt: ₦{balance.toLocaleString()})
                     </span>
                   </>
                 )}
@@ -213,14 +213,14 @@ export function DeliveryConfirmationModal({
             </div>
 
             <p className="text-[10px] text-slate-400 text-center leading-relaxed">
-              Idan ya karba da bashi, za a rubuta bashin <strong>₦{balance.toLocaleString()}</strong> a asusun {entry.client_name} kuma tsarin zai ci gaba da lissafa shi.
+              If marked as credit, a debt of <strong>₦{balance.toLocaleString()}</strong> will be recorded on {entry.client_name}&apos;s profile and tracked in your reports.
             </p>
           </div>
         ) : (
           <div className="space-y-3">
             <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-900 text-xs flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
-              <span>An biya kudin wannan aiki duka (₦0 Balance). Za a iya bayar da kaya.</span>
+              <span>This order is fully paid (₦0 balance). You can hand over the garment.</span>
             </div>
 
             <button
@@ -234,7 +234,7 @@ export function DeliveryConfirmationModal({
               ) : (
                 <>
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Bayar da Kayan (Mark as Delivered)</span>
+                  <span>Mark as Delivered</span>
                 </>
               )}
             </button>
@@ -248,7 +248,7 @@ export function DeliveryConfirmationModal({
             disabled={isSubmitting}
             className="text-xs text-slate-400 hover:text-slate-600 font-bold cursor-pointer"
           >
-            A&apos;a, koma baya (Cancel)
+            Cancel
           </button>
         </div>
       </div>
