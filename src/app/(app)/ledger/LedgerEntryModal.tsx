@@ -461,22 +461,33 @@ export function LedgerEntryModal({
             )}
           </div>
 
-          {/* Job Status Selector */}
+          {/* Job Status Selector (4 Steps) */}
           <div className="space-y-1.5">
             <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
-              Matakin Aiki (Order Status)
+              Matakin Aiki (4-Step Order Status)
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 type="button"
                 onClick={() => setStatus('started')}
                 className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
-                  status === 'started' || status === 'in_progress'
+                  status === 'started'
+                    ? 'bg-slate-800 text-white border-slate-900 shadow-xs'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                📦 An Karba (Received)
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatus('in_progress')}
+                className={`py-2 px-2 text-center rounded-xl font-bold border transition cursor-pointer text-xs ${
+                  status === 'in_progress'
                     ? 'bg-amber-500 text-white border-amber-600 shadow-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ⏳ Ana Dinki (Sewing)
+                ✂️ Ana Dinki (Sewing)
               </button>
               <button
                 type="button"
@@ -498,7 +509,7 @@ export function LedgerEntryModal({
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
-                ✅ An Karba (Delivered)
+                ✅ An Bayar (Delivered)
               </button>
             </div>
           </div>

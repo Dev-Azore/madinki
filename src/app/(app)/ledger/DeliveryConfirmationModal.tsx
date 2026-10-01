@@ -8,7 +8,6 @@ import {
   Loader2,
   AlertCircle,
   Scissors,
-  Wallet,
   ShieldAlert,
 } from 'lucide-react';
 import { recordLedgerPayment, updateLedgerStatus, LedgerEntryItem } from './actions';
@@ -34,14 +33,14 @@ export function DeliveryConfirmationModal({
   const total = entry.total_amount;
   const deposit = entry.deposit_amount;
   const balance = Math.max(0, total - deposit);
+  const hasZeroDeposit = deposit === 0;
 
-  // If already fully paid, simply confirm delivery
+  // Option 1: Customer paid the remaining balance / full total now
   const handleConfirmPaidInFull = async () => {
     setIsSubmitting(true);
     setError(null);
     try {
       if (balance > 0) {
-        // Record the remaining balance as payment and mark delivered
         const res = await recordLedgerPayment({
           id: entry.id,
           paymentAmount: balance,
@@ -73,7 +72,7 @@ export function DeliveryConfirmationModal({
     }
   };
 
-  // Deliver with debt (customer didn't pay remaining balance)
+  // Option 2: Customer did not pay remaining balance — deliver with debt recorded
   const handleDeliverWithDebt = async () => {
     setIsSubmitting(true);
     setError(null);
@@ -108,7 +107,7 @@ export function DeliveryConfirmationModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900">
-                Bayar da Kayan Dinki (Delivery)
+                Bayar da Kayan Dinki (Hand Over Clothes)
               </h3>
               <p className="text-[11px] text-slate-500 font-medium">
                 {entry.client_name} · {entry.style_type || 'Plain'}
@@ -140,30 +139,35 @@ export function DeliveryConfirmationModal({
             </strong>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-emerald-700">Kudin da aka bayar (Deposit):</span>
+            <span className="text-emerald-700">Kudin Ajiya da ya biya (Deposit):</span>
             <strong className="text-emerald-800 font-mono font-bold">
-              ₦{deposit.toLocaleString()}
+              {hasZeroDeposit ? '₦0 (Babu ajiya)' : `₦${deposit.toLocaleString()}`}
             </strong>
           </div>
           <div className="border-t border-slate-200/60 pt-2 flex items-center justify-between text-xs">
-            <span className="text-amber-800 font-black">Ragowar Kudi (Remaining Balance):</span>
+            <span className="text-amber-800 font-black">
+              {hasZeroDeposit ? 'Kudin da ya rage ba a biya ba:' : 'Ragowar Kudi (Remaining Balance):'}
+            </span>
             <strong className="text-amber-800 font-mono font-black text-base">
               ₦{balance.toLocaleString()}
             </strong>
           </div>
         </div>
 
-        {/* Tailor Question */}
+        {/* Tailor Confirmation Prompt */}
         {balance > 0 ? (
           <div className="space-y-3">
             <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs space-y-1">
               <span className="font-black block flex items-center gap-1">
                 <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
-                Tabbatar da Karbar Kudin Dinki
+                Tabbatar da Biyan Kudin Dinki
               </span>
               <p className="text-[11px] leading-relaxed text-amber-800">
-                Shin mai kayan ya biya sauran <strong>₦{balance.toLocaleString()}</strong> din kafin
-                ya tafi, ko kuma da bashi ya karbi kaya?
+                {hasZeroDeposit ? (
+                  <>Mai kayan bai biya ko sisi na ajiya a baya ba. Shin ya biya duka <strong>₦{total.toLocaleString()}</strong> kafin ya karba, ko kuma da bashi ya tafi?</>
+                ) : (
+                  <>Akwai sauran <strong>₦{balance.toLocaleString()}</strong> da ba a biya ba. Shin mai kayan ya biya ragowar kafin ya tafi, ko kuma da bashi ya karba?</>
+                )}
               </p>
             </div>
 
@@ -180,7 +184,11 @@ export function DeliveryConfirmationModal({
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Eh, Ya Biya Ragowar ₦{balance.toLocaleString()} (Paid Full)</span>
+                    <span>
+                      {hasZeroDeposit
+                        ? `Eh, Ya Biya Duka ₦${total.toLocaleString()} (Paid Full)`
+                        : `Eh, Ya Biya Ragowar ₦${balance.toLocaleString()} (Paid Full)`}
+                    </span>
                   </>
                 )}
               </button>
@@ -196,14 +204,16 @@ export function DeliveryConfirmationModal({
                 ) : (
                   <>
                     <ShieldAlert className="w-4 h-4 text-rose-600" />
-                    <span>A&apos;a, Ya Karbi Kaya da Bashi (Delivered on Debt)</span>
+                    <span>
+                      A&apos;a, Ya Karbi Kaya da Bashi (Delivered on Debt: ₦{balance.toLocaleString()})
+                    </span>
                   </>
                 )}
               </button>
             </div>
 
-            <p className="text-[10px] text-slate-400 text-center">
-              Idan ya karba da bashi, za a nuna jan tambarin <strong>Bashi: ₦{balance.toLocaleString()}</strong> a shafin {entry.client_name}.
+            <p className="text-[10px] text-slate-400 text-center leading-relaxed">
+              Idan ya karba da bashi, za a rubuta bashin <strong>₦{balance.toLocaleString()}</strong> a asusun {entry.client_name} kuma tsarin zai ci gaba da lissafa shi.
             </p>
           </div>
         ) : (

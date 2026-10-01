@@ -19,7 +19,9 @@ import {
   LayoutGrid,
   TableProperties,
   AlertTriangle,
-  ShieldAlert,
+  Scissors,
+  Package,
+  Sparkles,
 } from 'lucide-react';
 import {
   getLedgerData,
@@ -40,7 +42,7 @@ import { DeliveryConfirmationModal } from './DeliveryConfirmationModal';
 import { LedgerColumnCustomizer } from './LedgerColumnCustomizer';
 import { AdBanner } from '@/components/ads/AdBanner';
 
-type StatusFilter = 'all' | 'started' | 'ready' | 'delivered' | 'debt';
+type StatusFilter = 'all' | 'started' | 'in_progress' | 'ready' | 'delivered' | 'debt';
 type PeriodFilter = 'week' | 'month' | 'year' | 'all';
 type ViewMode = 'cards' | 'book';
 
@@ -144,9 +146,8 @@ export default function TailorEBookPage() {
 
       const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
 
-      if (statusFilter === 'started' && entry.status !== 'started' && entry.status !== 'in_progress') {
-        return false;
-      }
+      if (statusFilter === 'started' && entry.status !== 'started') return false;
+      if (statusFilter === 'in_progress' && entry.status !== 'in_progress') return false;
       if (statusFilter === 'ready' && entry.status !== 'ready') return false;
       if (statusFilter === 'delivered' && (entry.status !== 'delivered' || balance > 0)) return false;
       if (statusFilter === 'debt' && (entry.status !== 'delivered' || balance === 0)) return false;
@@ -202,12 +203,31 @@ export default function TailorEBookPage() {
   }, [periodEntries]);
 
   const handleQuickStatusChange = async (entry: LedgerEntryItem, nextStatus: LedgerStatus) => {
-    // If tailor selects delivered, show confirmation so they can check payment vs credit!
+    // 1. If tailor switches to delivered, MUST confirm whether customer paid or took with debt!
     if (nextStatus === 'delivered') {
       setDeliveryEntry(entry);
       return;
     }
 
+    // 2. If tailor switches to ready, update status AND trigger WhatsApp reminder modal so tailor can notify customer!
+    if (nextStatus === 'ready') {
+      setAllEntries((prev) =>
+        prev.map((e) => (e.id === entry.id ? { ...e, status: nextStatus } : e))
+      );
+      try {
+        const res = await updateLedgerStatus({ id: entry.id, status: nextStatus });
+        if (res.error) loadData();
+        else {
+          // Open WhatsApp reminder immediately for tailor convenience
+          setWhatsAppEntry({ ...entry, status: 'ready' });
+        }
+      } catch {
+        loadData();
+      }
+      return;
+    }
+
+    // 3. Otherwise (started -> in_progress, etc.)
     setAllEntries((prev) =>
       prev.map((e) => (e.id === entry.id ? { ...e, status: nextStatus } : e))
     );
@@ -239,16 +259,22 @@ export default function TailorEBookPage() {
 
   const getStatusBadge = (entry: LedgerEntryItem) => {
     const balance = Math.max(0, entry.total_amount - entry.deposit_amount);
-    if (entry.status === 'started' || entry.status === 'in_progress') {
+    if (entry.status === 'started') {
+      return {
+        label: 'An Karba (Received)',
+        style: 'bg-slate-100 text-slate-800 border-slate-300 font-bold',
+      };
+    }
+    if (entry.status === 'in_progress') {
       return {
         label: 'Ana Dinki (Sewing)',
-        style: 'bg-amber-50 text-amber-900 border-amber-200',
+        style: 'bg-amber-50 text-amber-900 border-amber-300 font-bold',
       };
     }
     if (entry.status === 'ready') {
       return {
         label: 'Ya Shirya (Ready)',
-        style: 'bg-sky-50 text-sky-800 border-sky-200',
+        style: 'bg-sky-50 text-sky-800 border-sky-300 font-black',
       };
     }
     if (entry.status === 'delivered') {
@@ -264,7 +290,7 @@ export default function TailorEBookPage() {
       };
     }
     return {
-      label: 'Ana Dinki',
+      label: 'An Karba',
       style: 'bg-slate-50 text-slate-700 border-slate-200',
     };
   };
@@ -319,7 +345,7 @@ export default function TailorEBookPage() {
         </div>
       </div>
 
-      {/* Urgency Alert Banner (Tailor Psychology: Never miss promised clothes!) */}
+      {/* Urgency Alert Banner */}
       {overdueOrders.length > 0 && !showOverdueOnly && (
         <div className="p-3.5 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 border border-amber-300/80 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -475,7 +501,7 @@ export default function TailorEBookPage() {
           )}
         </div>
 
-        {/* Status Filters */}
+        {/* 4-Step Status Filters + Debt Tab */}
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-2xl overflow-x-auto">
             {(
@@ -483,15 +509,19 @@ export default function TailorEBookPage() {
                 { key: 'all', label: `Duka (${periodEntries.length})` },
                 {
                   key: 'started',
-                  label: `Dinki (${
-                    periodEntries.filter(
-                      (e) => e.status === 'started' || e.status === 'in_progress'
-                    ).length
+                  label: `An Karba (${
+                    periodEntries.filter((e) => e.status === 'started').length
+                  })`,
+                },
+                {
+                  key: 'in_progress',
+                  label: `Ana Dinki (${
+                    periodEntries.filter((e) => e.status === 'in_progress').length
                   })`,
                 },
                 {
                   key: 'ready',
-                  label: `Shirya (${
+                  label: `Ya Shirya (${
                     periodEntries.filter((e) => e.status === 'ready').length
                   })`,
                 },
@@ -652,7 +682,7 @@ export default function TailorEBookPage() {
                     <th className="py-3 px-4 text-right">Ajiya (Deposit)</th>
                     <th className="py-3 px-4 text-right">Jimilla (Total)</th>
                     <th className="py-3 px-4 text-right">Ragowa (Balance)</th>
-                    <th className="py-3 px-4 text-center">Mataki</th>
+                    <th className="py-3 px-4 text-center">Mataki (Status)</th>
                     <th className="py-3 px-4 text-right">Aiki</th>
                   </tr>
                 </thead>
@@ -730,6 +760,7 @@ export default function TailorEBookPage() {
                           )}
                         </td>
                         <td className="py-3 px-4 text-center whitespace-nowrap">
+                          {/* 4-Step Status Selector */}
                           <select
                             value={entry.status}
                             onChange={(e) =>
@@ -737,9 +768,10 @@ export default function TailorEBookPage() {
                             }
                             className={`px-2.5 py-1 rounded-xl text-[10px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
                           >
-                            <option value="started">Ana Dinki (Sewing)</option>
-                            <option value="ready">Ya Shirya (Ready)</option>
-                            <option value="delivered">An Bayar (Delivered)</option>
+                            <option value="started">📦 An Karba (Received)</option>
+                            <option value="in_progress">✂️ Ana Dinki (Sewing)</option>
+                            <option value="ready">✨ Ya Shirya (Ready)</option>
+                            <option value="delivered">✅ An Bayar (Delivered)</option>
                           </select>
                         </td>
                         <td className="py-3 px-4 text-right whitespace-nowrap">
@@ -747,8 +779,16 @@ export default function TailorEBookPage() {
                             <button
                               type="button"
                               onClick={() => setWhatsAppEntry(entry)}
-                              className="p-1.5 text-emerald-700 hover:bg-emerald-50 rounded-lg transition cursor-pointer"
-                              title="Send WhatsApp Receipt"
+                              className={`p-1.5 rounded-lg transition cursor-pointer ${
+                                entry.status === 'ready'
+                                  ? 'bg-sky-50 text-sky-700 hover:bg-sky-100'
+                                  : 'text-emerald-700 hover:bg-emerald-50'
+                              }`}
+                              title={
+                                entry.status === 'ready'
+                                  ? 'Tura WhatsApp: Kayan ya shirya!'
+                                  : 'Send WhatsApp Receipt'
+                              }
                             >
                               <MessageCircle className="w-4 h-4" />
                             </button>
@@ -815,6 +855,7 @@ export default function TailorEBookPage() {
                 entry.status !== 'delivered' &&
                 entry.delivery_date &&
                 entry.delivery_date <= todayIso;
+              const isReady = entry.status === 'ready';
               const badge = getStatusBadge(entry);
 
               return (
@@ -823,6 +864,8 @@ export default function TailorEBookPage() {
                   className={`bg-white border rounded-3xl shadow-2xs overflow-hidden flex flex-col justify-between transition-all hover:shadow-md ${
                     entry.status === 'delivered' && balance > 0
                       ? 'border-rose-300 ring-1 ring-rose-300/60'
+                      : isReady
+                      ? 'border-sky-300 ring-1 ring-sky-300/60'
                       : isOverdue
                       ? 'border-amber-300 ring-1 ring-amber-300/60'
                       : 'border-slate-200'
@@ -841,7 +884,12 @@ export default function TailorEBookPage() {
                               Bashi
                             </span>
                           )}
-                          {isOverdue && (
+                          {isReady && (
+                            <span className="px-1.5 py-0.5 rounded-md bg-sky-600 text-white font-black text-[9px] uppercase tracking-wider">
+                              Shirya!
+                            </span>
+                          )}
+                          {isOverdue && !isReady && (
                             <span className="px-1.5 py-0.5 rounded-md bg-amber-500 text-white font-black text-[9px] uppercase tracking-wider animate-pulse">
                               Due!
                             </span>
@@ -938,8 +986,20 @@ export default function TailorEBookPage() {
 
                   {/* Card Bottom / Actions */}
                   <div className="border-t border-slate-100 p-3 bg-slate-50/50 space-y-2">
-                    {/* Quick collect button if balance remains */}
-                    {balance > 0 && (
+                    {/* Action 1: If ready, show 1-click WhatsApp customer reminder */}
+                    {isReady && (
+                      <button
+                        type="button"
+                        onClick={() => setWhatsAppEntry(entry)}
+                        className="w-full py-2 px-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>Tura WhatsApp: Kayan Ya Shirya!</span>
+                      </button>
+                    )}
+
+                    {/* Action 2: Quick collect button if balance remains */}
+                    {balance > 0 && !isReady && (
                       <button
                         type="button"
                         onClick={() => setPaymentEntry(entry)}
@@ -959,7 +1019,7 @@ export default function TailorEBookPage() {
                     )}
 
                     <div className="flex items-center justify-between gap-2">
-                      {/* Quick Status Dropdown */}
+                      {/* 4-Step Quick Status Dropdown */}
                       <select
                         value={entry.status}
                         onChange={(e) =>
@@ -967,9 +1027,10 @@ export default function TailorEBookPage() {
                         }
                         className={`flex-1 px-2.5 py-1.5 rounded-xl text-[11px] font-black border focus:outline-none cursor-pointer ${badge.style}`}
                       >
-                        <option value="started">Ana Dinki (Sewing)</option>
-                        <option value="ready">Ya Shirya (Ready)</option>
-                        <option value="delivered">An Bayar (Delivered)</option>
+                        <option value="started">📦 An Karba (Received)</option>
+                        <option value="in_progress">✂️ Ana Dinki (Sewing)</option>
+                        <option value="ready">✨ Ya Shirya (Ready)</option>
+                        <option value="delivered">✅ An Bayar (Delivered)</option>
                       </select>
 
                       {/* Tool buttons */}
